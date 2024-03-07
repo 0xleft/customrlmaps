@@ -1,0 +1,14 @@
+version: '3'
+services:
+  database:
+    image: 
+
+
+networks:
+  global-reverse-proxy:
+    driver: bridge
+  internal-customrlmaps:
+    driver: bridge    
+
+volumes:
+  mongo-data:
