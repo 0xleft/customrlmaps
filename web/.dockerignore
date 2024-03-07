@@ -1,0 +1,5 @@
+*.Dockerfile
+docker-compose*
+README.md
+run-dev.bat
+run-prod.sh
