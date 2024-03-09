@@ -1,18 +1,22 @@
 import { Inter } from "next/font/google";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/router";
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const getServerSideProps = async ({ req, res }) => {
+	const user = await currentUser(req, res);
+
+	return {
+		props: {},
+	};
+};
+
 export default function Maps() {
-	// get query params
-	const router = useRouter();
-	const { query } = router.query;
 
 	return (
 		<>
 			<h1>Maps</h1>
-			<p>Query: {query}</p>
 		</>
 	);
 }
