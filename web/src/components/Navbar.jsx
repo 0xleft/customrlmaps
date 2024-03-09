@@ -5,14 +5,13 @@ import Link from 'next/link';
 import { SignedOut, UserButton, SignedIn, useUser } from '@clerk/nextjs';
 import { hasRole, getUserRoles } from '@/utils/userUtils';
 import { Button } from './ui/button';
-import MapSearchForm from '@/pages/maps/MapSearchForm';
+import MapSearchForm from '@/components/MapSearchForm';
 import { useRouter } from 'next/router';
 
 const Navbar = () => {
 	const { user, isLoaded } = useUser();
 	const router = useRouter();
 	if (!isLoaded) return null;
-
 
 	const userRoles = getUserRoles(user);
 

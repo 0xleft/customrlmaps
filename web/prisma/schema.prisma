@@ -14,16 +14,25 @@ enum PublishStatus {
 
 model User {
   id Int @id @default(autoincrement())
-  username String
+  username String @unique
   description String?
+  clerkId String @unique
 
   maps Map[]
   mapLikes MapLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
-  @@unique([username])
+model MapVersion {
+  id Int @id @default(autoincrement())
+  map Map @relation(fields: [mapId], references: [id])
+  mapId Int
+  version String
+  downloadUrl String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Map {
@@ -31,11 +40,11 @@ model Map {
   publishStatus PublishStatus @default(DRAFT)
   name String
   description String?
-  imageUrl String
-  downloadUrl String
+  imageUrl String?
   user User @relation(fields: [userId], references: [id])
   userId Int
 
+  versions MapVersion[]
   likes MapLike[]
 
   createdAt DateTime @default(now())
