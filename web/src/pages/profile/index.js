@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Profile() {
   return (
     <>
-      <Button>Click me</Button>
+      <h1>Profile</h1>
     </>
   );
 }
