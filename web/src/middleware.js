@@ -1,9 +1,23 @@
-'use client';
+import { NextResponse } from "next/server";
+import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import { getUserRoles, hasRole } from "./utils/userUtils";
+ 
+export default authMiddleware({
+  afterAuth(auth, req, evt) {
+    if (!auth.userId && !auth.isPublicRoute) {
+      return redirectToSignIn({ returnBackUrl: req.url });
+    }
+    
+    return NextResponse.next();
+  },
+  publicRoutes: [
+    "/",
+    "/maps",
+    "/sign-in",
+    "/sign-up",
+  ]
+});
 
-import { authMiddleware } from "@clerk/nextjs";
- 
-export default authMiddleware({});
- 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)","/","/(api|trpc)(.*)"],
 };
