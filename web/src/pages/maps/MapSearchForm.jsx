@@ -3,6 +3,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
+import { useRouter } from "next/router"
 import {
   Form,
   FormControl,
@@ -15,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 
 const MapSearchForm = () => {
+    const router = useRouter();
     
     const formSchema = z.object({
         query: z.string().min(1, {
@@ -30,7 +32,10 @@ const MapSearchForm = () => {
     });
     
     function onSubmit(values) {
-        // todo
+        router.push({
+            pathname: "/maps",
+            query: { query: values.query },
+        });
     }
     
     return (
