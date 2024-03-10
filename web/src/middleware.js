@@ -12,14 +12,20 @@ export default authMiddleware({
   },
   publicRoutes: [
     "/",
-    "/maps",
-    "/search",
-    "/mods",
     "/sign-in",
     "/sign-up",
-  ]
+	"/search",
+	"/search/maps",
+	"/search/mods",
+	"/user/[[username]]",
+	"/user/[[username]]/mods",
+	"/user/[[username]]/mods/[id]",
+	"/user/[[username]]/maps",
+	"/user/[[username]]/maps/[id]",
+],
+  
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)","/","/(api|trpc)(.*)"],
+    matcher: ["/((?!.+\\.[\\w]+$|_next).*)","/","/(api|trpc)(.*)"],
 };

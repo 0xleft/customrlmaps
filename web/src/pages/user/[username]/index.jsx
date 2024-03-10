@@ -16,11 +16,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { CalendarIcon } from '@radix-ui/react-icons';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
         'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=100'
+        'public, s-maxage=10, stale-while-revalidate=0'
     )
 
     const { username } = params;
@@ -60,7 +61,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
             user: {
                 username: dbUser.username,
                 imageUrl: dbUser.imageUrl,
-                created: dbUser.createdAt.getDate(),
+                created: dbUser.createdAt.getUTCDate(),
                 roles: dbUser.roles,
             },
             topMaps: topMaps.map((map) => {
@@ -102,7 +103,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount })
         <>
             <div className="container p-4">
                 <Card className="w-full">
-                    <CardHeader className="flex flex-row space-x-4 items-center">
+                    <CardHeader className="flex flex-col">
                         <CardTitle>
                             {user.username}
                             {user.roles.map((role) => {
@@ -111,6 +112,13 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount })
                                 );
                             })}
                         </CardTitle>
+
+                        <div className="flex items-center">
+                            <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />{" "}
+                            <span className="text-xs text-muted-foreground">
+                                Joined {user.created}
+                            </span>
+                        </div>               
                     </CardHeader>
                     <CardContent>
                         <div>
