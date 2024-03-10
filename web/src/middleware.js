@@ -1,23 +1,26 @@
 import { NextResponse } from "next/server";
 import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 import { getUserRoles, hasRole } from "./utils/userUtils";
+
+const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api*", "/user/*", "/search*"];
  
+const isPublic = (path) => {
+	console.log(path);
+	return publicPaths.find((x) =>
+		path.match(new RegExp(`^${x}$`.replace("*$", "(.*)$")))
+	);
+};
+
 export default authMiddleware({
   	afterAuth(auth, req, evt) {
-		if (!auth.userId && !auth.isPublicRoute) {
+		if (!auth.userId && !isPublic(req.nextUrl.pathname)) {
 			return redirectToSignIn({ returnBackUrl: req.url });
 		}
 		
 		return NextResponse.next();
   	},
-  	publicRoutes: [
-		"/",
-		"/sign-in",
-		"/sign-up",
-		"/search",
-	],
 });
 
 export const config = {
-	matcher: ["/((?!.+\\.[\\w]+$|_next).*)","/","/(api|trpc)(.*)"],
+	matcher: "/((?!_next/image|_next/static|favicon.ico).*)",
 };

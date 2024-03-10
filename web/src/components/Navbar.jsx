@@ -7,7 +7,6 @@ import { hasRole, getUserRoles } from '@/utils/userUtils';
 import { Button } from './ui/button';
 import MapSearchForm from '@/components/MapSearchForm';
 import { useRouter } from 'next/router';
-import { ModeToggle } from './ModeToggle';
 import { NavButton } from './NavButton';
 import { AddButton } from './AddButton';
 import { NavBreadcrumbs } from './NavBreadcrumbs';

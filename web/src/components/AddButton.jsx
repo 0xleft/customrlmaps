@@ -30,11 +30,11 @@ export function AddButton() {
 			<DropdownMenuLabel>Create</DropdownMenuLabel>
 			<DropdownMenuSeparator />
 			<DropdownMenuItem value="map" onSelect={() => router.push("/new?type=map")}>
-				<BoxIcon />
+				<BoxIcon className="mr-2" />
 				Map
 			</DropdownMenuItem>
 			<DropdownMenuItem value="mod" onSelect={() => router.push("/new?type=mod")}>
-				<MagicWandIcon />
+				<MagicWandIcon className="mr-2" />
 				Mod
 			</DropdownMenuItem>
 			</DropdownMenuContent>

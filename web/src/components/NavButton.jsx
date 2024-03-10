@@ -17,10 +17,14 @@ import {
 import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu"
 import { useRouter } from 'next/router';
 import IsAdmin from "./IsAdmin";
-import { MagnifyingGlassIcon, HomeIcon, MagicWandIcon, BoxIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon, HomeIcon, MagicWandIcon, BoxIcon, SunIcon, MoonIcon } from "@radix-ui/react-icons";
+import { Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export function NavButton() {
 	const router = useRouter();
+
+	const { theme, setTheme } = useTheme();
 
   	return (
 		<DropdownMenu>
@@ -32,27 +36,51 @@ export function NavButton() {
 		<DropdownMenuContent className="w-56">
 			<DropdownMenuLabel>CustomRLMaps</DropdownMenuLabel>
 			<DropdownMenuSeparator />
-			<DropdownMenuItem onSelect={() => router.push('/search')}>
-				<MagnifyingGlassIcon />
-				Search
-			</DropdownMenuItem>
-			<DropdownMenuItem onSelect={() => router.push('/search/maps')}>
-				<BoxIcon />
-				Maps
-			</DropdownMenuItem>
-			<DropdownMenuItem onSelect={() => router.push('/search/mods')}>
-				<MagicWandIcon />
-				Mods
-			</DropdownMenuItem>
-			<DropdownMenuItem onSelect={() => router.push('/user')}>
-				<HomeIcon />
-				Dashboard
-			</DropdownMenuItem>
-			<IsAdmin>
-				<DropdownMenuItem onSelect={() => router.push('/admin')}>
-					Admin
+			<DropdownMenuGroup>
+				<DropdownMenuItem onSelect={() => router.push('/search')}>
+					<MagnifyingGlassIcon className="mr-2" />
+					Search
 				</DropdownMenuItem>
-			</IsAdmin>
+				<DropdownMenuItem onSelect={() => router.push('/search/maps')}>
+					<BoxIcon className="mr-2" />
+					Maps
+				</DropdownMenuItem>
+				<DropdownMenuItem onSelect={() => router.push('/search/mods')}>
+					<MagicWandIcon className="mr-2" />
+					Mods
+				</DropdownMenuItem>
+			</DropdownMenuGroup>
+			<DropdownMenuSeparator />
+			<DropdownMenuGroup>
+				<DropdownMenuItem onSelect={() => router.push('/user')}>
+					<HomeIcon className="mr-2" />
+					Dashboard
+				</DropdownMenuItem>
+				<IsAdmin>
+					<DropdownMenuItem onSelect={() => router.push('/admin')}>
+						Admin
+					</DropdownMenuItem>
+				</IsAdmin>
+			</DropdownMenuGroup>
+			<DropdownMenuSeparator />
+			<DropdownMenuGroup>
+				<DropdownMenuSub>
+					<DropdownMenuSubTrigger>
+						{theme === "dark" ? <MoonIcon className="mr-2" /> : <SunIcon className="mr-2" /> }
+						Theme
+					</DropdownMenuSubTrigger>
+					<DropdownMenuPortal>
+					<DropdownMenuSubContent>
+						<DropdownMenuItem onSelect={() => setTheme("light")}>
+							Light
+						</DropdownMenuItem>
+						<DropdownMenuItem onSelect={() => setTheme("dark")}>
+							Dark
+						</DropdownMenuItem>
+					</DropdownMenuSubContent>
+					</DropdownMenuPortal>
+				</DropdownMenuSub>
+			</DropdownMenuGroup>
 		</DropdownMenuContent>
 		</DropdownMenu>
   	)
