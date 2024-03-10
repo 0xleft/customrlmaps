@@ -3,15 +3,22 @@ import prisma from "@/lib/prisma";
 import formidable, {errors as formidableErrors} from 'formidable';
 import { z } from 'zod'
 
+import { S3Client } from '@aws-sdk/client-s3'
+import { v4 as uuidv4 } from 'uuid'
+
+
 export default async function handler(req, res) {
 	const user = await getAllUserInfo(req);
+
 	if (!user) {
 		return res.status(401).json({ error: "Unauthorized" });
 	}
+
 	const form = formidable({});
 	let fields;
     let files;
-    try {
+
+	try {
         [fields, files] = await form.parse(req);
     } catch (err) {
         return res.status(400).json({ error: "An error occured" });
@@ -43,7 +50,14 @@ export default async function handler(req, res) {
 		return res.status(400).json({ error: "Validation error" });
 	}
 
-	console.log(files);
+	// prisma validation
+
+	// upload to bucket
+	const client = new S3Client({ region: process.env.AWS_REGION })
+	const bucket = process.env.AWS_BUCKET_NAME
+	
+
+	// create prisma stuff
 
 	return res.status(200).json({ message: "Created" });
 }
