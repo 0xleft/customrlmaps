@@ -61,7 +61,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
             user: {
                 username: dbUser.username,
                 imageUrl: dbUser.imageUrl,
-                created: dbUser.createdAt.getUTCDate(),
+                created: `${dbUser.createdAt.getDate()}/${dbUser.createdAt.getMonth()}/${dbUser.createdAt.getFullYear()}`,
                 roles: dbUser.roles,
             },
             topMaps: topMaps.map((map) => {
@@ -97,8 +97,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
 
 export default function UserPage({ user, topMaps, topMods, modCount, mapCount }) {
-    console.log(user.roles)
-
     return (
         <>
             <div className="container p-4">
@@ -118,9 +116,11 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount })
                             <span className="text-xs text-muted-foreground">
                                 Joined {user.created}
                             </span>
-                        </div>               
+                        </div>         
                     </CardHeader>
                     <CardContent>
+                        <div>
+                        </div>
                         <div>
                         </div>
                         <div>
