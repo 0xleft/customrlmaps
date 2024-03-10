@@ -157,11 +157,8 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
 
                         <DateComponent text={`Joined ${user.created}`} />
 
-                        {/* description */}
-                        <CardDescription>
-                            <div className="flex items-center space-x-2">
-                                {/*user.description ? <div>{user.description}</div> : <div className='text-muted-foreground'>No description</div>*/}
-                            </div>
+                        <CardDescription className={user.description ? "" : "text-muted-foreground"}>
+                            {user.description ? user.description : "No description"}
                         </CardDescription>
                     </CardHeader>
 
@@ -174,8 +171,9 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                             <TabsContent value="maps">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                                     {topMaps.map((map) => {
+                                        {/* // todo fix the link */}
                                         return (
-                                            <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/map/${map.id}`} />
+                                            <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/maps/${map.name}`} />
                                         );
                                     })}
                                 </div>
@@ -184,22 +182,21 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                             <TabsContent value="mods">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                                     {topMods.map((mod) => {
+                                        {/* // todo fix the link */}
                                         return (
-                                            <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/mod/${mod.id}`} />
+                                            <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/mods/${mod.name}`} />
                                         );
                                     })}
                                 </div>
                                 {topMods.length === 0 ? <div className='text-muted-foreground'>User has not published any mods</div> : ""}
                             </TabsContent>
                         </Tabs>
-                        
-                        
                     </CardContent>
                     <CardFooter className="flex justify-between">
                         <Button asChild>
                             {user.isOwner ? <Link href="/user">Settings</Link> : ""}
                         </Button>
-                        {/*<div className='text-muted-foreground'>Published {modCount} mods and {mapCount} maps</div>*/}
+                        {<div className='text-muted-foreground'>Published {modCount} mods and {mapCount} maps</div>}
                     </CardFooter>
                 </Card>
             </div>

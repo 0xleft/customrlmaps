@@ -11,11 +11,11 @@ export const getServerSideProps = async ({ req, res }) => {
 
 export default function ModPage() {
     const router = useRouter();
-    const { id } = router.query;
+    const { modname } = router.query;
 
     return (
 		<div>
-			<h1>Mod ID: {id}</h1>
+			<h1>Mod name: {modname}</h1>
 		</div>
     );
 };

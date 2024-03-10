@@ -11,11 +11,11 @@ export const getServerSideProps = async ({ req, res }) => {
 
 export default function MapsPage () {
     const router = useRouter();
-    const { id } = router.query;
+    const { mapname } = router.query;
 
     return (
         <div>
-            <h1>Maps ID: {id}</h1>
+            <h1>Maps name: {mapname}</h1>
         </div>
     );
 };
