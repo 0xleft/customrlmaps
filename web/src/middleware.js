@@ -13,6 +13,8 @@ export default authMiddleware({
   publicRoutes: [
     "/",
     "/maps",
+    "/search",
+    "/mods",
     "/sign-in",
     "/sign-up",
   ]

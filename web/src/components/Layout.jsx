@@ -1,14 +1,22 @@
 import Footer from "./Footer";
 import Navbar from "./Navbar";
+import { ThemeProvider } from "@/components/ThemeProvider"
 
 const RootLayout = ({ children }) => {
 	return (
 		<>
-			<Navbar />
-			<main className="min-h-screen">
-				{children}
-			</main>
-			<Footer />
+			<ThemeProvider
+				attribute="class"
+				defaultTheme="system"
+				enableSystem
+				disableTransitionOnChange
+          	>
+				<Navbar />
+				<main className="min-h-screen">
+					{children}
+				</main>
+				<Footer />
+			</ThemeProvider>
 		</>
  );
 };

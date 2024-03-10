@@ -33,7 +33,7 @@ const MapSearchForm = () => {
     
     function onSubmit(values) {
         router.push({
-            pathname: "/maps",
+            pathname: "/search",
             query: { query: values.query },
         });
     }

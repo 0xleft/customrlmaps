@@ -17,9 +17,15 @@ model User {
   username String @unique
   description String?
   clerkId String @unique
+  email String @unique
+  imageUrl String? @default("https://www.gravatar.com/avatar/")
+
+  roles String[]
 
   maps Map[]
   mapLikes MapLike[]
+  mods Mod[]
+  modLikes ModLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -46,6 +52,42 @@ model Map {
 
   versions MapVersion[]
   likes MapLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Mod {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  imageUrl String?
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+
+  versions ModVersion[]
+  likes ModLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ModVersion {
+  id Int @id @default(autoincrement())
+  mod Mod @relation(fields: [modId], references: [id])
+  modId Int
+  version String
+  downloadUrl String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ModLike {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  mod Mod @relation(fields: [modId], references: [id])
+  modId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
