@@ -1,10 +1,19 @@
 import { getAllUserInfo } from "@/utils/apiUtils";
 import prisma from "@/lib/prisma";
-import formidable, {errors as formidableErrors} from 'formidable';
 import { z } from 'zod'
 
 import { S3Client } from '@aws-sdk/client-s3'
-import { v4 as uuidv4 } from 'uuid'
+import { createHash } from "crypto";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+
+const client = new S3Client({ region: process.env.AWS_REGION });
+
+const schema = z.object({
+	name: z.string().min(1, { message: "Name must not be empty" }),
+	description: z.string().min(1, { message: "Description must not be empty" }),
+	longDescription: z.string().min(1, { message: "Long description must not be empty" }),
+	type: z.enum(["mod", "map"]),
+})
 
 
 export default async function handler(req, res) {
@@ -14,56 +23,96 @@ export default async function handler(req, res) {
 		return res.status(401).json({ error: "Unauthorized" });
 	}
 
-	const form = formidable({});
-	let fields;
-    let files;
-
-	try {
-        [fields, files] = await form.parse(req);
-    } catch (err) {
-        return res.status(400).json({ error: "An error occured" });
-    }
-
-	const formSchema = z.object({
-		file: z.any(),
-		name: z.string().min(1, {
-			message: "Name must not be empty",
-		}),
-		description: z.string().min(1, {
-			message: "Description must not be empty",
-		}),
-		longDescription: z.string().min(1, {
-			message: "Long description must not be empty",
-		}),
-		banner: z.any()
-	})
-
-	try {
-		formSchema.parse({
-			file: files.file[0],
-			name: fields.name[0],
-			description: fields.description[0],
-			longDescription: fields.longDescription[0],
-			banner: files.banner[0],
-		});
-	} catch (err) {
-		return res.status(400).json({ error: "Validation error" });
+	if (req.method !== "POST") {
+		return res.status(405).json({ error: "Method not allowed" });
 	}
 
-	// prisma validation
+	try {
+		const parsed = schema.parse(JSON.parse(req.body));
 
-	// upload to bucket
-	const client = new S3Client({ region: process.env.AWS_REGION })
-	const bucket = process.env.AWS_BUCKET_NAME
-	
+		const filename = createHash("sha256").update(parsed.name + "file").digest("hex");
+		const bannername = createHash("sha256").update(parsed.name + "banner").digest("hex");
+		
+		const exists = await prisma.project.findFirst({
+			where: {
+				name: parsed.name,
+				type: parsed.type.toUpperCase(),
+			}
+		});
+		
+		if (exists) {
+			return res.status(400).json({ error: "Already exists" });
+		}
 
-	// create prisma stuff
+		// create presigned post
+		const fileReturn = await createPresignedPost(client, {
+			Bucket: process.env.AWS_BUCKET_NAME,
+			Key: `${parsed.type}s/${filename}`,
+			Conditions: [
+				['content-length-range', 100, 5242880],
+				{ 'Content-Type': 
+					parsed.type === "mod" ? "application/x-msdownload" : "application/octet-stream"
+				},
+			],
+			Fields: {
+				acl: "public-read",
+				"Content-Type": parsed.type === "mod" ? "application/x-msdownload" : "application/octet-stream",
+			},
+			Expires: 60,
+		});
 
-	return res.status(200).json({ message: "Created" });
+		const bannerReturn = await createPresignedPost(client, {
+			Bucket: process.env.AWS_BUCKET_NAME,
+			Key: `banners/${bannername}`,
+			Conditions: [
+				['content-length-range', 100, 5242880],
+				{ 'Content-Type': "image/png" },
+			],
+			Fields: {
+				acl: "public-read",
+				"Content-Type": "image/png", 
+			},
+			Expires: 60,
+		});
+
+		// create the mod/map
+		const project = await prisma.project.create({
+			data: {
+				name: parsed.name,
+				description: parsed.description,
+				longDescription: parsed.longDescription,
+				type: parsed.type.toUpperCase(),
+				userId: user.dbUser.id,
+				imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/banners/${bannername}`,
+			},
+		});
+
+		// create the initial version
+		await prisma.version.create({
+			data: {
+				project: {
+					connect: {
+						id: project.id,
+					},
+				},
+				version: "1.0.0",
+				downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${parsed.type}s/${filename}`,
+				changes: "Initial version",
+			},
+		})
+
+		console.log(fileReturn);
+		console.log(bannerReturn);
+
+		return res.status(200).json({
+			fileUrl: fileReturn.url,
+			fileFields: fileReturn.fields,
+			bannerUrl: bannerReturn.url,
+			bannerFields: bannerReturn.fields,
+		});
+	} catch (e) {
+		return res.status(400).json(process.env.NODE_ENV === "development" ? { error: e.message} : { error: "An error occurred"});
+	}
+
+	return res.status(500).json({ error: "An error occurred" });
 }
-
-export const config = {
-	api: {
-		bodyParser: false,
-	},
-};

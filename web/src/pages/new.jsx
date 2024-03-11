@@ -2,7 +2,6 @@ import { Inter } from "next/font/google";
 import { Button } from "@/components/ui/button";
 
 const inter = Inter({ subsets: ["latin"] });
-import ReactDOMServer from 'react-dom/server';
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { set, z } from "zod";
@@ -83,26 +82,72 @@ export default function New() {
     
     function onSubmit(values) {
 		setUploading(true);
-		const formData = new FormData();
-		formData.append('file', values.file[0]);
-		formData.append('name', values.name);
-		formData.append('description', values.description);
-		formData.append('longDescription', values.longDescription);
-		formData.append('banner', values.banner[0]);
-		formData.append('type', type);
 
 		fetch(`/api/new`, {
 			method: "POST",
-			body: formData,
+			body: JSON.stringify({
+				...values,
+				type: type,
+			}),
 		}).then((res) => res.json()).then((data) => {
 			if (data.error) {
 				toast.error("An error occurred! " + data.error);
+				setUploading(false);
+				return;
 			}
-			toast.success("Message: " + data.message);
+			toast.success("Started uploading file...");
+			const { fileUrl, fileFields, bannerUrl, bannerFields } = data;
+			const secondFormData = new FormData();
+			Object.keys(fileFields).forEach((key) => {
+				secondFormData.append(key, fileFields[key]);
+			});
+			secondFormData.append('file', values.file[0]);
+			fetch(fileUrl, {
+				method: "POST",
+				body: secondFormData,
+			}).then((res) => res.json()).then((data) => {
+				if (data.error) {
+					toast.error("An error occurred! " + data.error);
+					setUploading(false);
+					return;
+				}
+				toast.success("File uploaded successfully!");
+			}).catch((err) => {
+				toast.error("An error occurred! " + err);
+				setUploading(false);
+				return;
+			});
+
+			const thirdFormData = new FormData();
+			
+			Object.keys(bannerFields).forEach((key) => {
+				thirdFormData.append(key, bannerFields[key]);
+			});
+			thirdFormData.append('banner', values.banner[0]);
+
+			fetch(bannerUrl, {
+				method: "POST",
+				body: thirdFormData,
+			}).then((res) => res.json()).then((data) => {
+				if (data.error) {
+					toast.error("An error occurred! " + data.error);
+					setUploading(false);
+					return;
+				}
+				toast.success("Banner uploaded successfully!");
+
+				// todo: redirect to the new page
+			}).catch((err) => {
+				toast.error("An error occurred! " + err);
+				setUploading(false);
+				return;
+			});
+
 			setUploading(false);
 		}).catch((err) => {
 			toast.error("An error occurred! " + err);
 			setUploading(false);
+			return;
 		});
     }
 
@@ -205,7 +250,7 @@ export default function New() {
 												<FormItem>
 													<FormLabel>Banner</FormLabel>
 													<FormControl>
-														<Input type="file" {...bannerRef} />
+														<Input type="file" {...bannerRef} accept="image/png, image/jpeg, image/jpg" />
 													</FormControl>
 													<FormMessage />
 												</FormItem>

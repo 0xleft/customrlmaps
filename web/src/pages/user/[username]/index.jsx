@@ -51,9 +51,10 @@ export const getServerSideProps = async ({ req, res, params }) => {
     }
 
 
-    const topMaps = await prisma.map.findMany({
+    const topMaps = await prisma.project.findMany({
         where: {
-            publishStatus: "PUBLISHED"
+            publishStatus: "PUBLISHED",
+            type: "MAP",
         },
         take: 3,
         orderBy: {
@@ -66,9 +67,10 @@ export const getServerSideProps = async ({ req, res, params }) => {
         },
     });
       
-    const topMods = await prisma.mod.findMany({
+    const topMods = await prisma.project.findMany({
         where: {
-            publishStatus: "PUBLISHED"
+            publishStatus: "PUBLISHED",
+            type: "MOD",
         },
         take: 3,
         orderBy: {
@@ -106,15 +108,17 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 };
             }),
 
-            modCount: await prisma.mod.count({
+            modCount: await prisma.project.count({
                 where: {
                     userId: dbUser.id,
+                    type: "MOD",
                 }
             }),
 
-            mapCount: await prisma.mod.count({
+            mapCount: await prisma.project.count({
                 where: {
                     userId: dbUser.id,
+                    type: "MAP",
                 }
             })
         },
