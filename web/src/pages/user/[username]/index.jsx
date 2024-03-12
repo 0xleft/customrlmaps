@@ -53,7 +53,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     const topMaps = await prisma.project.findMany({
         where: {
-            publishStatus: "PUBLISHED",
             type: "MAP",
         },
         take: 3,
@@ -177,7 +176,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                                     {topMaps.map((map) => {
                                         {/* // todo fix the link */}
                                         return (
-                                            <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/maps/${map.name}`} />
+                                            <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/maps/${map.name}`} description={map.description} image={map.imageUrl} />
                                         );
                                     })}
                                 </div>
@@ -188,7 +187,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                                     {topMods.map((mod) => {
                                         {/* // todo fix the link */}
                                         return (
-                                            <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/mods/${mod.name}`} />
+                                            <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/mods/${mod.name}`} image={mod.imageUrl} />
                                         );
                                     })}
                                 </div>

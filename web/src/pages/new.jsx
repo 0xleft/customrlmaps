@@ -105,9 +105,9 @@ export default function New() {
 			fetch(fileUrl, {
 				method: "POST",
 				body: secondFormData,
-			}).then((res) => res.json()).then((data) => {
-				if (data.error) {
-					toast.error("An error occurred! " + data.error);
+			}).then((res) => {
+				if (res.status !== 204) {
+					toast.error("An error occurred! " + res.statusText);
 					setUploading(false);
 					return;
 				}
@@ -123,25 +123,26 @@ export default function New() {
 			Object.keys(bannerFields).forEach((key) => {
 				thirdFormData.append(key, bannerFields[key]);
 			});
-			thirdFormData.append('banner', values.banner[0]);
+			thirdFormData.append('file', values.banner[0]);
 
 			fetch(bannerUrl, {
 				method: "POST",
 				body: thirdFormData,
-			}).then((res) => res.json()).then((data) => {
-				if (data.error) {
-					toast.error("An error occurred! " + data.error);
+			}).then((res) => {
+				if (res.status !== 204) {
+					toast.error("An error occurred! " + res.statusText);
 					setUploading(false);
 					return;
 				}
-				toast.success("Banner uploaded successfully!");
 
-				// todo: redirect to the new page
+				toast.success("Banner uploaded successfully!");
 			}).catch((err) => {
 				toast.error("An error occurred! " + err);
 				setUploading(false);
 				return;
 			});
+
+			// todo redirect to new page
 
 			setUploading(false);
 		}).catch((err) => {

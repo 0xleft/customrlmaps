@@ -17,12 +17,8 @@ export function ItemCard( { title, description, image, id, createdAt, link } ) {
 
     const router = useRouter();
 
-    if (!title) {
-        title = "Title"
-    }
-
     if (!description) {
-        description = "grujeagregnaoiengoierang orngoanerg oineragi oingernaoi geroi ngaoier nger ngerng erin goierang oieran oigneraoig noag nerog ner"
+        description = "No description provided."
     }
 
     if (description.length > 100) {

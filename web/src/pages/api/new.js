@@ -6,7 +6,13 @@ import { S3Client } from '@aws-sdk/client-s3'
 import { createHash } from "crypto";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
-const client = new S3Client({ region: process.env.AWS_REGION });
+const client = new S3Client({
+	region: process.env.AWS_REGION,
+	credentials: {
+		accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+	},
+});
 
 const schema = z.object({
 	name: z.string().min(1, { message: "Name must not be empty" }),
@@ -48,12 +54,7 @@ export default async function handler(req, res) {
 		const fileReturn = await createPresignedPost(client, {
 			Bucket: process.env.AWS_BUCKET_NAME,
 			Key: `${parsed.type}s/${filename}`,
-			Conditions: [
-				['content-length-range', 100, 5242880],
-				{ 'Content-Type': 
-					parsed.type === "mod" ? "application/x-msdownload" : "application/octet-stream"
-				},
-			],
+			
 			Fields: {
 				acl: "public-read",
 				"Content-Type": parsed.type === "mod" ? "application/x-msdownload" : "application/octet-stream",
@@ -64,10 +65,7 @@ export default async function handler(req, res) {
 		const bannerReturn = await createPresignedPost(client, {
 			Bucket: process.env.AWS_BUCKET_NAME,
 			Key: `banners/${bannername}`,
-			Conditions: [
-				['content-length-range', 100, 5242880],
-				{ 'Content-Type': "image/png" },
-			],
+			
 			Fields: {
 				acl: "public-read",
 				"Content-Type": "image/png", 
