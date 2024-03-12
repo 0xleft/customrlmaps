@@ -53,9 +53,13 @@ export default function New() {
 		.refine((file) => checkFileType(file, type), type === "mod" ? "Only .dll formats are supported." : "Only .upk formats are supported."),
 		name: z.string().min(1, {
 			message: "Name must not be empty",
+		}).regex(/^[a-zA-Z0-9-_]+$/, {
+			message: "Only alphanumeric characters are allowed (a-z, A-Z, 0-9, - and _)",
 		}),
 		description: z.string().min(1, {
 			message: "Description must not be empty",
+		}).regex(/^[a-zA-Z0-9-_]+$/, {
+			message: "Only alphanumeric characters are allowed (a-z, A-Z, 0-9, - and _)",
 		}),
 		longDescription: z.string().min(1, {
 			message: "Long description must not be empty",

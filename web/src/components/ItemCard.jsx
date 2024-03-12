@@ -13,7 +13,7 @@ import Link from "next/link"
 import DateComponent from "./DateComponent"
 import { useRouter } from "next/router"
 
-export function ItemCard( { title, description, image, id, createdAt, link } ) {
+export function ItemCard( { title, description, image, createdAt, link } ) {
 
     const router = useRouter();
 
@@ -31,8 +31,7 @@ export function ItemCard( { title, description, image, id, createdAt, link } ) {
 
     return (
         <Card className="relative overflow-hidden">
-            {/* on hover make it expand */}
-            <img src={image} alt={title} className="absolute top-0 left-0 w-[33%] h-full object-cover rounded-s-md hover:cursor-pointer hover:w-[66%] transition-all"
+            <img src={image} alt={title} className="absolute top-0 left-0 w-[33%] h-full object-cover rounded-s-md hover:scale-105 hover:cursor-pointer transition-all"
             onClick={() => router.push(link || "/")} />
             <div className="ml-[33%]">
                 <CardHeader>
@@ -47,7 +46,7 @@ export function ItemCard( { title, description, image, id, createdAt, link } ) {
                     
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                    <DateComponent text={createdAt || "never"} />
+                    <DateComponent text={createdAt || "unknown"} />
                 </CardFooter>
             </div>
         </Card>

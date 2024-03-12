@@ -26,11 +26,12 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import FourOFour from '@/components/CustomError';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
         'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=0'
+        'public, s-maxage=10, stale-while-revalidate=60'
     )
 
     const { username } = params;
@@ -55,7 +56,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
         where: {
             type: "MAP",
         },
-        take: 3,
+        take: 6,
         orderBy: {
             likes: {
                 _count: 'desc',
@@ -71,7 +72,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
             publishStatus: "PUBLISHED",
             type: "MOD",
         },
-        take: 3,
+        take: 6,
         orderBy: {
             likes: {
                 _count: 'desc',
@@ -95,7 +96,9 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 return {
                     id: map.id,
                     name: map.name,
-                    created: map.createdAt.getDate(),
+                    description: map.description,
+                    imageUrl: map.imageUrl,
+                    created: `${map.createdAt.getDate()}/${map.createdAt.getMonth()}/${map.createdAt.getFullYear()}`
                 };
             }),
             topMods: topMods.map((mod) => {
@@ -103,7 +106,8 @@ export const getServerSideProps = async ({ req, res, params }) => {
                     id: mod.id,
                     name: mod.name,
                     description: mod.description,
-                    created: mod.createdAt.getDate(),
+                    imageUrl: mod.imageUrl,
+                    created: `${mod.createdAt.getDate()}/${mod.createdAt.getMonth()}/${mod.createdAt.getFullYear()}`,
                 };
             }),
 
@@ -111,6 +115,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 where: {
                     userId: dbUser.id,
                     type: "MOD",
+                    publishStatus: "PUBLISHED",
                 }
             }),
 
@@ -118,6 +123,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 where: {
                     userId: dbUser.id,
                     type: "MAP",
+                    publishStatus: "PUBLISHED",
                 }
             })
         },
@@ -129,79 +135,108 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
 
     if (notFound) {
         return (
-            <>
-                <div className="container p-4">
-                    <h1>User not found</h1>
-                </div>
-            </>
+            <FourOFour error="404">
+                <h1 className='text-muted-foreground'>User not found</h1>
+            </FourOFour>
         );
     }
 
     return (
         <>
-            <div className="container p-4">
-                <Card className="w-full">
-                    <CardHeader className="flex flex-col">
-                        <CardTitle>
-                            <div className='flex flex-row items-center space-x-2'>
-                                <Avatar>
-                                    <AvatarImage src={user.imageUrl} alt={user.username} />
-                                </Avatar>
-                                <div>
-                                    {user.username}
-                                </div>
-                                {user.roles.map((role) => {
-                                    return (
-                                        <Badge key={role} className="ml-2">{role}</Badge>
-                                    );
-                                })}
-                            </div>
-                        </CardTitle>
+            <div className='flex flex-row justify-center p-4 min-h-screen'>
+                <div className='hidden lg:flex lg:w-[20%] p-2'>
+                    <Card className="w-full">
+                        <CardHeader className="flex-col hidden lg:flex">
+                                <CardTitle>
+                                    <div className='flex flex-col space-y-2'>
+                                        <img src={user.imageUrl} alt={user.username} className='w-full max-w-[350px] rounded-full self-center' />
+                                        <p className='text-xl font-bold'>
+                                            {user.username}
+                                        </p>
+                                    </div>
+                                    <div className='flex flex-row items-center space-x-2'>
+                                        {user.roles.map((role) => {
+                                            return (
+                                                <Badge key={role} className="">{role}</Badge>
+                                            );
+                                        })}
+                                    </div>
+                                </CardTitle>
 
-                        <DateComponent text={`Joined ${user.created}`} />
 
-                        <CardDescription className={user.description ? "" : "text-muted-foreground"}>
-                            {user.description ? user.description : "No description"}
-                        </CardDescription>
-                    </CardHeader>
+                                <CardDescription className={user.description ? "" : "text-muted-foreground"}>
+                                    {user.description ? user.description : "No description"}
+                                </CardDescription>
 
-                    <CardContent>
-                        <Tabs defaultValue='maps'>
-                            <TabsList className="grid w-full grid-cols-2">
-                                <TabsTrigger value="maps">Maps</TabsTrigger>
-                                <TabsTrigger value="mods">Mods</TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="maps">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                                    {topMaps.map((map) => {
-                                        {/* // todo fix the link */}
-                                        return (
-                                            <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/maps/${map.name}`} description={map.description} image={map.imageUrl} />
-                                        );
-                                    })}
-                                </div>
-                                {topMaps.length === 0 ? <div className='text-muted-foreground'>User has not published any maps</div> : ""}
-                            </TabsContent>
-                            <TabsContent value="mods">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                                    {topMods.map((mod) => {
-                                        {/* // todo fix the link */}
-                                        return (
-                                            <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/mods/${mod.name}`} image={mod.imageUrl} />
-                                        );
-                                    })}
-                                </div>
-                                {topMods.length === 0 ? <div className='text-muted-foreground'>User has not published any mods</div> : ""}
-                            </TabsContent>
-                        </Tabs>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                        <Button asChild>
-                            {user.isOwner ? <Link href="/user">Settings</Link> : ""}
-                        </Button>
-                        {<div className='text-muted-foreground'>Published {modCount} mods and {mapCount} maps</div>}
-                    </CardFooter>
-                </Card>
+                                <DateComponent text={`Joined ${user.created}`} />
+                            </CardHeader>
+                    </Card>
+                </div>
+
+                <div className="w-full p-2 lg:w-[66%] min-h-screen">
+                    <Card className="w-full h-full">
+                        <CardHeader className="flex-col flex lg:hidden">
+                                <CardTitle>
+                                    <div className='flex flex-row items-center space-x-2'>
+                                        <Avatar>
+                                            <AvatarImage src={user.imageUrl} alt={user.username} />
+                                        </Avatar>
+                                        <div>
+                                            {user.username}
+                                        </div>
+                                        {user.roles.map((role) => {
+                                            return (
+                                                <Badge key={role} className="ml-2">{role}</Badge>
+                                            );
+                                        })}
+                                    </div>
+                                </CardTitle>
+
+                                <DateComponent text={`Joined ${user.created}`} />
+
+                                <CardDescription className={user.description ? "" : "text-muted-foreground"}>
+                                    {user.description ? user.description : "No description"}
+                                </CardDescription>
+                        </CardHeader>
+
+                        <CardContent className="mt-0 lg:mt-4">
+                            <Tabs defaultValue='maps'>
+                                <TabsList className="grid w-full grid-cols-2">
+                                    <TabsTrigger value="maps">Maps</TabsTrigger>
+                                    <TabsTrigger value="mods">Mods</TabsTrigger>
+                                </TabsList>
+                                <TabsContent value="maps">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                                        {topMaps.map((map) => {
+                                            {/* // todo fix the link */}
+                                            return (
+                                                <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/${map.name}`} description={map.description} image={map.imageUrl} />
+                                            );
+                                        })}
+                                    </div>
+                                    {topMaps.length === 0 ? <div className='text-muted-foreground'>User has not published any maps</div> : ""}
+                                </TabsContent>
+                                <TabsContent value="mods">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                                        {topMods.map((mod) => {
+                                            {/* // todo fix the link */}
+                                            return (
+                                                <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/${mod.name}`} image={mod.imageUrl} />
+                                            );
+                                        })}
+                                    </div>
+                                    {topMods.length === 0 ? <div className='text-muted-foreground'>User has not published any mods</div> : ""}
+                                </TabsContent>
+                            </Tabs>
+                        </CardContent>
+                        <CardFooter className="flex justify-between">
+                            <Button asChild>
+                                {user.isOwner ? <Link href="/user">Settings</Link> : ""}
+                            </Button>
+                            {<div className='text-muted-foreground'>Published {modCount} mods and {mapCount} maps</div>}
+                        </CardFooter>
+                    </Card>
+                </div>
             </div>
         </>
     );

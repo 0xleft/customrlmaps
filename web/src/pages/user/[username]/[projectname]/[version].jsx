@@ -9,13 +9,13 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 
-export default function ModPage() {
+export default function MapsPage () {
     const router = useRouter();
-    const { modname } = router.query;
+    const { mapname, version } = router.query;
 
     return (
-		<div>
-			<h1>Mod name: {modname}</h1>
-		</div>
+        <div>
+            <h1>Maps name: {mapname} version {version}</h1>
+        </div>
     );
 };
