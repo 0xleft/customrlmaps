@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import prisma from "@/lib/prisma";
 import CustomError from "@/components/CustomError";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
 import { getAllUserInfo } from "@/utils/apiUtils";
 import { ItemCard } from "@/components/ItemCard";
 import {
@@ -13,6 +13,9 @@ import {
 	PaginationNext,
 	PaginationPrevious,
   } from "@/components/ui/pagination"
+import { Badge } from "@/components/ui/badge";
+import DateComponent from "@/components/DateComponent";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
   
 
 const inter = Inter({ subsets: ["latin"] });
@@ -71,6 +74,10 @@ export const getServerSideProps = async ({ req, res, params }) => {
 			props: {
 				user: {
 					username: dbUser.username,
+					imageUrl: dbUser.imageUrl,
+					roles: dbUser.roles,
+					description: dbUser.description,
+					created: `${dbUser.createdAt.getDate()}/${dbUser.createdAt.getMonth()}/${dbUser.createdAt.getFullYear()}`,
 				},
 				projects: projects.map((project) => {
 					return {
@@ -105,46 +112,95 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 
 	return (
 		<>
-            <div className="container p-4 min-h-screen">
-                <Card className="w-full h-full min-h-screen">
-                    <CardHeader className="flex flex-col">
-                        <CardTitle>
-							{user.username}'s projects
-                        </CardTitle>
-					</CardHeader>
+<div className='flex flex-row justify-center p-4 min-h-screen'>
+                <div className='hidden lg:flex lg:w-[20%] p-2'>
+                    <Card className="w-full">
+                        <CardHeader className="flex-col hidden lg:flex">
+                                <CardTitle>
+                                    <div className='flex flex-col space-y-2'>
+                                        <img src={user.imageUrl} alt={user.username} className='w-full max-w-[350px] rounded-full self-center' />
+                                        <p className='text-xl font-bold'>
+                                            {user.username}
+                                        </p>
+                                    </div>
+                                    <div className='flex flex-row items-center space-x-2'>
+                                        {user.roles.map((role) => {
+                                            return (
+                                                <Badge key={role} className="">{role}</Badge>
+                                            );
+                                        })}
+                                    </div>
+                                </CardTitle>
 
-					<CardContent className="h-full">
-						{projects.map((project) => {
-							return (
-								<div key={project.name} className="mb-4">
-									<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} />
-								</div>
-							);
-						})}
-					</CardContent>
 
-					<CardFooter>
-						<Pagination>
-							<PaginationContent>
-								<PaginationItem>
-								<PaginationPrevious href={currentPage === 1 ? "#" : `/user/${user.username}/projects?page=${currentPage - 1}`} />
-								</PaginationItem>
-								<PaginationItem>
-								<PaginationLink href="#" aria-current="page">
-									{currentPage}
-								</PaginationLink>
-								</PaginationItem>
-								<PaginationItem>
-								<PaginationEllipsis />
-								</PaginationItem>
-								<PaginationItem>
-								<PaginationNext href={currentPage === maxPage ? "#" : `/user/${user.username}/projects?page=${currentPage + 1}`} />
-								</PaginationItem>
-							</PaginationContent>
-						</Pagination>
-					</CardFooter>
-				</Card>
-			</div>
+                                <CardDescription className={user.description ? "" : "text-muted-foreground"}>
+                                    {user.description ? user.description : "No description"}
+                                </CardDescription>
+
+                                <DateComponent text={`Joined ${user.created}`} />
+                            </CardHeader>
+                    </Card>
+                </div>
+
+                <div className="w-full p-2 lg:w-[66%] min-h-screen">
+					<Card className="w-full h-full min-h-screen">
+						<CardHeader className="flex-col flex lg:hidden">
+									<CardTitle>
+										<div className='flex flex-row items-center space-x-2'>
+											<Avatar>
+												<AvatarImage src={user.imageUrl} alt={user.username} />
+											</Avatar>
+											<div>
+												{user.username}
+											</div>
+											{user.roles.map((role) => {
+												return (
+													<Badge key={role} className="ml-2">{role}</Badge>
+												);
+											})}
+										</div>
+									</CardTitle>
+
+									<DateComponent text={`Joined ${user.created}`} />
+
+									<CardDescription className={user.description ? "" : "text-muted-foreground"}>
+										{user.description ? user.description : "No description"}
+									</CardDescription>
+						</CardHeader>
+
+						<CardContent className="h-full">
+							{projects.map((project) => {
+								return (
+									<div key={project.name} className="mb-4">
+										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/user/${user.username}/${project.name}`} />
+									</div>
+								);
+							})}
+						</CardContent>
+
+						<CardFooter>
+							<Pagination>
+								<PaginationContent>
+									<PaginationItem>
+									<PaginationPrevious href={currentPage === 1 ? "#" : `/user/${user.username}/projects?page=${currentPage - 1}`} />
+									</PaginationItem>
+									<PaginationItem>
+									<PaginationLink href="#" aria-current="page">
+										{currentPage}
+									</PaginationLink>
+									</PaginationItem>
+									<PaginationItem>
+									<PaginationEllipsis />
+									</PaginationItem>
+									<PaginationItem>
+									<PaginationNext href={currentPage === maxPage ? "#" : `/user/${user.username}/projects?page=${currentPage + 1}`} />
+									</PaginationItem>
+								</PaginationContent>
+							</Pagination>
+						</CardFooter>
+					</Card>
+                </div>
+            </div>
 		</>
 	);
 }
