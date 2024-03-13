@@ -11,6 +11,10 @@ async function getAllUserInfo(req) {
         return null;
     }
 
+    if (!user.userId) {
+        return null;
+    }
+
     const dbUser = await prisma.user.findUnique({
         where: {
             clerkId: user.userId,

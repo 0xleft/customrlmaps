@@ -15,6 +15,32 @@ import Markdown from "react-markdown";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import { getAllUserInfo } from "@/utils/apiUtils";
+
+
+export const getServerSideProps = async ({ req, res, params }) => {
+    res.setHeader(
+        'Cache-Control',
+        'public, s-maxage=10, stale-while-revalidate=60'
+    )
+
+	const user = await getAllUserInfo(req);
+	if (!user) {
+		return {
+			props: {
+				user: null,
+			},
+		};
+	}
+
+	return {
+		props: {
+			user: {
+				username: user.dbUser.username,
+			}
+		}
+	}
+};
 
 function checkFileType(file, type) {
 	if (!file) {
@@ -43,9 +69,13 @@ function checkBannerType(file) {
     return false;
 }
 
-export default function New() {
+export default function New( { user }) {
 	const router = useRouter();
 	const type = router.query.type;
+
+	if (!user) {
+		router.push("/sign-in");
+	}
 
     const formSchema = z.object({
 		file: z.any()
@@ -99,7 +129,7 @@ export default function New() {
 				setUploading(false);
 				return;
 			}
-			toast.success("Started uploading file...");
+			toast.success("Started uploading files...");
 			const { fileUrl, fileFields, bannerUrl, bannerFields } = data;
 			const secondFormData = new FormData();
 			Object.keys(fileFields).forEach((key) => {
@@ -115,7 +145,6 @@ export default function New() {
 					setUploading(false);
 					return;
 				}
-				toast.success("File uploaded successfully!");
 			}).catch((err) => {
 				toast.error("An error occurred! " + err);
 				setUploading(false);
@@ -139,14 +168,13 @@ export default function New() {
 					return;
 				}
 
-				toast.success("Banner uploaded successfully!");
+				toast.success("Uploaded successfully!");
+				router.push(`/user/${user.username}/projects/${values.name}`);
 			}).catch((err) => {
 				toast.error("An error occurred! " + err);
 				setUploading(false);
 				return;
 			});
-
-			// todo redirect to new page
 
 			setUploading(false);
 		}).catch((err) => {

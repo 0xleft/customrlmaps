@@ -29,7 +29,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
 	try {
-		const currentUser = getAllUserInfo(req);
+		const currentUser = await getAllUserInfo(req);
 		const { username } = params;
 	
 		const dbUser = await prisma.user.findUnique({
@@ -48,24 +48,29 @@ export const getServerSideProps = async ({ req, res, params }) => {
 	
 		const page = parseInt(new URL(req.url, "https://localhost").searchParams.get('page')) || 1;
 	
+		let projectQuery = {
+			where: {
+				userId: dbUser.id,
+			},
+			take: PER_PAGE,
+			skip: (page - 1) * PER_PAGE,
+			orderBy: {
+				createdAt: "desc",
+			},
+		};
+
+		// todo
+		if (!currentUser || currentUser.dbUser.id !== dbUser.id) {
+			projectQuery.where.publishStatus = "PUBLISHED";
+		}
+
 		const projects = await prisma.project.findMany(
-			{
-				where: {
-					userId: dbUser.id,
-					// publishStatus: (currentUser && currentUser.id === dbUser.id) ? undefined : "PUBLISHED",
-				},
-				take: PER_PAGE,
-				skip: (page - 1) * PER_PAGE,
-				orderBy: {
-					createdAt: "desc",
-				},
-			}
+			projectQuery
 		);
 	
 		const maxPage = await prisma.project.count({
 			where: {
 				userId: dbUser.id,
-				// publishStatus: (currentUser && currentUser.id === dbUser.id) ? undefined : "PUBLISHED",
 			},
 		});
 	
@@ -172,7 +177,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 							{projects.map((project) => {
 								return (
 									<div key={project.name} className="mt-4">
-										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/user/${user.username}/${project.name}`} />
+										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/user/${user.username}/projects/${project.name}`} />
 									</div>
 								);
 							})}

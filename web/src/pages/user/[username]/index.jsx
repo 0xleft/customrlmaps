@@ -27,6 +27,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import FourOFour from '@/components/CustomError';
+import { getAllUserInfo } from '@/utils/apiUtils';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -35,7 +36,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { username } = params;
-    
+    const currentUser = await getAllUserInfo(req);
 
     const dbUser = await prisma.user.findUnique({
         where: {
@@ -52,7 +53,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     }
 
 
-    const topMaps = await prisma.project.findMany({
+    let mapsQuery = {
         where: {
             type: "MAP",
         },
@@ -65,23 +66,21 @@ export const getServerSideProps = async ({ req, res, params }) => {
         include: {
             likes: true,
         },
-    });
+    };
+
+    if (!currentUser || currentUser?.dbUser.id !== dbUser.id) {
+        mapsQuery.where.publishStatus = "PUBLISHED";
+    }
+
+    const topMaps = await prisma.project.findMany(
+        mapsQuery
+    );
+
+    let modsQuery = {...mapsQuery, where: { type: "MOD" }};
       
-    const topMods = await prisma.project.findMany({
-        where: {
-            publishStatus: "PUBLISHED",
-            type: "MOD",
-        },
-        take: 6,
-        orderBy: {
-            likes: {
-                _count: 'desc',
-            },
-        },
-        include: {
-            likes: true,
-        },
-    });
+    const topMods = await prisma.project.findMany(
+        modsQuery
+    );
 
 	return {
 		props: {
@@ -210,7 +209,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                                         {topMaps.map((map) => {
                                             {/* // todo fix the link */}
                                             return (
-                                                <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/${map.name}`} description={map.description} image={map.imageUrl} />
+                                                <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/projects/${map.name}`} description={map.description} image={map.imageUrl} />
                                             );
                                         })}
                                     </div>
@@ -221,7 +220,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                                         {topMods.map((mod) => {
                                             {/* // todo fix the link */}
                                             return (
-                                                <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/${mod.name}`} image={mod.imageUrl} />
+                                                <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/projects/${mod.name}`} image={mod.imageUrl} />
                                             );
                                         })}
                                     </div>

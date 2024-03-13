@@ -15,7 +15,8 @@ const client = new S3Client({
 });
 
 const schema = z.object({
-	name: z.string().min(1, { message: "Name must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }),
+	name: z.string().min(1, { message: "Name must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }).
+	refine((file) => file === "projects", { error: "Bad filename" }),
 	description: z.string().min(1, { message: "Description must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Description must only contain letter characters" }),
 	longDescription: z.string().min(1, { message: "Long description must not be empty" }),
 	type: z.enum(["mod", "map"]),
@@ -36,8 +37,7 @@ export default async function handler(req, res) {
 	try {
 		const parsed = schema.parse(JSON.parse(req.body));
 
-		const filename = createHash("sha256").update(parsed.name + "file").digest("hex");
-		const bannername = createHash("sha256").update(parsed.name + "banner").digest("hex");
+		
 		
 		const exists = await prisma.project.findFirst({
 			where: {
@@ -49,6 +49,9 @@ export default async function handler(req, res) {
 		if (exists) {
 			return res.status(400).json({ error: "Already exists" });
 		}
+
+		const filename = createHash("sha256").update(parsed.name + "file").digest("hex");
+		const bannername = createHash("sha256").update(parsed.name + "banner").digest("hex");
 
 		// create presigned post
 		const fileReturn = await createPresignedPost(client, {
