@@ -145,41 +145,39 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
                 <div className="w-full p-2 lg:w-[66%] min-h-screen">
 					<Card className="w-full h-full min-h-screen">
 						<CardHeader className="flex-col flex lg:hidden">
-									<CardTitle>
-										<div className='flex flex-row items-center space-x-2'>
-											<Avatar>
-												<AvatarImage src={user.imageUrl} alt={user.username} />
-											</Avatar>
-											<div>
-												{user.username}
-											</div>
-											{user.roles.map((role) => {
-												return (
-													<Badge key={role} className="ml-2">{role}</Badge>
-												);
-											})}
-										</div>
-									</CardTitle>
+							<CardTitle>
+								<div className='flex flex-row items-center space-x-2'>
+									<Avatar>
+										<AvatarImage src={user.imageUrl} alt={user.username} />
+									</Avatar>
+									<div>
+										{user.username}
+									</div>
+									{user.roles.map((role) => {
+										return (
+											<Badge key={role} className="ml-2">{role}</Badge>
+										);
+									})}
+								</div>
+							</CardTitle>
 
-									<DateComponent text={`Joined ${user.created}`} />
+							<DateComponent text={`Joined ${user.created}`} />
 
-									<CardDescription className={user.description ? "" : "text-muted-foreground"}>
-										{user.description ? user.description : "No description"}
-									</CardDescription>
+							<CardDescription className={user.description ? "" : "text-muted-foreground"}>
+								{user.description ? user.description : "No description"}
+							</CardDescription>
 						</CardHeader>
 
 						<CardContent className="h-full">
 							{projects.map((project) => {
 								return (
-									<div key={project.name} className="mb-4">
+									<div key={project.name} className="mt-4">
 										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/user/${user.username}/${project.name}`} />
 									</div>
 								);
 							})}
-						</CardContent>
 
-						<CardFooter>
-							<Pagination>
+							<Pagination className="mt-10">
 								<PaginationContent>
 									<PaginationItem>
 									<PaginationPrevious href={currentPage === 1 ? "#" : `/user/${user.username}/projects?page=${currentPage - 1}`} />
@@ -197,6 +195,10 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 									</PaginationItem>
 								</PaginationContent>
 							</Pagination>
+						</CardContent>
+
+						<CardFooter className="">
+							
 						</CardFooter>
 					</Card>
                 </div>
