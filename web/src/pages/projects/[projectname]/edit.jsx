@@ -91,6 +91,7 @@ export default function MapsPage ( { project, notFound, versions, canEdit }) {
         );
     }
 
+    // todo installation
     const router = useRouter();
     const [selectedVersion, setSelectedVersion] = useState("");
 
