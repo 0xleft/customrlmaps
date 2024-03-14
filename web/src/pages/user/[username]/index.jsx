@@ -26,8 +26,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import FourOFour from '@/components/CustomError';
 import { getAllUserInfo } from '@/utils/apiUtils';
+import CustomError from '@/components/CustomError';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -97,7 +97,9 @@ export const getServerSideProps = async ({ req, res, params }) => {
                     name: map.name,
                     description: map.description,
                     imageUrl: map.imageUrl,
-                    created: `${map.createdAt.getDate()}/${map.createdAt.getMonth()}/${map.createdAt.getFullYear()}`
+                    created: `${map.createdAt.getDate()}/${map.createdAt.getMonth()}/${map.createdAt.getFullYear()}`,
+                    status: map.publishStatus,
+                    type: map.type
                 };
             }),
             topMods: topMods.map((mod) => {
@@ -107,6 +109,8 @@ export const getServerSideProps = async ({ req, res, params }) => {
                     description: mod.description,
                     imageUrl: mod.imageUrl,
                     created: `${mod.createdAt.getDate()}/${mod.createdAt.getMonth()}/${mod.createdAt.getFullYear()}`,
+                    status: mod.publishStatus,
+                    type: mod.type
                 };
             }),
 
@@ -129,14 +133,13 @@ export const getServerSideProps = async ({ req, res, params }) => {
 	};
 };
 
-
 export default function UserPage({ user, topMaps, topMods, modCount, mapCount, notFound }) {
 
     if (notFound) {
         return (
-            <FourOFour error="404">
+            <CustomError error="404">
                 <h1 className='text-muted-foreground'>User not found</h1>
-            </FourOFour>
+            </CustomError>
         );
     }
 
@@ -198,18 +201,18 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                                 </CardDescription>
                         </CardHeader>
 
-                        <CardContent className="mt-0 lg:mt-4">
+                        <CardContent className="mt-0 lg:mt-4 min-h-screen">
                             <Tabs defaultValue='maps'>
                                 <TabsList className="grid w-full grid-cols-2">
-                                    <TabsTrigger value="maps">Maps</TabsTrigger>
-                                    <TabsTrigger value="mods">Mods</TabsTrigger>
+                                    <TabsTrigger value="maps">Top Maps</TabsTrigger>
+                                    <TabsTrigger value="mods">Top Mods</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="maps">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                                         {topMaps.map((map) => {
                                             {/* // todo fix the link */}
                                             return (
-                                                <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/projects/${map.name}`} description={map.description} image={map.imageUrl} />
+                                                <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/user/${user.username}/projects/${map.name}`} description={map.description} image={map.imageUrl} isPrivate={map.status === "DRAFT"} type={map.type} />
                                             );
                                         })}
                                     </div>
@@ -220,7 +223,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                                         {topMods.map((mod) => {
                                             {/* // todo fix the link */}
                                             return (
-                                                <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/projects/${mod.name}`} image={mod.imageUrl} />
+                                                <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/user/${user.username}/projects/${mod.name}`} image={mod.imageUrl} isPrivate={mod.status === "DRAFT"} type={mod.type} />
                                             );
                                         })}
                                     </div>

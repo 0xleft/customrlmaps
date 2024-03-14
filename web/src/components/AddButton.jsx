@@ -14,7 +14,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/router"
-import { BoxIcon, MagicWandIcon } from "@radix-ui/react-icons"
+import { BoxIcon, MagicWandIcon, RocketIcon } from "@radix-ui/react-icons"
 
 export function AddButton() {
     const router = useRouter();
@@ -30,7 +30,7 @@ export function AddButton() {
 			<DropdownMenuLabel>Create</DropdownMenuLabel>
 			<DropdownMenuSeparator />
 			<DropdownMenuItem value="map" onSelect={() => router.push("/new?type=map")}>
-				<BoxIcon className="mr-2" />
+				<RocketIcon className="mr-2" />
 				Map
 			</DropdownMenuItem>
 			<DropdownMenuItem value="mod" onSelect={() => router.push("/new?type=mod")}>

@@ -12,8 +12,10 @@ import {
 import Link from "next/link"
 import DateComponent from "./DateComponent"
 import { useRouter } from "next/router"
+import { LockClosedIcon } from "@radix-ui/react-icons"
+import { Badge } from "./ui/badge"
 
-export function ItemCard( { title, description, image, createdAt, link } ) {
+export function ItemCard( { title, description, image, createdAt, link, isPrivate, type } ) {
 
     const router = useRouter();
 
@@ -36,8 +38,9 @@ export function ItemCard( { title, description, image, createdAt, link } ) {
             <div className="ml-[33%]">
                 <CardHeader>
                     <CardTitle>
-                        <Link href={link || "/"} className="hover:underline">
+                        <Link href={link || "/"} className="hover:underline flex flex-row space-x-4">
                             {title}
+                            {isPrivate && <LockClosedIcon className="w-6 h-6" />}
                         </Link>
                     </CardTitle>
                     <CardDescription>{description}</CardDescription>
@@ -45,8 +48,9 @@ export function ItemCard( { title, description, image, createdAt, link } ) {
                 <CardContent>
                     
                 </CardContent>
-                <CardFooter className="flex justify-between">
+                <CardFooter className="flex justify-between items-center">
                     <DateComponent text={createdAt || "unknown"} />
+                    <Badge className="">{type}</Badge>
                 </CardFooter>
             </div>
         </Card>

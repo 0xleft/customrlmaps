@@ -90,6 +90,8 @@ export const getServerSideProps = async ({ req, res, params }) => {
 						description: project.description,
 						imageUrl: project.imageUrl,
 						createdAt: `${project.createdAt.getDate()}/${project.createdAt.getMonth()}/${project.createdAt.getFullYear()}`,
+						type: project.type,
+						status: project.publishStatus,
 					};
 				}),
 				currentPage: page,
@@ -117,7 +119,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 
 	return (
 		<>
-<div className='flex flex-row justify-center p-4 min-h-screen'>
+			<div className='flex flex-row justify-center p-4 min-h-screen'>
                 <div className='hidden lg:flex lg:w-[20%] p-2'>
                     <Card className="w-full">
                         <CardHeader className="flex-col hidden lg:flex">
@@ -177,7 +179,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 							{projects.map((project) => {
 								return (
 									<div key={project.name} className="mt-4">
-										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/user/${user.username}/projects/${project.name}`} />
+										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/user/${user.username}/projects/${project.name}`} type={project.type} isPrivate={project.status === "DRAFT"} />
 									</div>
 								);
 							})}

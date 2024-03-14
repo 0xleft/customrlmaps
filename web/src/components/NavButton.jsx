@@ -17,8 +17,7 @@ import {
 import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu"
 import { useRouter } from 'next/router';
 import IsAdmin from "./IsAdmin";
-import { MagnifyingGlassIcon, HomeIcon, MagicWandIcon, BoxIcon, SunIcon, MoonIcon } from "@radix-ui/react-icons";
-import { Sun } from "lucide-react";
+import { MagnifyingGlassIcon, HomeIcon, MagicWandIcon, BoxIcon, SunIcon, MoonIcon, RocketIcon, LockClosedIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 
 export function NavButton() {
@@ -42,7 +41,7 @@ export function NavButton() {
 					Search
 				</DropdownMenuItem>
 				<DropdownMenuItem onSelect={() => router.push('/search/maps')}>
-					<BoxIcon className="mr-2" />
+					<RocketIcon className="mr-2" />
 					Maps
 				</DropdownMenuItem>
 				<DropdownMenuItem onSelect={() => router.push('/search/mods')}>
@@ -58,6 +57,7 @@ export function NavButton() {
 				</DropdownMenuItem>
 				<IsAdmin>
 					<DropdownMenuItem onSelect={() => router.push('/admin')}>
+						<LockClosedIcon className="mr-2" />
 						Admin
 					</DropdownMenuItem>
 				</IsAdmin>

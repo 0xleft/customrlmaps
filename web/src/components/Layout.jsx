@@ -25,16 +25,19 @@ const RootLayout = ({ children }) => {
 			progressInterval = setInterval(() => {
 				setProgress((oldProgress) => {
 					if (oldProgress >= 90) {
-						clearInterval(progressInterval);
 						return 90;
 					}
 					return oldProgress + 10;
 				});
 			}, 100);
 		};
+
 		const end = () => {
 			clearInterval(progressInterval);
-			setProgress(100);
+			setProgress(99);
+			setTimeout(() => {
+				setProgress(100);
+			}, 100);
 		};
 
 		Router.events.on('routeChangeStart', start);

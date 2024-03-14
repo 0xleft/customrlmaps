@@ -16,12 +16,11 @@ const client = new S3Client({
 
 const schema = z.object({
 	name: z.string().min(1, { message: "Name must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }).
-	refine((file) => file === "projects", { error: "Bad filename" }),
+	refine((file) => file !== "projects", { error: "Bad filename" }),
 	description: z.string().min(1, { message: "Description must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Description must only contain letter characters" }),
 	longDescription: z.string().min(1, { message: "Long description must not be empty" }),
 	type: z.enum(["mod", "map"]),
 })
-
 
 export default async function handler(req, res) {
 	const user = await getAllUserInfo(req);

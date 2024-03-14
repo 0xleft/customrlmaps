@@ -253,7 +253,9 @@ export default function New( { user }) {
 									<TabsContent value="preview">
 										<Card>
 											<CardContent className="mt-4">
-												<article class="prose"><Markdown>{longDescription}</Markdown></article>
+												<article class="prose"><Markdown
+													allowedElements={["h1", "h2", "h3", "h4", "h5", "h6", "p", "ul", "ol", "li", "a", "strong", "em", "code", "img", "blockquote", "hr", "br"]}
+												>{longDescription}</Markdown></article>
 											</CardContent>
 										</Card>
 									</TabsContent>
