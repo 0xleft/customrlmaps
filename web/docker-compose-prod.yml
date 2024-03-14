@@ -3,13 +3,11 @@ services:
   database:
     image: postgres:latest
     environment:
-      POSTGRES_USER: admin
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: customrlmaps
     volumes:
       - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432"
     networks:
       - internal-customrlmaps
 

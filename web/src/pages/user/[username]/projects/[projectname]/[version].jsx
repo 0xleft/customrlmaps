@@ -9,7 +9,7 @@ export const getServerSideProps = async ({ req, res }) => {
 };
 
 
-export default function MapsPage () {
+export default function VersionMapsPage () {
     const router = useRouter();
     const { mapname, version } = router.query;
 

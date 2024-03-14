@@ -1,3 +1,4 @@
+import { Combobox } from '@/components/Combobox';
 import CustomError from '@/components/CustomError';
 import DateComponent from '@/components/DateComponent';
 import { Badge } from '@/components/ui/badge';
@@ -15,8 +16,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
         'public, s-maxage=10, stale-while-revalidate=60'
     )
 
-    console.log(params);
-
     const { username, projectname } = params;
     const currentUser = await getAllUserInfo(req);
 
@@ -33,8 +32,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
             },
         };
     }
-
-    console.log(projectname)
 
     const project = await prisma.project.findUnique({
         where: {
@@ -63,6 +60,14 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     });
 
+
+    // get versions
+    const versions = await prisma.version.findMany({
+        where: {
+            projectId: project.id,
+        }
+    });
+
 	return {
 		props: {
             project: {
@@ -77,6 +82,13 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 publishStatus: project.publishStatus,
                 type: project.type,
             },
+            versions: versions.map(version => {
+                return {
+                    version: version.version,
+                    changelog: version.changelog,
+                    downloadUrl: version.downloadUrl,
+                };
+            }),
         },
 	};
 };
@@ -124,6 +136,7 @@ export default function MapsPage ( { project, notFound }) {
                                     }} className='mt-4'>
                                         Install
                                     </Button>
+                                    <Combobox />
                                 </div>
                                 
                             </CardTitle>
