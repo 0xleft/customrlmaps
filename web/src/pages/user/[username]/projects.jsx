@@ -179,7 +179,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 							{projects.map((project) => {
 								return (
 									<div key={project.name} className="mt-4">
-										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/user/${user.username}/projects/${project.name}`} type={project.type} isPrivate={project.status === "DRAFT"} />
+										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/projects/${project.name}`} type={project.type} isPrivate={project.status === "DRAFT"} />
 									</div>
 								);
 							})}

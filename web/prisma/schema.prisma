@@ -34,17 +34,6 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-model Version {
-  id Int @id @default(autoincrement())
-  project Project @relation(fields: [projectId], references: [id])
-  projectId Int
-  version String
-  downloadUrl String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  changes String
-}
-
 model Project {
   type ProjectType
   id Int @id @default(autoincrement())
@@ -64,6 +53,17 @@ model Project {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Version {
+  id Int @id @default(autoincrement())
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  version String
+  downloadUrl String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  changes String
 }
 
 model Like {

@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function Combobox( { onSelect = () => {}, values = [{ value: "test", label: "test" }], initialValue = "", title = "" }) {
+export function Combobox( { onSelect = () => {}, values = [], initialValue = "", title = "" }) {
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState(initialValue);
 
@@ -48,7 +48,7 @@ export function Combobox( { onSelect = () => {}, values = [{ value: "test", labe
                     value={obj.value}
                     onSelect={(currentValue) => {
                         onSelect(currentValue)
-                        setValue(currentValue)
+                        setValue(currentValue === value ? "" : currentValue)
                         setOpen(false)
                     }}
                 >

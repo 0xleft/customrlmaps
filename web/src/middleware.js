@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
 import { getUserRoles, hasRole } from "./utils/userUtils";
 
-const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api*", "/user/*", "/search*"];
+const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api*", "/user/*", "/search*", "/projects/*"];
  
 const isPublic = (path) => {
-	console.log(path);
 	return publicPaths.find((x) =>
 		path.match(new RegExp(`^${x}$`.replace("*$", "(.*)$")))
 	);
