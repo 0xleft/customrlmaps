@@ -49,14 +49,18 @@ export default async function handler(req, res) {
 			return res.status(400).json({ error: "Already exists" });
 		}
 
-		const filename = createHash("sha256").update(parsed.name + "file").digest("hex");
-		const bannername = createHash("sha256").update(parsed.name + "banner").digest("hex");
+		const currentTime = new Date().getTime();
+
+		const filename = createHash("sha256").update(parsed.name + `3641file${currentTime}`).digest("hex");
+		const bannername = createHash("sha256").update(parsed.name + `3641banner${currentTime}`).digest("hex");
 
 		// create presigned post
 		const fileReturn = await createPresignedPost(client, {
 			Bucket: process.env.AWS_BUCKET_NAME,
 			Key: `${parsed.type}s/${filename}`,
-			
+			Conditions: [
+				["content-length-range", 0, 100000000] // 100mb
+			],
 			Fields: {
 				acl: "public-read",
 				"Content-Type": parsed.type === "mod" ? "application/x-msdownload" : "application/octet-stream",
@@ -67,7 +71,10 @@ export default async function handler(req, res) {
 		const bannerReturn = await createPresignedPost(client, {
 			Bucket: process.env.AWS_BUCKET_NAME,
 			Key: `banners/${bannername}`,
-			
+			Conditions: [
+				["content-length-range", 0, 10000000], // 10mb
+				["starts-with", "$Content-Type", "image/"],
+			],
 			Fields: {
 				acl: "public-read",
 				"Content-Type": "image/png", 

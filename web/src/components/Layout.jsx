@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress"
+import { Toaster } from "sonner";
 
 function progressBar() {
 
@@ -74,6 +75,7 @@ const RootLayout = ({ children }) => {
 				</main>
 				
 				<Footer />
+				<Toaster />
 			</ThemeProvider>
 		</>
  );

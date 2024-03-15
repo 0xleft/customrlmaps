@@ -6,18 +6,9 @@ import { S3Client } from '@aws-sdk/client-s3'
 import { createHash } from "crypto";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
-const client = new S3Client({
-	region: process.env.AWS_REGION,
-	credentials: {
-		accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-	},
-});
-
 const schema = z.object({
-	name: z.string().min(1, { message: "Name must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }),
+	name: z.any(),
 })
-
 
 export default async function handler(req, res) {
 	const user = await getAllUserInfo(req);
@@ -33,24 +24,32 @@ export default async function handler(req, res) {
 	try {
 		const parsed = schema.parse(JSON.parse(req.body));
 
-        const project = await prisma.project.findFirst({
+        const project = await prisma.project.findUnique({
             where: {
                 name: parsed.name,
             }
         });
 
-        if (!exists) {
-            return res.status(400).json({ error: "Does not exist" }); 
+        if (!project) {
+            return res.status(400).json({ error: "Project not found" });
         }
 
-        const likes = await prisma.like.count({
+        if (project.userId !== user.dbUser.id) {
+            return res.status(403).json({ error: "Forbidden" });
+        }
+
+        await prisma.project.update({
             where: {
-                projectId: project.id,
+                name: parsed.name,
+            },
+            data: {
+                deletedAt: new Date(),
+                publishStatus: "DELETED",
             }
         });
 
-        return res.status(200).json({ likes: likes });
-    } catch (e) {
+        return res.status(200).json({ message: "Deleted" });
+	} catch (e) {
 		return res.status(400).json(process.env.NODE_ENV === "development" ? { error: e.message} : { error: "An error occurred"});
 	}
 

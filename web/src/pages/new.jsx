@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { getAllUserInfo } from "@/utils/apiUtils";
+import { UpdateIcon } from "@radix-ui/react-icons";
 
 
 export const getServerSideProps = async ({ req, res, params }) => {
@@ -69,7 +70,7 @@ function checkBannerType(file) {
     return false;
 }
 
-export default function New( { user }) {
+export default function NewProject ( { user }) {
 	const router = useRouter();
 	const type = router.query.type;
 
@@ -169,7 +170,7 @@ export default function New( { user }) {
 				}
 
 				toast.success("Uploaded successfully!");
-				router.push(`/user/${user.username}/projects/${values.name}`);
+				router.push(`/projects/${values.name}`);
 			}).catch((err) => {
 				toast.error("An error occurred! " + err);
 				setUploading(false);
@@ -237,7 +238,7 @@ export default function New( { user }) {
 											name="longDescription"
 											render={({ field }) => (
 												<FormItem>
-													<FormLabel>README description (supports some markdown)</FormLabel>
+													<FormLabel>README description (supports limited markdown)</FormLabel>
 													<FormControl>
 														<Textarea placeholder="Long description" {...field} className="h-96" onChange={(e) => {
 																setLongDescription(e.target.value);
@@ -296,7 +297,8 @@ export default function New( { user }) {
 								<div className="w-full justify-between flex flex-row">
 									<div className=""></div>
 									<Button type="submit" className="md:w-[33%] w-full" disabled={uploading}>
-											{uploading ? "Uploading..." : "Upload"}
+											<UpdateIcon className={"animate-spin " + (uploading ? "block" : "hidden")} />
+											{uploading ? "" : "Upload"}
 									</Button>
 								</div>
 							</form>
@@ -304,7 +306,6 @@ export default function New( { user }) {
 					</CardContent>
 				</Card>
 			</div>
-			<Toaster />
 		</>
 	);
 }

@@ -10,6 +10,7 @@ datasource db {
 enum PublishStatus {
   DRAFT
   PUBLISHED
+  DELETED
 }
 
 enum ProjectType {
@@ -32,6 +33,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
 }
 
 model Project {
@@ -53,6 +56,8 @@ model Project {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
 }
 
 model Version {
@@ -64,6 +69,8 @@ model Version {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   changes String
+
+  deletedAt DateTime?
 }
 
 model Like {
@@ -75,4 +82,6 @@ model Like {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  deletedAt DateTime?
 }

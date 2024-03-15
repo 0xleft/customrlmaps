@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { getAllUserInfo } from '@/utils/apiUtils';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import { Separator } from '@radix-ui/react-dropdown-menu';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -28,6 +29,14 @@ export const getServerSideProps = async ({ req, res, params }) => {
     });
 
     if (!project || project.publishStatus !== "PUBLISHED" && (!currentUser || currentUser.dbUser?.id !== project.userId)) {
+        return {
+            props: {
+                notFound: true,
+            },
+        };
+    }
+
+    if (project.publishStatus === "DELETED") {
         return {
             props: {
                 notFound: true,
@@ -82,7 +91,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 };
 
 
-export default function MapsPage ( { project, notFound, versions, canEdit }) {
+export default function ProjectIndex ( { project, notFound, versions, canEdit }) {
     if (notFound) {
         return (
             <CustomError error="404">
@@ -91,6 +100,7 @@ export default function MapsPage ( { project, notFound, versions, canEdit }) {
         );
     }
 
+    // todo install
     const router = useRouter();
     const [selectedVersion, setSelectedVersion] = useState("");
 
@@ -114,7 +124,7 @@ export default function MapsPage ( { project, notFound, versions, canEdit }) {
                     <CardHeader className="flex-col flex">
                         <CardTitle className="flex md:flex-row justify-between flex-col">
                             <div className='w-full'>
-                                <h1 className='text-4xl font-bold underline flex md:flex-row flex-col'>
+                                <h1 className='text-4xl font-bold flex md:flex-row flex-col'>
                                     <p>
                                         {project.name}
                                     </p>
@@ -150,10 +160,11 @@ export default function MapsPage ( { project, notFound, versions, canEdit }) {
                     </CardHeader>
 
                     <CardContent className="min-h-screen">
+                            
                         <div className='flex md:flex-row flex-col'>
-                            <div className='md:w-[55%]'>
+                            <div className='md:w-[55%] overflow-clip'>
                                 <AspectRatio ratio={16 / 9} className="bg-muted overflow-clip">
-                                    <img src={project.imageUrl} alt={`Unable to load image for ${project.name}`} className="rounded-lg object-cover w-full" />
+                                    <img src={project.imageUrl} alt={`Unable to load image for ${project.name}`} className="rounded-md object-cover w-full" />
                                 </AspectRatio>
                             </div>
 
@@ -193,7 +204,7 @@ export default function MapsPage ( { project, notFound, versions, canEdit }) {
                             <h2 className='text-xl md:text-2xl font-bold'>Long description:</h2>
                             <Card className='mt-4'>
                                 <CardContent className="mt-4">
-                                    <article class="prose"><Markdown
+                                    <article className="prose"><Markdown
                                         allowedElements={["h1", "h2", "h3", "h4", "h5", "h6", "p", "ul", "ol", "li", "a", "strong", "em", "code", "img", "blockquote", "hr", "br"]}
                                     >{project.longDescription}</Markdown></article>
                                 </CardContent>
