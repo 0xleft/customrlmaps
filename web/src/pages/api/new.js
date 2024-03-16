@@ -15,8 +15,7 @@ const client = new S3Client({
 });
 
 const schema = z.object({
-	name: z.string().min(1, { message: "Name must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }).
-	refine((file) => file !== "projects", { error: "Bad filename" }),
+	name: z.string().min(1, { message: "Name must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }),
 	description: z.string().min(1, { message: "Description must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Description must only contain letter characters" }),
 	longDescription: z.string().min(1, { message: "Long description must not be empty" }),
 	type: z.enum(["mod", "map"]),
@@ -91,19 +90,14 @@ export default async function handler(req, res) {
 				type: parsed.type.toUpperCase(),
 				userId: user.dbUser.id,
 				imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/banners/${bannername}`,
+				latestVersion: "1.0.0",
 			},
 		});
 
 		// create the initial version
 		await prisma.version.create({
 			data: {
-				project: {
-					connect: {
-						id: project.id,
-					},
-				},
 				projectId: project.id,
-				isLatest: true,
 				version: "1.0.0",
 				downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${parsed.type}s/${filename}`,
 				changes: "Initial version",

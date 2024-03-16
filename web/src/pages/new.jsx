@@ -170,7 +170,7 @@ export default function NewProject ( { user }) {
 				}
 
 				toast.success("Uploaded successfully!");
-				router.push(`/projects/${values.name}`);
+				router.push(`/project/${values.name}`);
 			}).catch((err) => {
 				toast.error("An error occurred! " + err);
 				setUploading(false);

@@ -66,7 +66,7 @@ export function VersionDialog({ versions = [], projectname, open, onClose }) {
                         onClick={
                             () => {
                                 open = false;
-                                router.push(`/projects/${projectname}/${selectedVersion}/edit`);
+                                router.push(`/project/${projectname}/version/${selectedVersion}/edit`);
                             }
                         }
                         disabled={selectedVersion == ""}

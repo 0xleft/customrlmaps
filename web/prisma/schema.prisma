@@ -49,6 +49,7 @@ model Project {
   downloads Int @default(0)
   views Int @default(0)
   longDescription String?
+  latestVersion String?
 
   tags String[]
   versions Version[]
@@ -69,7 +70,6 @@ model Version {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   changes String
-  isLatest Boolean @default(false)
 
   deletedAt DateTime?
 }

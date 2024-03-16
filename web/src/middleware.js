@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
-import { getUserRoles, hasRole } from "./utils/userUtils";
 
-const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api*", "/user/*", "/search*", "/projects/*"];
+const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api*", "/user/*", "/search*", "/project/*"];
  
 const isPublic = (path) => {
 	return publicPaths.find((x) =>
@@ -18,8 +17,9 @@ export default authMiddleware({
 		
 		return NextResponse.next();
   	},
+	ignoredRoutes: [`/((?!api|trpc|project))(_next.*|.+\\.[\\w]+$)`],
 });
 
 export const config = {
-	matcher: ["/((?!.+\\.[\\w]+$|_next).*)","/","/(api|trpc)(.*)"],
+    matcher: ["/((?!.+\\.[\\w]+$|_next).*)","/","/(api|trpc|project)(.*)"],
 };

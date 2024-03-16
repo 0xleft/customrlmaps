@@ -182,7 +182,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 							{projects.map((project) => {
 								return (
 									<div key={project.name} className="mt-4">
-										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/projects/${project.name}`} type={project.type} isPrivate={project.status === "DRAFT"} />
+										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/project/${project.name}`} type={project.type} isPrivate={project.status === "DRAFT"} />
 									</div>
 								);
 							})}
@@ -190,7 +190,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 							<Pagination className="mt-10">
 								<PaginationContent>
 									<PaginationItem>
-									<PaginationPrevious href={currentPage === 1 ? "#" : `/user/${user.username}/projects?page=${currentPage - 1}`} />
+									<PaginationPrevious href={currentPage === 1 ? "#" : `/user/${user.username}/project?page=${currentPage - 1}`} />
 									</PaginationItem>
 									<PaginationItem>
 									<PaginationLink href="#" aria-current="page">
@@ -201,7 +201,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 									<PaginationEllipsis />
 									</PaginationItem>
 									<PaginationItem>
-									<PaginationNext href={currentPage === maxPage ? "#" : `/user/${user.username}/projects?page=${currentPage + 1}`} />
+									<PaginationNext href={currentPage === maxPage ? "#" : `/user/${user.username}/project?page=${currentPage + 1}`} />
 									</PaginationItem>
 								</PaginationContent>
 							</Pagination>

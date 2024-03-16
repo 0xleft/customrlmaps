@@ -77,6 +77,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 publishStatus: project.publishStatus,
                 type: project.type,
                 views: project.views,
+                latestVersion: project.latestVersion,
             },
             versions: versions.map(version => {
                 return {
@@ -106,25 +107,28 @@ export default function ProjectIndex ( { project, notFound, versions, canEdit })
 
     // maybe a better method to make the latest version the first in the list
     let versionsList = [];
-    versionsList = versionsList.concat([{
-        value: "latest",
-        label: "Latest",
-    }]);
-    versionsList = versionsList.concat(versions.map(version => {
+    versionsList = versions.map(version => {
+        if (version.version === project.latestVersion) {
+            return {
+                value: version.version,
+                label: `${version.version} (latest)`,
+            };
+        }
+        
         return {
             value: version.version,
             label: version.version,
         };
-    }));
+    }).reverse();
 
     return (
         <>
             <div className='container pt-6'>
-                <Card className="w-full p-4">
+                <Card className="w-full">
                     <CardHeader className="flex-col flex">
-                        <CardTitle className="flex md:flex-row justify-between flex-col">
+                        <CardTitle className="flex md:flex-row justify-between flex-col items-center">
                             <div className='w-full'>
-                                <h1 className='text-4xl font-bold flex md:flex-row flex-col'>
+                                <h1 className='text-4xl flex md:flex-row flex-col'>
                                     <p>
                                         {project.name}
                                     </p>
@@ -142,21 +146,19 @@ export default function ProjectIndex ( { project, notFound, versions, canEdit })
                                 }}
                                 />
                                 <Button onClick={() => {
-                                    // todo
+                                    router.push(`/project/${project.name}/version/${selectedVersion}`);
                                 }} className='mt-4' disabled={!selectedVersion}>
-                                    Install
+                                    View
                                 </Button>
                                 {canEdit && <Button asChild>
-                                    <Link href={`/projects/${project.name}/edit`} className='mt-4' variant='outline'>Edit</Link>
+                                    <Link href={`/project/${project.name}/edit`} className='mt-4' variant='outline'>Edit</Link>
                                 </Button>}
                             </div>
                             
                         </CardTitle>
-
-
-                        <CardDescription >
+                        <CardDescription>
+                            Latest version {project.latestVersion}
                         </CardDescription>
-
                     </CardHeader>
 
                     <CardContent className="min-h-screen">

@@ -100,6 +100,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 publishStatus: project.publishStatus,
                 type: project.type,
                 views: project.views,
+                latestVersion: project.latestVersion,
             },
             versions: versions.map(version => {
                 return {
@@ -137,6 +138,9 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
     const router = useRouter();
 
     const formSchema = z.object({
+        description: z.string(),
+        longDescription: z.string(),
+        status: z.enum(["PUBLISHED", "DRAFT"]).optional(),
 	})
 
     const form = useForm({
@@ -157,7 +161,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
     function onSubmit(data) {
         setUploading(true);
 
-        fetch(`/api/projects/update`, {
+        fetch(`/api/project/update`, {
             method: "POST",
             body: JSON.stringify({
                 name: project.name,
@@ -207,7 +211,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
 
     function setStatus(status) {
         toast.loading("Updating status...");
-        fetch(`/api/projects/update`, {
+        fetch(`/api/project/update`, {
             method: "POST",
             body: JSON.stringify({
                 name: project.name,
@@ -254,7 +258,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                                     <DropdownMenuLabel>Settings</DropdownMenuLabel>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuGroup>
-                                                        <DropdownMenuItem onSelect={() => router.push(`/projects/${project.name}/version/new`)}>
+                                                        <DropdownMenuItem onSelect={() => router.push(`/project/${project.name}/version/new`)}>
                                                             New version
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem onSelect={() => {
@@ -296,6 +300,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                     </div>
                                 </CardTitle>
                                 <CardDescription>
+                                    <h1>Latest version {project.latestVersion}</h1>
                                 </CardDescription>
                             </CardHeader>
 

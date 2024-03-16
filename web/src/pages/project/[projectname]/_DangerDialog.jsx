@@ -62,7 +62,7 @@ export function DangerDialog({ projectname, open, onClose }) {
                     <Button variant="destructive" type="button" onClick={() => {
                         toast.loading("Deleting project...");
                         setLoading(true);
-                        fetch(`/api/projects/delete`, {
+                        fetch(`/api/project/delete`, {
                             method: 'POST',
                             body: JSON.stringify({
                                 name: projectname,

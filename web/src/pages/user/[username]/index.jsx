@@ -215,7 +215,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                                         {topMaps.map((map) => {
                                             {/* // todo fix the link */}
                                             return (
-                                                <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/projects/${map.name}`} description={map.description} image={map.imageUrl} isPrivate={map.status === "DRAFT"} type={map.type} />
+                                                <ItemCard key={map.id} title={map.name} createdAt={map.created} link={`/project/${map.name}`} description={map.description} image={map.imageUrl} isPrivate={map.status === "DRAFT"} type={map.type} />
                                             );
                                         })}
                                     </div>
@@ -226,7 +226,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                                         {topMods.map((mod) => {
                                             {/* // todo fix the link */}
                                             return (
-                                                <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/projects/${mod.name}`} image={mod.imageUrl} isPrivate={mod.status === "DRAFT"} type={mod.type} />
+                                                <ItemCard key={mod.id} title={mod.name} description={mod.description} createdAt={mod.created} link={`/project/${mod.name}`} image={mod.imageUrl} isPrivate={mod.status === "DRAFT"} type={mod.type} />
                                             );
                                         })}
                                     </div>
