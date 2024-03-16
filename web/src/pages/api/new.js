@@ -102,6 +102,8 @@ export default async function handler(req, res) {
 						id: project.id,
 					},
 				},
+				projectId: project.id,
+				isLatest: true,
 				version: "1.0.0",
 				downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${parsed.type}s/${filename}`,
 				changes: "Initial version",

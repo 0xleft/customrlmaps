@@ -3,22 +3,21 @@ import CustomError from '@/components/CustomError';
 import DateComponent from '@/components/DateComponent';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { getAllUserInfo } from '@/utils/apiUtils';
+import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+import Markdown from 'react-markdown';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { getAllUserInfo } from '@/utils/apiUtils';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, CircleIcon, ReloadIcon, UpdateIcon } from '@radix-ui/react-icons';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Markdown from 'react-markdown';
 import { z } from 'zod';
 import {
     DropdownMenu,
@@ -44,8 +43,6 @@ DialogTitle,
 DialogTrigger,
 } from "@/components/ui/dialog"
 import { Select } from '@/components/ui/select';
-import { VersionDialog } from './_VersionDialog';
-import { DangerDialog } from './_DangerDialog';
 import { Toaster, toast } from 'sonner';
 
 export const getServerSideProps = async ({ req, res, params }) => {
@@ -79,7 +76,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
         };
     }
 
-    // get versions
     const versions = await prisma.version.findMany({
         where: {
             projectId: project.id,
@@ -114,8 +110,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 };
 
 
-export default function EditProjectPage ( { project, notFound, versions, canEdit }) {
-
+export default function NewVersionProject({ project, notFound, canEdit }) {
     if (notFound) {
         return (
             <CustomError error="404">
@@ -132,95 +127,22 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
         );
     }
 
-    const [longDescription, setLongDescription] = useState(project.longDescription);
-    const [uploading, setUploading] = useState(false);
-    const router = useRouter();
-
-    const formSchema = z.object({
-	})
-
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            description: project.description,
-            longDescription: project.longDescription,
-            status: project.publishStatus,
-        },
-    });
-
-	const bannerRef = form.register("banner");
-    const [bannerSrc, setBannerSrc] = useState("");
-
     const [versionDialogOpen, setVersionDialogOpen] = useState(false);
     const [dangerDialogOpen, setDangerDialogOpen] = useState(false);
 
+    const [uploading, setUploading] = useState(false);
+
+    const form = useForm({
+        defaultValues: {
+            changes: "",
+            files: "",
+        }
+    });
+
+    const filesRef = form.register("files");    
+
     function onSubmit(data) {
-        setUploading(true);
-
-        fetch(`/api/projects/update`, {
-            method: "POST",
-            body: JSON.stringify({
-                name: project.name,
-                description: form.getValues().description,
-                longDescription: form.getValues().longDescription,
-                banner: form.getValues().banner,
-            }),
-        }).then((res) => res.json()).then((data) => {
-            if (data.error) {
-                toast.error("An error occurred! " + data.error);
-                setUploading(false);
-                return;
-            }
-
-            if (data.message) {
-                toast.loading("Started uploading files...");
-                const secondFormData = new FormData();
-                Object.keys(data.bannerFields).forEach((key) => {
-                    secondFormData.append(key, data.bannerFields[key]);
-                });
-                secondFormData.append('file', form.getValues().banner[0]);
-                fetch(data.bannerUrl, {
-                    method: "POST",
-                    body: secondFormData,
-                }).then((res) => {
-                    if (res.status !== 204) {
-                        toast.error("An error occurred! " + res.statusText);
-                        setUploading(false);
-                        return;
-                    }
-
-                    toast.success("Updated project");
-                    setUploading(false);
-                    router.reload();
-                }).catch((err) => {
-                    toast.error("An error occurred! " + err);
-                    setUploading(false);
-                    return;
-                });
-            } else {
-                toast.success("Updated project");
-                setUploading(false);
-                router.reload();
-            }
-        });
-    }
-
-    function setStatus(status) {
-        toast.loading("Updating status...");
-        fetch(`/api/projects/update`, {
-            method: "POST",
-            body: JSON.stringify({
-                name: project.name,
-                status: status,
-            }),
-        }).then((res) => res.json()).then((data) => {
-            if (data.error) {
-                toast.error("An error occurred! " + data.error);
-                return;
-            }
-            toast.success("Status: " + data.message);
-            router.reload();
-        });
+        console.log(data);
     }
 
     return (
@@ -235,7 +157,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                         <div className='w-full'>
                                             <h1 className='text-4xl flex md:flex-row flex-col font-bold'>
                                                 <p>
-                                                    Editing <span className='font-normal'>{project.name}</span>
+                                                    New version for <span className='font-normal'>{project.name}</span>
                                                 </p>
                                                 <div className='flex flex-row space-x-2 md:mt-1'>
                                                     <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.type}</Badge>
@@ -254,39 +176,15 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                                     <DropdownMenuLabel>Settings</DropdownMenuLabel>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuGroup>
-                                                        <DropdownMenuItem onSelect={() => router.push(`/projects/${project.name}/version/new`)}>
-                                                            New version
-                                                        </DropdownMenuItem>
                                                         <DropdownMenuItem onSelect={() => {
-                                                            // open dialog for version list and then select the version and then open the edit page for the version
-                                                            setVersionDialogOpen(true);
+                                                            setLatestVersionDialogOpen(true);
                                                         }}>
-                                                            Edit version
+                                                            Select latest version
                                                         </DropdownMenuItem>
                                                     </DropdownMenuGroup>
                                                     <DropdownMenuSeparator />
                                                     <DropdownMenuGroup>
-                                                        <DropdownMenuSub>
-                                                            <DropdownMenuSubTrigger>
-                                                                Status
-                                                            </DropdownMenuSubTrigger>
-                                                            <DropdownMenuPortal>
-                                                            <DropdownMenuSubContent>
-                                                                <DropdownMenuItem onSelect={() => setStatus("PUBLISHED")}>
-                                                                    {project.publishStatus === "PUBLISHED" ? <CheckIcon className="mr-2" /> : null}
-                                                                    Published
-                                                                </DropdownMenuItem>
-                                                                <DropdownMenuItem onSelect={() => setStatus("DRAFT")}>
-                                                                    {project.publishStatus === "DRAFT" ? <CheckIcon className="mr-2" /> : null}
-                                                                    Draft
-                                                                </DropdownMenuItem>
-                                                            </DropdownMenuSubContent>
-                                                            </DropdownMenuPortal>
-                                                        </DropdownMenuSub>
-                                                    </DropdownMenuGroup>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuGroup>
-                                                        <DropdownMenuItem onSelect={() => setDangerDialogOpen(true)}>
+                                                        <DropdownMenuItem onSelect={() => setVersionDeleteDialogOpen(true)}>
                                                             Delete
                                                         </DropdownMenuItem>
                                                     </DropdownMenuGroup>
@@ -301,17 +199,16 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
 
 
                             <CardContent className="space-y-10">
-
                                 <Separator className="border-b" />
 
                                 <FormField
                                     control={form.control}
-                                    name="description"
+                                    name="changes"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Description</FormLabel>
+                                            <FormLabel>Changes</FormLabel>
                                             <FormControl>
-                                                <Textarea placeholder="Description" {...field} onChange={(e) => {
+                                                <Textarea placeholder="Changes" {...field} onChange={(e) => {
                                                         field.onChange(e);
                                                     }}
                                                 />
@@ -321,64 +218,26 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                     )}
                                 />
 
-
-                                <Tabs defaultValue="raw">
-									<TabsList className="grid grid-cols-2">
-										<TabsTrigger value="raw">Raw</TabsTrigger>
-										<TabsTrigger value="preview">Preview</TabsTrigger>
-									</TabsList>
-									<TabsContent value="raw">
-										<FormField
-											control={form.control}
-											name="longDescription"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel>README description (supports limited markdown)</FormLabel>
-													<FormControl>
-														<Textarea placeholder="Long description" {...field} className="h-96" onChange={(e) => {
-																setLongDescription(e.target.value);
-																field.onChange(e);
-															}}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-									</TabsContent>
-									<TabsContent value="preview">
-										<Card>
-											<CardContent className="mt-4">
-												<article className="prose"><Markdown
-													allowedElements={["h1", "h2", "h3", "h4", "h5", "h6", "p", "ul", "ol", "li", "a", "strong", "em", "code", "img", "blockquote", "hr", "br"]}
-												>{longDescription}</Markdown></article>
-											</CardContent>
-										</Card>
-									</TabsContent>
-								</Tabs>
-
                                 <div className="flex flex-row space-x-4">
                                     <FormField
                                         control={form.control}
-                                        name="banner"
+                                        name="files"
                                         render={({ field }) => (
                                             <FormItem className="flex flex-col">
-                                                <FormLabel>Banner</FormLabel>
+                                                <FormLabel>Project files</FormLabel>
                                                 <div className='flex flex-row space-x-2'>
                                                     <FormControl>
-                                                        <Input type="file" {...bannerRef} accept="image/png, image/jpeg, image/jpg" onChange={(e) => {
-                                                            bannerRef.onChange(e);
+                                                        <Input type="file" {...filesRef} accept="image/png, image/jpeg, image/jpg" onChange={(e) => {
+                                                            filesRef.onChange(e);
                                                             const reader = new FileReader();
                                                             reader.onload = function(e) {
-                                                                setBannerSrc(e.target.result);
                                                             };
                                                             reader.readAsDataURL(e.target.files[0]);
                                                         }} />
                                                     </FormControl>
 
-                                                    <Button className={"" + (bannerSrc == "" ? "hidden" : "")} onClick={() => {
-                                                        form.setValue("banner", "");
-                                                        setBannerSrc("")
+                                                    <Button className={"" + (filesRef.name == "" ? "hidden" : "")} onClick={() => {
+                                                        form.setValue("files", "");
                                                     }}
                                                     type="button">Cancel</Button>
                                                 </div>
@@ -387,11 +246,6 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                         )}
                                     />
 								</div>
-                                <div className='max-h-[300px] overflow-clip'>
-                                    <AspectRatio ratio={16 / 9} className="bg-muted overflow-clip rounded-md max-h-[300px] max-w-[533px]">
-                                        <img src={bannerSrc} alt="Will not change" className="rounded-md object-cover w-full" />
-                                    </AspectRatio>
-                                </div>
 
                                 <div className='flex flex-row justify-between'>
                                     <div></div>
@@ -405,14 +259,14 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                             <CardFooter>
                                 <DateComponent text={`Last updated ${project.updated}`} />
 
-                                <VersionDialog open={versionDialogOpen} projectname={project.name} versions={versions.map((version) => {
+                                {/* <VersionDialog open={versionDialogOpen} projectname={project.name} versions={versions.map((version) => {
                                     return {
                                         value: version.version,
                                         label: version.version,
                                     };
                                 })} onClose={() => setVersionDialogOpen(false)} />
 
-                                <DangerDialog open={dangerDialogOpen} projectname={project.name} onClose={() => setDangerDialogOpen(false)} />
+                                <DangerDialog open={dangerDialogOpen} projectname={project.name} onClose={() => setDangerDialogOpen(false)} /> */}
                             </CardFooter>
                         </Card>
                     </form>
