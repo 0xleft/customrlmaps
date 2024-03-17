@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
+import { withAuth } from 'next-auth/middleware';
 
 const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api*", "/user/*", "/search*", "/project/*"];
  
@@ -9,17 +9,19 @@ const isPublic = (path) => {
 	);
 };
 
-export default authMiddleware({
-  	afterAuth(auth, req, evt) {
-		if (!auth.userId && !isPublic(req.nextUrl.pathname)) {
-			return redirectToSignIn({ returnBackUrl: req.url });
-		}
-		
-		return NextResponse.next();
-  	},
-	ignoredRoutes: [`/((?!api|trpc|project))(_next.*|.+\\.[\\w]+$)`],
-});
-
 export const config = {
-    matcher: ["/((?!.+\\.[\\w]+$|_next).*)","/","/(api|trpc|project)(.*)"],
-};
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
+
+export default withAuth({
+	callbacks: {
+		authorized: async ({ req }) => {
+			const path = req.url;
+
+			if (isPublic(path)) {
+				return NextResponse.next();
+			}
+			return NextResponse.redirect(new URL("/api/auth/signin", req.url));
+		},
+	}
+})

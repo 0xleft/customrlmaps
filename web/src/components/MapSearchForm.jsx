@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-const MapSearchForm = () => {
+export default function MapSearchForm() {
     const router = useRouter();
     
     const formSchema = z.object({
@@ -59,5 +59,3 @@ const MapSearchForm = () => {
         </Form>
     );
 }
-
-export default MapSearchForm;

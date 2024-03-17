@@ -21,8 +21,8 @@ enum ProjectType {
 model User {
   id Int @id @default(autoincrement())
   username String @unique
+  fullname String
   description String?
-  clerkId String @unique
   email String @unique
   imageUrl String? @default("https://www.gravatar.com/avatar/")
   lastUsernameChange DateTime?
@@ -34,7 +34,7 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   deleted Boolean @default(false)
   deletedAt DateTime?
 }

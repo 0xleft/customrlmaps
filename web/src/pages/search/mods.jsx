@@ -1,6 +1,4 @@
 import { Inter } from "next/font/google";
-import prisma from "@/lib/prisma";
-import { useUser } from "@clerk/clerk-react";
 
 const inter = Inter({ subsets: ["latin"] });
 

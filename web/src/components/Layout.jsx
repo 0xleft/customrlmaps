@@ -1,11 +1,8 @@
-import { Router, useRouter } from "next/router";
 import Footer from "./Footer";
-import Navbar from "./Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider"
-import { useEffect, useState } from "react";
-import { Progress } from "@/components/ui/progress"
 import { Toaster } from "sonner";
 import NextNProgress from 'nextjs-progressbar';
+import Navbar from "./Navbar";
 
 const RootLayout = ({ children }) => {
 	return (

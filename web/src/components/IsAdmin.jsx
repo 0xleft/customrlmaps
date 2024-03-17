@@ -1,20 +1,12 @@
-import { getUserRoles, hasRole } from "@/utils/userUtils";
-import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 
 
-const IsAdmin = ({ children }) => {
-	const { user, isLoaded } = useUser();
-	const router = useRouter();
-	if (!isLoaded) return null;
+export default function IsAdmin({ user, children }) {
+	// todo
 
-	const userRoles = getUserRoles(user);
-    
     return (
 		<>
-            {hasRole(userRoles, "admin") && children}
+			{children}
 		</>
  );
 };
-
-export default IsAdmin;

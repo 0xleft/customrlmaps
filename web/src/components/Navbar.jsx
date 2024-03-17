@@ -1,27 +1,20 @@
-"use client";
+"use sever";
 
 import React from 'react';
 import Link from 'next/link';
-import { SignedOut, UserButton, SignedIn, useUser } from '@clerk/nextjs';
-import { hasRole, getUserRoles } from '@/utils/userUtils';
 import { Button } from './ui/button';
 import MapSearchForm from '@/components/MapSearchForm';
-import { useRouter } from 'next/router';
 import { NavButton } from './NavButton';
 import { AddButton } from './AddButton';
 import { NavBreadcrumbs } from './NavBreadcrumbs';
+import { SignedIn, SignedOut } from './SignedButtons';
+import { signIn, useSession } from 'next-auth/react';
 
-const Navbar = () => {
-	const { user, isLoaded } = useUser();
-	const router = useRouter();
-	if (!isLoaded) return null;
+export default function Navbar() {
+	const session = useSession();
 
-	const userRoles = getUserRoles(user);
-
-	// move to another component?
-	if (router.pathname === '/admin' && !hasRole(userRoles, "admin")) {
-		router.push('/');
-	}
+	if (!session) return null;
+	if (session.status == "loading") return null;
 
   	return (
 		<header className='text-primary body-font bg-secondary shadow'>
@@ -33,7 +26,7 @@ const Navbar = () => {
 						<Button variant='hero'>CustomRLMaps</Button>
 					</Link>
 					<div className='hidden md:flex'>
-						<NavBreadcrumbs />
+						{/* <NavBreadcrumbs /> */}
 					</div>
 				</div>
 				<nav className='md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center'>
@@ -46,21 +39,16 @@ const Navbar = () => {
 					<div className='hidden md:flex'>
 						<MapSearchForm />
 					</div>
-					<SignedOut>
-						<Link href='/sign-in'>
-							<Button variant='outline'>Sign in</Button>
-						</Link>
-						<Link href='/sign-up'>
-							<Button variant='outline'>Sign up</Button>
-						</Link>
+					<SignedOut session={session}>
+						<Button variant='outline'
+							onClick={() => signIn()}
+						>Sign in</Button>
 					</SignedOut>
-					<SignedIn>
-						<UserButton />
+					<SignedIn session={session}>
+						{/*<UserButton />*/}
 					</SignedIn>
 				</div>
 			</div>
 		</header>
   	);
 };
-
-export default Navbar;

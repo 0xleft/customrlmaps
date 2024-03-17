@@ -12,11 +12,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Markdown from "react-markdown";
-import { useEffect, useState } from "react";
-import { Toaster } from "@/components/ui/sonner";
+import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { getAllUserInfo } from "@/utils/apiUtils";
 import { UpdateIcon } from "@radix-ui/react-icons";
+import { getAllUserInfo, getAllUserInfoServer, getUserInfo } from "@/utils/userUtilsServer";
 
 
 export const getServerSideProps = async ({ req, res, params }) => {
@@ -25,8 +24,9 @@ export const getServerSideProps = async ({ req, res, params }) => {
         'public, s-maxage=10, stale-while-revalidate=60'
     )
 
-	const user = await getAllUserInfo(req);
-	if (!user) {
+	const user = await getAllUserInfoServer(req, res);
+
+	if (!user || !user.dbUser) {
 		return {
 			props: {
 				user: null,
@@ -70,13 +70,15 @@ function checkBannerType(file) {
     return false;
 }
 
-export default function NewProject ( { user }) {
+export default function NewProject({ user }) {
 	const router = useRouter();
 	const type = router.query.type;
 
-	if (!user) {
-		router.push("/sign-in");
-	}
+	useEffect(() => {
+		if (!user) {
+			router.push("/api/auth/signin");
+		}
+	}, [user]);
 
     const formSchema = z.object({
 		file: z.any()

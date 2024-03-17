@@ -1,16 +1,14 @@
 import "@/styles/globals.css";
-import { ClerkProvider, currentUser, useAuth } from "@clerk/nextjs";
 import RootLayout from "@/components/Layout";
-import { StrictMode } from "react";
+import { SessionProvider } from "next-auth/react"
+import { auth } from "@/auth";
 
-export default function App({ Component, pageProps }) {
-  return (
-	<StrictMode>
-		<ClerkProvider {...pageProps}>
+export default function App({ Component, session, ...pageProps }) {
+	return (
+		<SessionProvider session={session}>
 			<RootLayout>
 				<Component {...pageProps} />
 			</RootLayout>
-		</ClerkProvider>
-	</StrictMode>
-  )
+		</SessionProvider>
+	)
 }

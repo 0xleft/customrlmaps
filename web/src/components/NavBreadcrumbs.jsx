@@ -12,6 +12,8 @@ import Link from "next/link"
  
 export function NavBreadcrumbs() {
 
+    if (typeof window === "undefined") return null;
+
     const path = window.location.pathname;
     const pathArray = path.split("/").filter((item) => item !== "");
     if (pathArray.length === 0) return null;
