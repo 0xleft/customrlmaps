@@ -5,54 +5,9 @@ import { ThemeProvider } from "@/components/ThemeProvider"
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress"
 import { Toaster } from "sonner";
-
-function progressBar() {
-
-}
+import NextNProgress from 'nextjs-progressbar';
 
 const RootLayout = ({ children }) => {
-
-	let router = useRouter();
-	const [progress, setProgress] = useState(100);
-
-	let progressInterval;
-
-	useEffect(() => {
-		const start = (url) => {
-			if (url !== router.pathname) {
-				setProgress(0);
-			}
-
-			progressInterval = setInterval(() => {
-				setProgress((oldProgress) => {
-					if (oldProgress >= 90) {
-						return 90;
-					}
-					return oldProgress + 10;
-				});
-			}, 100);
-		};
-
-		const end = () => {
-			clearInterval(progressInterval);
-			setProgress(99);
-			setTimeout(() => {
-				setProgress(100);
-			}, 100);
-		};
-
-		Router.events.on('routeChangeStart', start);
-		Router.events.on('routeChangeComplete', end);
-		Router.events.on('routeChangeError', end);
-	
-		return () => {
-			Router.events.off('routeChangeStart', start);
-			Router.events.off('routeChangeComplete', end);
-			Router.events.off('routeChangeError', end);
-		};
-	}, []);
-
-
 	return (
 		<>
 			<ThemeProvider
@@ -65,11 +20,9 @@ const RootLayout = ({ children }) => {
 
 				<main className="min-h-screen">
 					<>
-						{(progress < 100) ? <>
-							<div className="fixed top-0 z-50 w-full">
-								<Progress value={progress} className="h-1 rounded-none" />
-							</div>
-						</> : null}
+						<NextNProgress color="#000" startPosition={0.3} stopDelayMs={200} height={3} showOnShallow={true} options={
+							{ showSpinner: false }
+						} />
 						{children}
 					</>
 				</main>

@@ -19,8 +19,16 @@ export const getServerSideProps = async ({ req, res }) => {
         }
     });
 
-    const clerkUser = await clerkClient.users.getUser(user.userId);
+    if (dbUser.deleted) {
+        return {
+            props: {
+                user: null,
+            },
+        };
+    }
 
+    const clerkUser = await clerkClient.users.getUser(user.userId);
+    
     const memberShips = await clerkClient.users.getOrganizationMembershipList({
         userId: user.userId,
     });

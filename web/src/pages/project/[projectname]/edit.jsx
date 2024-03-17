@@ -57,6 +57,14 @@ export const getServerSideProps = async ({ req, res, params }) => {
     const { projectname } = params;
     const currentUser = await getAllUserInfo(req);
 
+    if (!currentUser) {
+        return {
+            props: {
+                notFound: true,
+            },
+        };
+    }
+
     const project = await prisma.project.findUnique({
         where: {
             name: projectname,
@@ -172,6 +180,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
             }),
         }).then((res) => res.json()).then((data) => {
             if (data.error) {
+                toast.dismiss();
                 toast.error("An error occurred! " + data.error);
                 setUploading(false);
                 return;
@@ -189,20 +198,24 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                     body: secondFormData,
                 }).then((res) => {
                     if (res.status !== 204) {
+                        toast.dismiss();
                         toast.error("An error occurred! " + res.statusText);
                         setUploading(false);
                         return;
                     }
 
+                    toast.dismiss();
                     toast.success("Updated project");
                     setUploading(false);
                     router.replace(router.asPath);
                 }).catch((err) => {
+                    toast.dismiss();
                     toast.error("An error occurred! " + err);
                     setUploading(false);
                     return;
                 });
             } else {
+                toast.dismiss();
                 toast.success("Updated project");
                 setUploading(false);
                 router.replace(router.asPath);

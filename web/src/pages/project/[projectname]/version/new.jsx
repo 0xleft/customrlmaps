@@ -55,6 +55,14 @@ export const getServerSideProps = async ({ req, res, params }) => {
     const { projectname } = params;
     const currentUser = await getAllUserInfo(req);
 
+    if (!currentUser) {
+        return {
+            props: {
+                notFound: true,
+            },
+        };
+    }
+
     const project = await prisma.project.findUnique({
         where: {
             name: projectname,

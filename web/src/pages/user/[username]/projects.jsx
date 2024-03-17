@@ -16,6 +16,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import DateComponent from "@/components/DateComponent";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import UserLeftCom from "@/components/UserLeftCom";
+import { getAuth } from "@clerk/nextjs/server";
   
 
 const inter = Inter({ subsets: ["latin"] });
@@ -39,6 +41,14 @@ export const getServerSideProps = async ({ req, res, params }) => {
 		});
 	
 		if (!dbUser) {
+			return {
+				props: {
+					notFound: true,
+				},
+			};
+		}
+
+		if (dbUser.deleted) {
 			return {
 				props: {
 					notFound: true,
@@ -86,6 +96,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 					roles: dbUser.roles,
 					description: dbUser.description,
 					created: `${dbUser.createdAt.getDate()}/${dbUser.createdAt.getMonth()}/${dbUser.createdAt.getFullYear()}`,
+					isOwner: dbUser.clerkId === getAuth(req).userId,
 				},
 				projects: projects.map((project) => {
 					return {
@@ -124,32 +135,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 		<>
 			<div className='flex flex-row justify-center p-4 min-h-screen'>
                 <div className='hidden lg:flex lg:w-[20%] p-2'>
-                    <Card className="w-full">
-                        <CardHeader className="flex-col hidden lg:flex">
-                                <CardTitle>
-                                    <div className='flex flex-col space-y-2'>
-                                        <img src={user.imageUrl} alt={user.username} className='w-full max-w-[350px] rounded-full self-center aspect-square' />
-                                        <p className='text-xl font-bold'>
-                                            {user.username}
-                                        </p>
-                                    </div>
-                                    <div className='flex flex-row items-center space-x-2'>
-                                        {user.roles.map((role) => {
-                                            return (
-                                                <Badge key={role} className="">{role}</Badge>
-                                            );
-                                        })}
-                                    </div>
-                                </CardTitle>
-
-
-                                <CardDescription className={user.description ? "" : "text-muted-foreground"}>
-                                    {user.description ? user.description : "No description"}
-                                </CardDescription>
-
-                                <DateComponent text={`Joined ${user.created}`} />
-                            </CardHeader>
-                    </Card>
+                    <UserLeftCom user={user} />
                 </div>
 
                 <div className="w-full p-2 lg:w-[66%] min-h-screen">

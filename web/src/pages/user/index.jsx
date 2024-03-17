@@ -44,10 +44,19 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     const currentUser = await getAllUserInfo(req);
 
+	if (currentUser.dbUser.deleted) {
+		return {
+			props: {
+				notFound: true,
+			},
+		};
+	}
+
 	return {
 		props: {
             user: {
                 username: currentUser.dbUser.username,
+				description: currentUser.dbUser.description,
                 imageUrl: currentUser.dbUser.imageUrl,
                 created: `${currentUser.dbUser.createdAt.getDate()}/${currentUser.dbUser.createdAt.getMonth()}/${currentUser.dbUser.createdAt.getFullYear()}`,
                 roles: currentUser.dbUser.roles.join(", "),

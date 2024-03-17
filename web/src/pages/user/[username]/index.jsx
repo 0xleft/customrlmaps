@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/tabs";
 import { getAllUserInfo } from '@/utils/apiUtils';
 import CustomError from '@/components/CustomError';
+import UserLeftCom from '@/components/UserLeftCom';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -44,14 +45,13 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     });
 
-    if (!dbUser) {
+    if (!dbUser || dbUser.deleted) {
         return {
             props: {
                 notFound: true,
             },
         };
     }
-
 
     let mapsQuery = {
         where: {
@@ -89,6 +89,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 		props: {
             user: {
                 username: dbUser.username,
+                description: dbUser.description,
                 imageUrl: dbUser.imageUrl,
                 created: `${dbUser.createdAt.getDate()}/${dbUser.createdAt.getMonth()}/${dbUser.createdAt.getFullYear()}`,
                 roles: dbUser.roles,
@@ -150,32 +151,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
         <>
             <div className='flex flex-row justify-center p-4 min-h-screen'>
                 <div className='hidden lg:flex lg:w-[20%] p-2'>
-                    <Card className="w-full">
-                        <CardHeader className="flex-col hidden lg:flex">
-                                <CardTitle>
-                                    <div className='flex flex-col space-y-2'>
-                                        <img src={user.imageUrl} alt={user.username} className='w-full max-w-[350px] rounded-full self-center aspect-square' />
-                                        <p className='text-xl font-bold'>
-                                            {user.username}
-                                        </p>
-                                    </div>
-                                    <div className='flex flex-row items-center space-x-2'>
-                                        {user.roles.map((role) => {
-                                            return (
-                                                <Badge key={role} className="">{role}</Badge>
-                                            );
-                                        })}
-                                    </div>
-                                </CardTitle>
-
-
-                                <CardDescription className={user.description ? "" : "text-muted-foreground"}>
-                                    {user.description ? user.description : "No description"}
-                                </CardDescription>
-
-                                <DateComponent text={`Joined ${user.created}`} />
-                            </CardHeader>
-                    </Card>
+                    <UserLeftCom user={user} />
                 </div>
 
                 <div className="w-full p-2 lg:w-[66%] min-h-screen">
@@ -235,9 +211,6 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                             </Tabs>
                         </CardContent>
                         <CardFooter className="flex justify-between">
-                            <Button asChild>
-                                {user.isOwner ? <Link href="/user">Settings</Link> : ""}
-                            </Button>
                             {<div className='text-muted-foreground'>Published {modCount} mods and {mapCount} maps</div>}
                         </CardFooter>
                     </Card>
