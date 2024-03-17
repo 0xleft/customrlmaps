@@ -70,7 +70,8 @@ model Version {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   changes String
-
+  
+  deleted Boolean @default(false)
   deletedAt DateTime?
 }
 

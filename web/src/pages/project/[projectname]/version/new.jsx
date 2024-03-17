@@ -13,7 +13,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, CircleIcon, ReloadIcon, UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -45,6 +44,7 @@ import { Select } from '@/components/ui/select';
 import { Toaster, toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Separator } from '@/components/ui/separator';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -232,7 +232,7 @@ export default function NewVersionProject({ project, notFound, canEdit }) {
 
 
                             <CardContent className="space-y-10">
-                                <Separator className="border-b" />
+                                <Separator />
 
                                 <FormField
                                     control={form.control}

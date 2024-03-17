@@ -39,7 +39,9 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Project has been deleted" });
         }
 
-        const version = await prisma.version.findFirst({
+        const projectType = project.type.toLowerCase();
+
+        const exists = await prisma.version.findFirst({
             where: {
                 projectId: project.id,
                 version: parsed.versionString,
@@ -47,25 +49,20 @@ export default async function handler(req, res) {
             }
         });
 
-        if (!version) {
+        if (!exists) {
             return res.status(400).json({ error: "Version doesn't exists" });
         }
 
-        if (project.latestVersion === version.version) {
-            return res.status(400).json({ error: "Cannot delete the latest version" });
-        }
-
-        await prisma.version.update({
+        await prisma.project.update({
             where: {
-                id: version.id,
+                id: project.id,
             },
             data: {
-                deleted: true,
-                deletedAt: new Date(),
+                latestVersion: parsed.versionString,
             }
         });
 
-        return res.status(200).json({ message: "Deleted" });
+        return res.status(200).json({ message: "Updated" });
     } catch (e) {
 		return res.status(400).json(process.env.NODE_ENV === "development" ? { error: e.message} : { error: "An error occurred"});
 	}

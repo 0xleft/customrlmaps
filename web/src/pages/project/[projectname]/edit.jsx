@@ -83,6 +83,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     const versions = await prisma.version.findMany({
         where: {
             projectId: project.id,
+            deleted: false,
         }
     });
 

@@ -3,7 +3,27 @@ import DateComponent from '@/components/DateComponent';
 import { getAllUserInfo } from '@/utils/apiUtils';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useState } from 'react';
+import { DangerDialog } from './_DangerDialog';
+import { toast } from 'sonner';
+import { useRouter } from 'next/router';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -40,6 +60,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
         where: {
             projectId: project.id,
             version: versionname,
+            deleted: false,
         }
     });
 
@@ -71,20 +92,48 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 changes: version.changes,
                 version: version.version,
                 downloadUrl: version.downloadUrl,
-            }
+                updated: `${version.updatedAt.getDate()}/${version.updatedAt.getMonth()}/${version.updatedAt.getFullYear()}`,
+            },
+            canEdit: currentUser && currentUser.dbUser?.id === project.userId,
         },
 	};
 };
 
 
-export default function VersionIndexView({ project, notFound, version }) {
+export default function VersionIndexView({ project, notFound, version, canEdit }) {
     if (notFound) {
         return (
             <CustomError error="404">
                 <h1 className='text-muted-foreground'>Map not found</h1>
             </CustomError>
         );
-    }  
+    }
+
+    const [dangerDialogOpen, setDangerDialogOpen] = useState(false);
+    const router = useRouter();
+
+    function setAsLatest() {
+        toast.loading("Setting as latest");
+        fetch("/api/project/version/setlatest", {
+            method: "POST",
+            body: JSON.stringify({
+                name: project.name,
+                versionString: version.version,
+            }),
+        }).then(res => res.json()).then(data => {
+            if (data.error) {
+                toast.dismiss();
+                toast.error(data.error);
+                return;
+            }
+            toast.dismiss();
+            toast.success("Version set as latest");
+            router.reload();
+        }).catch(e => {
+            toast.dismiss();
+            toast.error("An error occurred: " + e);
+        });
+    }
 
     return (
         <>
@@ -92,19 +141,53 @@ export default function VersionIndexView({ project, notFound, version }) {
                 <Card>
                     <CardHeader>
                         <CardTitle>
-                            <div className='flex flex-row space-x-2 items-center w-full justify-between'>
+                            <div className='flex flex-col md:flex-row space-x-2 items-center w-full justify-between'>
                                 <div className='w-full'>
                                     <h1 className='text-4xl flex md:flex-row flex-col'>
                                         <p>
-                                            {project.name} - {version.version}
+                                            {project.name} ({version.version})
                                         </p>
                                         <div className='flex flex-row space-x-2 md:mt-1'>
                                             <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.type}</Badge>
                                             <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.publishStatus}</Badge>
                                         </div>
                                     </h1>
+                                    
+                                </div>
+                                <div className='flex flex-row space-x-2 md:mt-0 mt-2'>
+                                <Button onClick={() => {
+                                    // todo redirect to custom install url
+                                }} className='md:mt-0'>
+                                    {project.type === "MOD" ? "Install" : "Download"}
+                                </Button>
+                                    {canEdit && (
+                                            <DropdownMenu className="">
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="outline">
+                                                    Settings
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent className="w-56">
+                                                <DropdownMenuLabel>Manage</DropdownMenuLabel>
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuGroup>
+                                                    <DropdownMenuItem onSelect={() => {
+                                                        setAsLatest();
+                                                    }}>
+                                                        Set as latest
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem onSelect={() => {
+                                                        setDangerDialogOpen(true);
+                                                    }}>
+                                                        Delete
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuGroup>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    )}
                                 </div>
                             </div>
+
                         </CardTitle>
 
                         <CardDescription>
@@ -113,11 +196,27 @@ export default function VersionIndexView({ project, notFound, version }) {
                     </CardHeader>
 
                     <CardContent>
+                        <Separator />
+                        <div className='mt-2 mb-2'>
+                            <h1 className='text-2xl'>Changes</h1>
+                            <p className=''>{version.changes}</p>
+                        </div>
+
+                        <Separator />
+
+                        <div className='mt-2 mb-2'>
+                            <h1 className='text-2xl'>Download files</h1>
+                            <a href={version.downloadUrl} target='_blank' className='text-blue-500'>{version.downloadUrl}</a>
+                        </div>
                         
                     </CardContent>
 
                     <CardFooter>
-                        <DateComponent text={`Last updated ${project.updated}`} />
+                        <DateComponent text={`Last updated ${version.updated}`} />
+
+                        <DangerDialog projectname={project.name} open={dangerDialogOpen} onClose={() => {
+                            setDangerDialogOpen(false);
+                        }} version={version.version} />
                     </CardFooter>
                 </Card>
             </div>
