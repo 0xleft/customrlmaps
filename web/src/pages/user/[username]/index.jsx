@@ -154,7 +154,7 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount, n
                         <CardHeader className="flex-col hidden lg:flex">
                                 <CardTitle>
                                     <div className='flex flex-col space-y-2'>
-                                        <img src={user.imageUrl} alt={user.username} className='w-full max-w-[350px] rounded-full self-center' />
+                                        <img src={user.imageUrl} alt={user.username} className='w-full max-w-[350px] rounded-full self-center aspect-square' />
                                         <p className='text-xl font-bold'>
                                             {user.username}
                                         </p>

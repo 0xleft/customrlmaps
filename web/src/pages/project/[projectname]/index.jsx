@@ -4,9 +4,9 @@ import DateComponent from '@/components/DateComponent';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { getAllUserInfo } from '@/utils/apiUtils';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
-import { Separator } from '@radix-ui/react-dropdown-menu';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -64,6 +64,12 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     });
 
+    const creator = await prisma.user.findUnique({
+        where: {
+            id: project.userId,
+        }
+    });
+
 	return {
 		props: {
             project: {
@@ -80,6 +86,9 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 views: project.views,
                 latestVersion: project.latestVersion,
             },
+            creator: {
+                username: creator.username
+            },
             versions: versions.map(version => {
                 return {
                     version: version.version,
@@ -93,7 +102,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 };
 
 
-export default function ProjectIndex ( { project, notFound, versions, canEdit }) {
+export default function ProjectIndex ( { project, notFound, versions, canEdit, creator }) {
     if (notFound) {
         return (
             <CustomError error="404">
@@ -127,7 +136,7 @@ export default function ProjectIndex ( { project, notFound, versions, canEdit })
             <div className='container pt-6'>
                 <Card className="w-full">
                     <CardHeader className="flex-col flex">
-                        <CardTitle className="flex md:flex-row justify-between flex-col items-center">
+                        <CardTitle className="flex md:flex-row justify-between flex-col items-center mb-2">
                             <div className='w-full'>
                                 <h1 className='text-4xl flex md:flex-row flex-col'>
                                     <p>
@@ -155,14 +164,13 @@ export default function ProjectIndex ( { project, notFound, versions, canEdit })
                                     <Link href={`/project/${project.name}/edit`} className='mt-4' variant='outline'>Edit</Link>
                                 </Button>}
                             </div>
-                            
                         </CardTitle>
-                        <CardDescription>
-                            Latest version {project.latestVersion}
-                        </CardDescription>
+                        <Separator />
+                        
                     </CardHeader>
 
                     <CardContent className="min-h-screen">
+
                             
                         <div className='flex md:flex-row flex-col'>
                             <div className='md:w-[55%] overflow-clip'>
@@ -172,7 +180,14 @@ export default function ProjectIndex ( { project, notFound, versions, canEdit })
                             </div>
 
                             <div className='md:w-[45%] md:pl-10 mt-2 flex flex-col md:space-y-2 space-y-4'>
+
+                                <h2 className='text-xl md:text-xl font-bold'>Creator: <span className='text-muted-foreground font-normal'>
+                                    <Link href={`/user/${creator.username}`} className='hover:underline'>
+                                        @{creator.username}
+                                    </Link></span></h2>
+
                                 <h2 className='text-xl md:text-2xl font-bold'>Info:</h2>
+
                                 <div className='flex md:flex-row md:space-x-10 flex-col'>
                                     <div>
                                         <div className='flex flex-row items-center space-x-2'>

@@ -25,6 +25,7 @@ model User {
   clerkId String @unique
   email String @unique
   imageUrl String? @default("https://www.gravatar.com/avatar/")
+  lastUsernameChange DateTime?
 
   roles String[]
 
@@ -33,7 +34,8 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
+  
+  deleted Boolean @default(false)
   deletedAt DateTime?
 }
 

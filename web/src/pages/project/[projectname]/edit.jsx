@@ -196,7 +196,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
 
                     toast.success("Updated project");
                     setUploading(false);
-                    router.reload();
+                    router.replace(router.asPath);
                 }).catch((err) => {
                     toast.error("An error occurred! " + err);
                     setUploading(false);
@@ -205,7 +205,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
             } else {
                 toast.success("Updated project");
                 setUploading(false);
-                router.reload();
+                router.replace(router.asPath);
             }
         });
     }
@@ -224,7 +224,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                 return;
             }
             toast.success("Status: " + data.message);
-            router.reload();
+            router.replace(router.asPath);
         });
     }
 

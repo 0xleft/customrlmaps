@@ -128,7 +128,7 @@ export default function VersionIndexView({ project, notFound, version, canEdit }
             }
             toast.dismiss();
             toast.success("Version set as latest");
-            router.reload();
+            router.push(`/project/${project.name}`);
         }).catch(e => {
             toast.dismiss();
             toast.error("An error occurred: " + e);
