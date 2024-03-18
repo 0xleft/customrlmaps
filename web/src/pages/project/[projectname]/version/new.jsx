@@ -2,18 +2,11 @@ import CustomError from '@/components/CustomError';
 import DateComponent from '@/components/DateComponent';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getAllUserInfo } from '@/utils/apiUtils';
-import { AspectRatio } from '@radix-ui/react-aspect-ratio';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useState } from 'react';
-import Markdown from 'react-markdown';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { CheckIcon, CircleIcon, ReloadIcon, UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -23,28 +16,13 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuRadioItem,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-Dialog,
-DialogContent,
-DialogDescription,
-DialogHeader,
-DialogTitle,
-DialogTrigger,
-} from "@/components/ui/dialog"
-import { Select } from '@/components/ui/select';
-import { Toaster, toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -53,7 +31,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { projectname } = params;
-    const currentUser = await getAllUserInfo(req);
+    const currentUser = await getAllUserInfoServer(req);
 
     if (!currentUser) {
         return {
@@ -101,7 +79,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 views: project.views,
                 latestVersion: project.latestVersion,
             },
-            canEdit: currentUser && currentUser.dbUser?.id === project.userId,
+            canEdit: currentUser && currentUser.dbUser?.id === project.userId, // todo admin
         },
 	};
 };

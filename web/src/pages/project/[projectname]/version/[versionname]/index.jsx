@@ -1,6 +1,5 @@
 import CustomError from '@/components/CustomError';
 import DateComponent from '@/components/DateComponent';
-import { getAllUserInfo } from '@/utils/apiUtils';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -11,19 +10,14 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuRadioItem,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useState } from 'react';
 import { DangerDialog } from './_DangerDialog';
 import { toast } from 'sonner';
 import { useRouter } from 'next/router';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -32,7 +26,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { projectname, versionname } = params;
-    const currentUser = await getAllUserInfo(req);
+    const currentUser = await getAllUserInfoServer(req);
 
     const project = await prisma.project.findUnique({
         where: {
@@ -94,7 +88,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 downloadUrl: version.downloadUrl,
                 updated: `${version.updatedAt.getDate()}/${version.updatedAt.getMonth()}/${version.updatedAt.getFullYear()}`,
             },
-            canEdit: currentUser && currentUser.dbUser?.id === project.userId,
+            canEdit: currentUser && currentUser.dbUser?.id === project.userId, // todo admin
         },
 	};
 };

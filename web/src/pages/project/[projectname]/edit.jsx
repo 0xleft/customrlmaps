@@ -1,4 +1,3 @@
-import { Combobox } from '@/components/Combobox';
 import CustomError from '@/components/CustomError';
 import DateComponent from '@/components/DateComponent';
 import { Badge } from '@/components/ui/badge';
@@ -8,13 +7,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { getAllUserInfo } from '@/utils/apiUtils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, CircleIcon, ReloadIcon, UpdateIcon } from '@radix-ui/react-icons';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -35,18 +31,10 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-Dialog,
-DialogContent,
-DialogDescription,
-DialogHeader,
-DialogTitle,
-DialogTrigger,
-} from "@/components/ui/dialog"
-import { Select } from '@/components/ui/select';
 import { VersionDialog } from './_VersionDialog';
 import { DangerDialog } from './_DangerDialog';
 import { Toaster, toast } from 'sonner';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -55,7 +43,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { projectname } = params;
-    const currentUser = await getAllUserInfo(req);
+    const currentUser = await getAllUserInfoServer(req);
 
     if (!currentUser) {
         return {
@@ -118,7 +106,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                     downloadUrl: version.downloadUrl,
                 };
             }),
-            canEdit: currentUser && currentUser.dbUser?.id === project.userId,
+            canEdit: currentUser && currentUser.dbUser?.id === project.userId, // todo admim?
         },
 	};
 };

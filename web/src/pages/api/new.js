@@ -1,10 +1,10 @@
-import { getAllUserInfo } from "@/utils/apiUtils";
 import prisma from "@/lib/prisma";
 import { z } from 'zod'
 
 import { S3Client } from '@aws-sdk/client-s3'
 import { createHash } from "crypto";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { getAllUserInfoServer } from "@/utils/userUtilsServer";
 
 const client = new S3Client({
 	region: process.env.AWS_REGION,
@@ -22,7 +22,7 @@ const schema = z.object({
 })
 
 export default async function handler(req, res) {
-	const user = await getAllUserInfo(req);
+	const user = await getAllUserInfoServer(req);
 
 	if (!user) {
 		return res.status(401).json({ error: "Unauthorized" });

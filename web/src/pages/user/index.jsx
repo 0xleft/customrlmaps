@@ -1,8 +1,5 @@
 import { Inter } from "next/font/google";
-import { getAllUserInfo } from "@/utils/apiUtils";
-import { Badge } from "@/components/ui/badge";
 import DateComponent from "@/components/DateComponent";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -25,7 +22,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -33,6 +29,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { DangerDialog } from "./_DangerDialog";
+import { getAllUserInfoServer } from "@/utils/userUtilsServer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,7 +39,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
         'public, s-maxage=10, stale-while-revalidate=60'
     )
 
-    const currentUser = await getAllUserInfo(req);
+    const currentUser = await getAllUserInfoServer(req);
 
 	if (currentUser.dbUser.deleted) {
 		return {

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { getAllUserInfo } from '@/utils/apiUtils';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,7 +20,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { projectname } = params;
-    const currentUser = await getAllUserInfo(req);
+    const currentUser = await getAllUserInfoServer(req);
 
     const project = await prisma.project.findUnique({
         where: {

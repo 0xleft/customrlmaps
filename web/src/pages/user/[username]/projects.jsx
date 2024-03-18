@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import DateComponent from "@/components/DateComponent";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import UserLeftCom from "@/components/UserLeftCom";
-import { getAuth } from "@clerk/nextjs/server";
+import { getAllUserInfoServer } from "@/utils/userUtilsServer";
   
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,7 +31,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
 	try {
-		const currentUser = await getAllUserInfo(req);
+		const currentUser = await getAllUserInfoServer(req);
 		const { username } = params;
 	
 		const dbUser = await prisma.user.findUnique({
@@ -56,6 +56,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 			};
 		}
 	
+		// todo
 		const page = parseInt(new URL(req.url, "https://localhost").searchParams.get('page')) || 1;
 	
 		let projectQuery = {
@@ -96,7 +97,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 					roles: dbUser.roles,
 					description: dbUser.description,
 					created: `${dbUser.createdAt.getDate()}/${dbUser.createdAt.getMonth()}/${dbUser.createdAt.getFullYear()}`,
-					isOwner: dbUser.clerkId === getAuth(req).userId,
+					isOwner: dbUser.id === currentUser.dbUser.id
 				},
 				projects: projects.map((project) => {
 					return {

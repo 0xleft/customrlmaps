@@ -1,10 +1,6 @@
-import { useRouter } from 'next/router';
 import prisma from '@/lib/prisma';
-import { getAuth } from "@clerk/nextjs/server";
-import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar } from '@/components/ui/avatar';
 import { AvatarImage } from '@radix-ui/react-avatar';
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -13,11 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { CalendarIcon } from '@radix-ui/react-icons';
-import Link from 'next/link';
 import { ItemCard } from '@/components/ItemCard';
 import DateComponent from '@/components/DateComponent';
 import {
@@ -26,9 +18,9 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { getAllUserInfo } from '@/utils/apiUtils';
 import CustomError from '@/components/CustomError';
 import UserLeftCom from '@/components/UserLeftCom';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -37,7 +29,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { username } = params;
-    const currentUser = await getAllUserInfo(req);
+    const currentUser = await getAllUserInfoServer(req);
 
     const dbUser = await prisma.user.findUnique({
         where: {
@@ -93,7 +85,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 imageUrl: dbUser.imageUrl,
                 created: `${dbUser.createdAt.getDate()}/${dbUser.createdAt.getMonth()}/${dbUser.createdAt.getFullYear()}`,
                 roles: dbUser.roles,
-                isOwner: dbUser.clerkId === getAuth(req).userId,
+                isOwner: dbUser.id === currentUser.dbUser.id,
             },
             topMaps: topMaps.map((map) => {
                 return {

@@ -1,5 +1,5 @@
-import { getAllUserInfo } from "@/utils/apiUtils";
 import prisma from "@/lib/prisma";
+import { getAllUserInfoServer } from "@/utils/userUtilsServer";
 import { z } from 'zod'
 
 const schema = z.object({
@@ -8,7 +8,7 @@ const schema = z.object({
 });
 
 export default async function handler(req, res) {
-	const user = await getAllUserInfo(req);
+	const user = await getAllUserInfoServer(req);
 
 	if (!user) {
 		return res.status(401).json({ error: "Unauthorized" });
