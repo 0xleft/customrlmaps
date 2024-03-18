@@ -46,11 +46,11 @@ export function NavButton() {
 						<MagnifyingGlassIcon className="mr-2" />
 						Search
 					</DropdownMenuItem>
-					<DropdownMenuItem onSelect={() => router.push('/search/maps')}>
+					<DropdownMenuItem onSelect={() => router.push('/search?type=maps')}>
 						<RocketIcon className="mr-2" />
 						Maps
 					</DropdownMenuItem>
-					<DropdownMenuItem onSelect={() => router.push('/search/mods')}>
+					<DropdownMenuItem onSelect={() => router.push('/search?type=mods')}>
 						<MagicWandIcon className="mr-2" />
 						Mods
 					</DropdownMenuItem>
