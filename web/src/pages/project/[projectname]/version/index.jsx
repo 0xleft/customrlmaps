@@ -1,6 +1,6 @@
-import CustomError from "@/components/CustomError";
-import { useRouter } from "next/router";
-import { use, useEffect } from "react";
+import CustomError from '@/components/CustomError';
+import { useRouter } from 'next/router';
+import { use, useEffect } from 'react';
 
 export default function VersionIndex() {
     const router = useRouter();

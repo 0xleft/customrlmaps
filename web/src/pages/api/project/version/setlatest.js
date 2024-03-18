@@ -1,6 +1,6 @@
-import prisma from "@/lib/prisma";
-import { z } from 'zod'
-import { getAllUserInfoServer } from "@/utils/userUtilsServer";
+import prisma from '@/lib/prisma';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { z } from 'zod';
 
 const schema = z.object({
     name: z.any(),

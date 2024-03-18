@@ -1,26 +1,14 @@
-import prisma from '@/lib/prisma';
-import { Avatar } from '@/components/ui/avatar';
-import { AvatarImage } from '@radix-ui/react-avatar';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ItemCard } from '@/components/ItemCard';
-import DateComponent from '@/components/DateComponent';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
 import CustomError from '@/components/CustomError';
+import DateComponent from '@/components/DateComponent';
+import { ItemCard } from '@/components/ItemCard';
+import { Avatar } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserLeftCom from '@/components/UserLeftCom';
+import prisma from '@/lib/prisma';
 import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { AvatarImage } from '@radix-ui/react-avatar';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(

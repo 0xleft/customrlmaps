@@ -1,5 +1,3 @@
-import { auth } from "@/auth";
-
 export function SignedIn({ session, children }) {
     if (!session) {
         return null;

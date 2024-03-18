@@ -1,24 +1,30 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu"
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+    HomeIcon,
+    LockClosedIcon,
+    MagicWandIcon,
+    MagnifyingGlassIcon,
+    MoonIcon,
+    RocketIcon,
+    SunIcon,
+} from '@radix-ui/react-icons';
+import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import IsAdmin from "./IsAdmin";
-import { MagnifyingGlassIcon, HomeIcon, MagicWandIcon, BoxIcon, SunIcon, MoonIcon, RocketIcon, LockClosedIcon } from "@radix-ui/react-icons";
-import { useTheme } from "next-themes";
+
+import IsAdmin from './IsAdmin';
 
 export function NavButton() {
 	const router = useRouter();

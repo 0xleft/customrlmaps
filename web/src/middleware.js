@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withAuth } from 'next-auth/middleware';
 
-const publicPaths = ["/", "/sign-in*", "/sign-up*", "/api*", "/user/*", "/search*", "/project/*"];
+const publicPaths = ["/", "/api*", "/user/*", "/search*", "/project/*"];
  
 const isPublic = (path) => {
 	return publicPaths.find((x) =>
@@ -21,7 +21,8 @@ export default withAuth({
 			if (isPublic(path)) {
 				return NextResponse.next();
 			}
-			return NextResponse.redirect(new URL("/api/auth/signin", req.url));
+
+			return NextResponse.rewrite(new URL("/api/auth/signin", req.url));
 		},
 	}
 })

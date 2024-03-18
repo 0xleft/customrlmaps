@@ -1,19 +1,11 @@
-import * as React from "react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { LockClosedIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import * as React from 'react';
 
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Link from "next/link"
-import DateComponent from "./DateComponent"
-import { useRouter } from "next/router"
-import { LockClosedIcon } from "@radix-ui/react-icons"
-import { Badge } from "./ui/badge"
+import DateComponent from './DateComponent';
+import { Badge } from './ui/badge';
 
 export function ItemCard( { title, description, image, createdAt, link, isPrivate, type } ) {
 

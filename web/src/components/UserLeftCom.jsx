@@ -1,16 +1,10 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card"
-import { Badge } from "./ui/badge";
-import DateComponent from "./DateComponent";
-import { Button } from "./ui/button";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import DateComponent from './DateComponent';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 
 export default function UserLeftCom({ user }) {
     const router = useRouter();

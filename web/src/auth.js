@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
+import NextAuth from 'next-auth';
+import Google from 'next-auth/providers/google';
 
 export const config = {
     theme: {
@@ -10,6 +10,7 @@ export const config = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         })
     ],
+    
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)

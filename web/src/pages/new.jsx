@@ -1,21 +1,19 @@
-import { Inter } from "next/font/google";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { UpdateIcon } from '@radix-ui/react-icons';
+import { useRouter } from 'next/router';
+import { use, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import Markdown from 'react-markdown';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
-const inter = Inter({ subsets: ["latin"] });
-import { useRouter } from "next/router";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { set, z } from "zod";
-import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Markdown from "react-markdown";
-import { use, useEffect, useState } from "react";
-import { toast } from "sonner";
-import { UpdateIcon } from "@radix-ui/react-icons";
-import { getAllUserInfo, getAllUserInfoServer, getUserInfo } from "@/utils/userUtilsServer";
 
 
 export const getServerSideProps = async ({ req, res, params }) => {

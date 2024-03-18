@@ -1,5 +1,5 @@
-import CustomError from "@/components/CustomError";
-import { useRouter } from "next/router";
+import CustomError from '@/components/CustomError';
+import { useRouter } from 'next/router';
 
 export default function VersionIndex() {
     const router = useRouter();

@@ -1,20 +1,15 @@
-"use client"
-
-import * as React from "react"
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
-
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu"
-import { useRouter } from "next/router"
-import { BoxIcon, MagicWandIcon, RocketIcon } from "@radix-ui/react-icons"
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { MagicWandIcon, RocketIcon } from '@radix-ui/react-icons';
+import { useRouter } from 'next/router';
+import * as React from 'react';
 
 export function AddButton() {
     const router = useRouter();

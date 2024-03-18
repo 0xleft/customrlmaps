@@ -1,26 +1,26 @@
-import { Inter } from "next/font/google";
-import prisma from "@/lib/prisma";
-import CustomError from "@/components/CustomError";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
-import { getAllUserInfo } from "@/utils/apiUtils";
-import { ItemCard } from "@/components/ItemCard";
+import CustomError from '@/components/CustomError';
+import DateComponent from '@/components/DateComponent';
+import { ItemCard } from '@/components/ItemCard';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-  } from "@/components/ui/pagination"
-import { Badge } from "@/components/ui/badge";
-import DateComponent from "@/components/DateComponent";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import UserLeftCom from "@/components/UserLeftCom";
-import { getAllUserInfoServer } from "@/utils/userUtilsServer";
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from '@/components/ui/pagination';
+import UserLeftCom from '@/components/UserLeftCom';
+import prisma from '@/lib/prisma';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+
+
   
 
-const inter = Inter({ subsets: ["latin"] });
+
 
 const PER_PAGE = 10
 

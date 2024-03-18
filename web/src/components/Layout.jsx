@@ -1,8 +1,9 @@
-import Footer from "./Footer";
-import { ThemeProvider } from "@/components/ThemeProvider"
-import { Toaster } from "sonner";
+import { ThemeProvider } from '@/components/ThemeProvider';
 import NextNProgress from 'nextjs-progressbar';
-import Navbar from "./Navbar";
+import { Toaster } from 'sonner';
+
+import Footer from './Footer';
+import Navbar from './Navbar';
 
 const RootLayout = ({ children }) => {
 	return (

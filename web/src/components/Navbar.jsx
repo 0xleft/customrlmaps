@@ -1,14 +1,12 @@
-"use sever";
-
-import React from 'react';
-import Link from 'next/link';
-import { Button } from './ui/button';
 import MapSearchForm from '@/components/MapSearchForm';
-import { NavButton } from './NavButton';
-import { AddButton } from './AddButton';
-import { NavBreadcrumbs } from './NavBreadcrumbs';
-import { SignedIn, SignedOut } from './SignedButtons';
 import { signIn, useSession } from 'next-auth/react';
+import Link from 'next/link';
+import React from 'react';
+
+import { AddButton } from './AddButton';
+import { NavButton } from './NavButton';
+import { SignedIn, SignedOut } from './SignedButtons';
+import { Button } from './ui/button';
 
 export default function Navbar() {
 	const session = useSession();

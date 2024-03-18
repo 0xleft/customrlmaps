@@ -1,14 +1,7 @@
-import { DividerVerticalIcon, SlashIcon } from "@radix-ui/react-icons"
-import { BreadcrumbPage } from "@/components/ui/breadcrumb"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { useRouter } from "next/router"
-import Link from "next/link"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { SlashIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
+
  
 export function NavBreadcrumbs() {
 
