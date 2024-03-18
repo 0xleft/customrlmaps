@@ -29,17 +29,19 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     if (!project || project.publishStatus !== "PUBLISHED" && (!currentUser || currentUser.dbUser?.id !== project.userId)) {
         return {
-            props: {
-                notFound: true,
-            },
+            redirect: {
+                destination: "/",
+                permanent: false,
+            }
         };
     }
 
     if (project.publishStatus === "DELETED") {
         return {
-            props: {
-                notFound: true,
-            },
+            redirect: {
+                destination: "/",
+                permanent: false,
+            }
         };
     }
 
@@ -101,15 +103,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 };
 
 
-export default function ProjectIndex ( { project, notFound, versions, canEdit, creator }) {
-    if (notFound) {
-        return (
-            <CustomError error="404">
-                <h1 className='text-muted-foreground'>Map not found</h1>
-            </CustomError>
-        );
-    }
-
+export default function ProjectIndex ( { project, versions, canEdit, creator }) {
     // todo install
     const router = useRouter();
     const [selectedVersion, setSelectedVersion] = useState("");

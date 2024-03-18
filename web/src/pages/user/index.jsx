@@ -36,9 +36,10 @@ export const getServerSideProps = async ({ req, res }) => {
 
     if (!currentUser || !currentUser.session || !currentUser.dbUser || currentUser.dbUser.deleted) {
         return {
-            props: {
-                notFound: true,
-            },
+            redirect: {
+                destination: "/",
+                permanent: false,
+            }
         };
     }
 
@@ -52,17 +53,9 @@ export const getServerSideProps = async ({ req, res }) => {
 	};
 };
 
-export default function User({ user, notFound }) {
+export default function User({ user }) {
 
     if (!user) {
-        return (
-            <CustomError error="404">
-                <h1 className='text-muted-foreground'>User not found</h1>
-            </CustomError>
-        );
-    }
-
-    if (notFound) {
         return (
             <CustomError error="404">
                 <h1 className='text-muted-foreground'>User not found</h1>
@@ -130,7 +123,7 @@ export default function User({ user, notFound }) {
 						return;
 					}
 					toast.dismiss();
-					toast.success("Updated project");
+					toast.success("Updated user");
 					setUploading(false);
 					router.replace(router.asPath);
 				}).catch((err) => {
@@ -141,7 +134,7 @@ export default function User({ user, notFound }) {
 				});
 			} else {
 				toast.dismiss();
-				toast.success("Updated project");
+				toast.success("Updated user");
 				setUploading(false);
 				router.replace(router.asPath);
 			}

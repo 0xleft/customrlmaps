@@ -14,7 +14,7 @@ const client = new S3Client({
 });
 
 const schema = z.object({
-	username: z.any(),
+	username: z.string().min(3).optional(),
     description: z.any(),
     image: z.boolean(),
 })
@@ -55,8 +55,6 @@ export default async function handler(req, res) {
         if (parsed.description) {
             updateData.description = parsed.description;
         }
-
-
 
         await prisma.user.update({
             where: {

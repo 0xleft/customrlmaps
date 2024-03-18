@@ -67,7 +67,10 @@ async function getUserFromEmail(email) {
 async function getAllUserInfoServer(req, res) {
     const session = await getUserInfoServer(req, res);
     if (!session) {
-        return null;
+        return {
+            session: null,
+            dbUser: null,
+        };
     }
     const user = await getUserFromEmail(session.user.email);
     return {

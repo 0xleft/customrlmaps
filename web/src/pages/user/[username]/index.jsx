@@ -27,9 +27,10 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     if (!dbUser || dbUser.deleted) {
         return {
-            props: {
-                notFound: true,
-            },
+            redirect: {
+                destination: "/",
+                permanent: false,
+            }
         };
     }
 
@@ -117,15 +118,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 	};
 };
 
-export default function UserPage({ user, topMaps, topMods, modCount, mapCount, notFound }) {
-
-    if (notFound) {
-        return (
-            <CustomError error="404">
-                <h1 className='text-muted-foreground'>User not found</h1>
-            </CustomError>
-        );
-    }
+export default function UserPage({ user, topMaps, topMods, modCount, mapCount }) {
 
     return (
         <>

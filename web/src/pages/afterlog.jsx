@@ -10,8 +10,9 @@ export const getServerSideProps = async ({ req, res }) => {
 
     if (!user.session) {
         return {
-            props: {
-                message: "Session not found",
+            redirect: {
+                destination: "/",
+                permanent: false,
             },
         };
     }

@@ -17,7 +17,7 @@ export default function Navbar() {
 	if (session.status == "loading") return null;
 
   	return (
-		<header className='text-primary body-font bg-secondary shadow'>
+		<header className='text-primary body-font bg-primary-foreground shadow'>
 			<div className='mx-auto flex flex-wrap p-2 flex-row md:flex-row items-center justify-between ml-3 mr-3'>
 				<div className='flex flex-row items-center space-x-2'>
 					<NavButton />
@@ -35,7 +35,7 @@ export default function Navbar() {
 						<MapSearchForm />
 					</div>
 					<SignedOut session={session}>
-						<Button variant='outline'
+						<Button variant=''
 							onClick={() => signIn()}
 						>Sign in</Button>
 					</SignedOut>

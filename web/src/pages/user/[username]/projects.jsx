@@ -42,17 +42,19 @@ export const getServerSideProps = async ({ req, res, params }) => {
 	
 		if (!dbUser) {
 			return {
-				props: {
-					notFound: true,
-				},
+				redirect: {
+					destination: "/",
+					permanent: false,
+				}
 			};
 		}
 
 		if (dbUser.deleted) {
 			return {
-				props: {
-					notFound: true,
-				},
+				redirect: {
+					destination: "/",
+					permanent: false,
+				}
 			};
 		}
 	
@@ -115,22 +117,15 @@ export const getServerSideProps = async ({ req, res, params }) => {
 		};
 	} catch (e) {
 		return {
-			props: {
-				notFound: true,
-			},
+			redirect: {
+				destination: "/",
+				permanent: false,
+			}
 		};
 	}
 };
 
-export default function projects({ user, projects, notFound, currentPage, maxPage }) {
-
-	if (notFound) {
-		return (
-			<CustomError error="404">
-				<p>User not found</p>
-			</CustomError>
-		);
-	}
+export default function projects({ user, projects, currentPage, maxPage }) {
 
 	return (
 		<>

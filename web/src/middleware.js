@@ -3,26 +3,25 @@ import { withAuth } from 'next-auth/middleware';
 
 const publicPaths = ["/", "/api*", "/user/*", "/search*", "/project/*"];
  
-const isPublic = (path) => {
+function isPublic(path) {
 	return publicPaths.find((x) =>
 		path.match(new RegExp(`^${x}$`.replace("*$", "(.*)$")))
 	);
 };
 
-export default withAuth({
-	callbacks: {
-		authorized({ req, token }) {
-			const path = new URL(req.url).pathname;
+export default withAuth(req => {
+	if (isPublic(new URL(req.url).pathname)) {
+		return NextResponse.next();
+	}
 
-			if (isPublic(path) || token) {
-				return NextResponse.next();
-			}
+	if (req.nextauth.token) {
+		return NextResponse.next();
+	}
 
-			return NextResponse.redirect(new URL("/api/auth/signin", req.url));
-		},
-	},
-})
+	const signInUrl = new URL("/api/auth/signin", req.nextUrl.origin);
+	return NextResponse.redirect(signInUrl);
+});
 
 export const config = {
-	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-}
+	matcher: ['/admin/:path*', '/new', '/user/:path*', '/projects', '/profile']
+};

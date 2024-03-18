@@ -13,7 +13,7 @@ export async function getServerSideProps() {
     }
 }
 
-export default function Signin({ csrfToken, providers }) {
+export default function Signin({ providers }) {
     return (
         <div className='flex flex-col items-center justify-center w-full min-h-screen'>
             <Card className="min-w-[300px]">
