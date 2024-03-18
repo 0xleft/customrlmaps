@@ -3,9 +3,9 @@ import '@/styles/globals.css';
 import RootLayout from '@/components/Layout';
 import { SessionProvider } from 'next-auth/react';
 
-export default function App({ Component, session, ...pageProps }) {
+export default function App({ Component, pageProps }) {
 	return (
-		<SessionProvider session={session}>
+		<SessionProvider session={pageProps.session}>
 			<RootLayout>
 				<Component {...pageProps} />
 			</RootLayout>

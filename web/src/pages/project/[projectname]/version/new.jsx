@@ -19,9 +19,11 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const getServerSideProps = async ({ req, res, params }) => {
@@ -31,7 +33,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { projectname } = params;
-    const currentUser = await getAllUserInfoServer(req);
+    const currentUser = await getAllUserInfoServer(req, res);
 
     if (!currentUser) {
         return {

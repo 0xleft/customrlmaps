@@ -42,7 +42,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { projectname } = params;
-    const currentUser = await getAllUserInfoServer(req);
+    const currentUser = await getAllUserInfoServer(req, res);
 
     if (!currentUser) {
         return {

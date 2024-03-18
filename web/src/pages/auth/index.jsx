@@ -1,13 +1,12 @@
 import CustomError from '@/components/CustomError';
 import { useRouter } from 'next/router';
-import { use, useEffect } from 'react';
+import { useEffect } from 'react';
 
-export default function VersionIndex() {
+export default function AuthIndex() {
     const router = useRouter();
-    const { projectname } = router.query;
 
     useEffect(() => {
-        router.replace(`/project/${projectname}`);
+        router.replace(`/`);
     }, []);
     
     return (

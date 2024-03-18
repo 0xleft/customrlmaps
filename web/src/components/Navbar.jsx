@@ -7,6 +7,8 @@ import { AddButton } from './AddButton';
 import { NavButton } from './NavButton';
 import { SignedIn, SignedOut } from './SignedButtons';
 import { Button } from './ui/button';
+import { NavBreadcrumbs } from './NavBreadcrumbs';
+import UserButton from './UserButton';
 
 export default function Navbar() {
 	const session = useSession();
@@ -24,14 +26,9 @@ export default function Navbar() {
 						<Button variant='hero'>CustomRLMaps</Button>
 					</Link>
 					<div className='hidden md:flex'>
-						{/* <NavBreadcrumbs /> */}
+						<NavBreadcrumbs />
 					</div>
 				</div>
-				<nav className='md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center'>
-					<SignedIn>
-						
-					</SignedIn>
-				</nav>
 				<div className='md:flex items-center space-x-2 flex-row flex'>
 					<AddButton />
 					<div className='hidden md:flex'>
@@ -43,7 +40,7 @@ export default function Navbar() {
 						>Sign in</Button>
 					</SignedOut>
 					<SignedIn session={session}>
-						{/*<UserButton />*/}
+						<UserButton session={session} />
 					</SignedIn>
 				</div>
 			</div>

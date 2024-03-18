@@ -18,46 +18,57 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import { DangerDialog } from './_DangerDialog';
+import { z } from 'zod';
+import CustomError from '@/components/CustomError';
 
-
-
-
-export const getServerSideProps = async ({ req, res, params }) => {
+export const getServerSideProps = async ({ req, res }) => {
     res.setHeader(
         'Cache-Control',
         'public, s-maxage=10, stale-while-revalidate=60'
     )
 
-    const currentUser = await getAllUserInfoServer(req);
+    const currentUser = await getAllUserInfoServer(req, res);
 
-	if (currentUser.dbUser.deleted) {
-		return {
-			props: {
-				notFound: true,
-			},
-		};
-	}
+    if (!currentUser || !currentUser.session || !currentUser.dbUser || currentUser.dbUser.deleted) {
+        return {
+            props: {
+                notFound: true,
+            },
+        };
+    }
 
-	return {
+    return {
 		props: {
             user: {
                 username: currentUser.dbUser.username,
-				description: currentUser.dbUser.description,
                 imageUrl: currentUser.dbUser.imageUrl,
-                created: `${currentUser.dbUser.createdAt.getDate()}/${currentUser.dbUser.createdAt.getMonth()}/${currentUser.dbUser.createdAt.getFullYear()}`,
-                roles: currentUser.dbUser.roles.join(", "),
-				updated: `${currentUser.dbUser.updatedAt.getDate()}/${currentUser.dbUser.updatedAt.getMonth()}/${currentUser.dbUser.updatedAt.getFullYear()}`
             },
         },
 	};
 };
 
-export default function User({ user }) {
+export default function User({ user, notFound }) {
+
+    if (!user) {
+        return (
+            <CustomError error="404">
+                <h1 className='text-muted-foreground'>User not found</h1>
+            </CustomError>
+        );
+    }
+
+    if (notFound) {
+        return (
+            <CustomError error="404">
+                <h1 className='text-muted-foreground'>User not found</h1>
+            </CustomError>
+        );
+    }
 
 	const formSchema = z.object({
 		username: z.string().min(1, "Username is required"),

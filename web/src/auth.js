@@ -10,7 +10,9 @@ export const config = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         })
     ],
-    
+    pages: {
+        signIn: "/auth/signin",
+    },
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config)

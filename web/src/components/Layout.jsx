@@ -5,7 +5,7 @@ import { Toaster } from 'sonner';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
-const RootLayout = ({ children }) => {
+export default function RootLayout({ children, providers }) {
 	return (
 		<>
 			<ThemeProvider
@@ -14,7 +14,7 @@ const RootLayout = ({ children }) => {
 				enableSystem
 				disableTransitionOnChange
           	>
-				<Navbar />
+				<Navbar providers={providers} />
 
 				<main className="min-h-screen">
 					<>
@@ -31,5 +31,3 @@ const RootLayout = ({ children }) => {
 		</>
  );
 };
-
-export default RootLayout;

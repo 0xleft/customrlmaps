@@ -4,42 +4,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
-import { use, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Markdown from 'react-markdown';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-
-
-export const getServerSideProps = async ({ req, res, params }) => {
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=60'
-    )
-
-	const user = await getAllUserInfoServer(req, res);
-
-	if (!user || !user.dbUser) {
-		return {
-			props: {
-				user: null,
-			},
-		};
-	}
-
-	return {
-		props: {
-			user: {
-				username: user.dbUser.username,
-			}
-		}
-	}
-};
 
 function checkFileType(file, type) {
 	if (!file) {
@@ -68,15 +41,10 @@ function checkBannerType(file) {
     return false;
 }
 
-export default function NewProject({ user }) {
+export default function NewProject() {
+
 	const router = useRouter();
 	const type = router.query.type;
-
-	useEffect(() => {
-		if (!user) {
-			router.push("/api/auth/signin");
-		}
-	}, [user]);
 
     const formSchema = z.object({
 		file: z.any()

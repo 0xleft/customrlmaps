@@ -52,18 +52,26 @@ function userCanEditVersion(user, version) {
     return hasRole(user, "ADMIN") || userOwnsVersion(user, version);
 }
 
-async function getUserInfo(req, res) {
+async function getUserInfoServer(req, res) {
     return await getServerSession(req, res);
 }
 
+async function getUserFromEmail(email) {
+    return await prisma.user.findFirst({
+        where: {
+            email: email,
+        },
+    });
+}
+
 async function getAllUserInfoServer(req, res) {
-    const session = await getUserInfo(req, res);
+    const session = await getUserInfoServer(req, res);
     if (!session) {
         return null;
     }
-    const user = await getUserFromUsername(session.user.name);
+    const user = await getUserFromEmail(session.user.email);
     return {
-        session,
+        session: session,
         dbUser: user,
     };
 }
@@ -79,6 +87,6 @@ export {
     userOwnsVersion,
     userCanEditProject,
     userCanEditVersion,
-    getUserInfo,
+    getUserInfoServer,
     getAllUserInfoServer,
 }

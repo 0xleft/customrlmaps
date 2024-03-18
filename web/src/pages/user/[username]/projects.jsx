@@ -31,7 +31,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
 	try {
-		const currentUser = await getAllUserInfoServer(req);
+		const currentUser = await getAllUserInfoServer(req, res);
 		const { username } = params;
 	
 		const dbUser = await prisma.user.findUnique({
@@ -177,7 +177,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 							<Pagination className="mt-10">
 								<PaginationContent>
 									<PaginationItem>
-									<PaginationPrevious href={currentPage === 1 ? "#" : `/user/${user.username}/project?page=${currentPage - 1}`} />
+									<PaginationPrevious href={currentPage === 1 ? "#" : `/user/${user.username}/projects?page=${currentPage - 1}`} />
 									</PaginationItem>
 									<PaginationItem>
 									<PaginationLink href="#" aria-current="page">
@@ -188,7 +188,7 @@ export default function projects({ user, projects, notFound, currentPage, maxPag
 									<PaginationEllipsis />
 									</PaginationItem>
 									<PaginationItem>
-									<PaginationNext href={currentPage === maxPage ? "#" : `/user/${user.username}/project?page=${currentPage + 1}`} />
+									<PaginationNext href={currentPage === maxPage ? "#" : `/user/${user.username}/projects?page=${currentPage + 1}`} />
 									</PaginationItem>
 								</PaginationContent>
 							</Pagination>

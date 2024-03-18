@@ -17,7 +17,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     )
 
     const { username } = params;
-    const currentUser = await getAllUserInfoServer(req);
+    const currentUser = await getAllUserInfoServer(req, res);
 
     const dbUser = await prisma.user.findUnique({
         where: {

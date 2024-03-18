@@ -9,20 +9,20 @@ const isPublic = (path) => {
 	);
 };
 
-export const config = {
-	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-}
-
 export default withAuth({
 	callbacks: {
-		authorized: async ({ req }) => {
-			const path = req.url;
+		authorized({ req, token }) {
+			const path = new URL(req.url).pathname;
 
-			if (isPublic(path)) {
+			if (isPublic(path) || token) {
 				return NextResponse.next();
 			}
 
-			return NextResponse.rewrite(new URL("/api/auth/signin", req.url));
+			return NextResponse.redirect(new URL("/api/auth/signin", req.url));
 		},
-	}
+	},
 })
+
+export const config = {
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
