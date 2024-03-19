@@ -7,7 +7,7 @@ import * as React from 'react';
 import DateComponent from './DateComponent';
 import { Badge } from './ui/badge';
 
-export function ItemCard( { title, description, image, createdAt, link, isPrivate, type } ) {
+export function ItemCard({title, description, image, createdAt, link, isPrivate, type}) {
 
     const router = useRouter();
 
@@ -47,4 +47,12 @@ export function ItemCard( { title, description, image, createdAt, link, isPrivat
             </div>
         </Card>
     )
+}
+
+export function BigItemCard({title, description, image, createdAt, link, isPrivate, type}) {
+    return (
+        <>
+            
+        </>
+    );
 }
