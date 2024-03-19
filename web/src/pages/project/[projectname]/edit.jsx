@@ -134,8 +134,8 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
     const router = useRouter();
 
     const formSchema = z.object({
-        description: z.string(),
-        longDescription: z.string(),
+        description: z.string().max(300),
+        longDescription: z.string().max(2000),
         status: z.enum(["PUBLISHED", "DRAFT"]).optional(),
 	})
 

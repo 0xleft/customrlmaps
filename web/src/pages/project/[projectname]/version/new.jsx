@@ -111,7 +111,7 @@ export default function NewVersionProject({ project, notFound, canEdit }) {
     const schema = z.object({
         changes: z.string().min(1, {
 			message: "Changes are required",
-		}),
+		}).max(300),
         files: z.any().refine((file) => file?.length !== 0, "File is required"),
         versionString: z.string().regex(/^\d{1,4}\.\d{1,4}\.\d{1,4}$/, "Invalid version number format. Use x.x.x"),
         latest: z.boolean(),

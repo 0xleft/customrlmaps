@@ -3,7 +3,7 @@ import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import { z } from 'zod';
 
 const schema = z.object({
-    name: z.any(),
+    name: z.any().max(20),
     versionString: z.string().regex(/^\d{1,4}\.\d{1,4}\.\d{1,4}$/, "Invalid version number format. Use x.x.x"),
 });
 

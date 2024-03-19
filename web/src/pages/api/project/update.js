@@ -14,9 +14,9 @@ const client = new S3Client({
 });
 
 const schema = z.object({
-	name: z.any(),
-	description: z.any(),
-	longDescription: z.any(),
+	name: z.any().max(20),
+	description: z.any().max(300),
+	longDescription: z.any().max(2000),
 	status: z.enum(["PUBLISHED", "DRAFT"]).optional(),
     banner: z.any().optional(),
 })

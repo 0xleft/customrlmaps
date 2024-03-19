@@ -50,17 +50,17 @@ export default function NewProject() {
 		file: z.any()
 		.refine((file) => file?.length !== 0, "File is required")
 		.refine((file) => checkFileType(file, type), type === "mod" ? "Only .dll formats are supported." : "Only .upk formats are supported."),
-		name: z.string().min(1, {
+		name: z.string().max(20).min(1, {
 			message: "Name must not be empty",
 		}).regex(/^[a-zA-Z0-9-_]+$/, {
 			message: "Only alphanumeric characters are allowed (a-z, A-Z, 0-9, - and _)",
 		}),
-		description: z.string().min(1, {
+		description: z.string().max(300).min(1, {
 			message: "Description must not be empty",
 		}).regex(/^[a-zA-Z0-9-_]+$/, {
 			message: "Only alphanumeric characters are allowed (a-z, A-Z, 0-9, - and _)",
 		}),
-		longDescription: z.string().min(1, {
+		longDescription: z.string().max(2000).min(1, {
 			message: "Long description must not be empty",
 		}),
 		banner: z.any()

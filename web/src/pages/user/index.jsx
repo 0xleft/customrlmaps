@@ -64,8 +64,8 @@ export default function User({ user }) {
     }
 
 	const formSchema = z.object({
-		username: z.string().min(1, "Username is required"),
-		description: z.string().optional(),
+		username: z.string().max(20).min(1, "Username is required"),
+		description: z.string().max(300).optional(),
 	})
 
     const form = useForm({
