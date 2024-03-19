@@ -4,23 +4,24 @@ import { Toaster } from 'sonner';
 
 import Footer from './Footer';
 import Navbar from './Navbar';
+import { useTheme } from 'next-themes';
+import { useEffect } from 'react';
+import ThemedProgressBar from './ThemedProgressBar';
 
-export default function RootLayout({ children, providers }) {
+export default function RootLayout({ children }) {
+		
 	return (
 		<>
 			<ThemeProvider
 				attribute="class"
 				defaultTheme="light"
-				enableSystem
 				disableTransitionOnChange
           	>
-				<Navbar providers={providers} />
+				<Navbar />
 
 				<main className="min-h-screen">
 					<>
-						<NextNProgress color="#000" startPosition={0.3} stopDelayMs={200} height={3} showOnShallow={true} options={
-							{ showSpinner: false }
-						} />
+						<ThemedProgressBar />
 						{children}
 					</>
 				</main>
