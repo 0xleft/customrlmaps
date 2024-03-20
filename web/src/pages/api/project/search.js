@@ -18,7 +18,7 @@ export default async function handler(req, res) {
             query: params.get("query") || "",
             page: parseInt(params.get("page")) || 0,
             username: params.get("username") || "",
-            order: params.get("order") || "downloads",
+            order: params.get("order") || "views",
             orderType: params.get("orderType") || "desc",
             rating: parseInt(params.get("rating")) || 0,
         });

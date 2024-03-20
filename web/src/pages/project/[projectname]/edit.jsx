@@ -222,6 +222,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                 toast.error("An error occurred! " + data.error);
                 return;
             }
+            toast.dismiss();
             toast.success("Status: " + data.message);
             router.replace(router.asPath);
         });

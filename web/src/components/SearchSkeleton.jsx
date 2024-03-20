@@ -3,6 +3,8 @@ import { Button } from "./ui/button";
 import { Card, CardDescription, CardTitle } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { useRouter } from "next/router";
+import { DownloadIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 function SingleSeachSkeleton() {
 	return (
@@ -19,8 +21,22 @@ function SingleSeachSkeleton() {
 	);
 }
 
+
+
 export function SearchItem({ project }) {
 	const router = useRouter();
+
+	function getNiceNumber(number) {
+		if (number < 1000) {
+			return number;
+		}
+	
+		if (number < 1000000) {
+			return (number / 1000).toFixed(1) + "k";
+		}
+	
+		return (number / 1000000).toFixed(1) + "m";
+	}
 
 	return (
 		<>
@@ -29,25 +45,30 @@ export function SearchItem({ project }) {
 					router.push(`/project/${project.name}`);
 				}} />
 				
-				<div className="flex flex-row justify-between space-x-2">
-					<div className="pl-2">
-						<Link className="text-4xl" href={`/project/${project.name}`}
-						>{project.name}</Link>
+				<div className="flex flex-col justify-between space-x-2">
+					<Link className="pl-2 text-xl hover:underline" href={`/project/${project.name}`}
+					>{
+						project.name
+					}</Link>
 
-						<CardDescription>
-							{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
-						</CardDescription>
-					</div>
-
-					<div>
-						<Button>View</Button>
-					</div>
+					<CardDescription className="h-full text-clip text-md">
+						By <Link href={`/user/${project.user}`} className="hover:underline">@{project.user}</Link>
+					</CardDescription>
 				</div>
 
-				
-				
-				
-				<div className="flex flex-row justify-between space-x-2">
+				<div className="flex flex-row justify-between space-x-2 h-full">
+					<div className="flex flex-row space-x-2 min-h-8 items-center justify-center w-full">
+						<p className="flex flex-row items-center">
+							<EyeOpenIcon />
+							{getNiceNumber(project.views)} views
+						</p>
+					</div>
+					<div className="flex flex-row space-x-2 min-h-8 items-center justify-center w-full">
+						<p className="flex flex-row items-center">
+							<DownloadIcon />
+							{getNiceNumber(project.downloads)} downloads
+						</p>
+					</div>
 				</div>
 			</Card>
 		</>
