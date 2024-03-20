@@ -1,10 +1,13 @@
+import { useEffect, useState } from "react";
 
-export default function IsAdmin({ user, children }) {
-	// todo
-
+export default function IsAdmin({ children, isAdmin }) {
     return (
 		<>
-			{children}
+			{isAdmin ? (
+				<>
+					{children}
+				</>
+			) : null }
 		</>
  );
 };

@@ -3,7 +3,7 @@
 import MapSearchForm from '@/components/MapSearchForm';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { AddButton } from './AddButton';
 import { NavButton } from './NavButton';
@@ -15,6 +15,17 @@ import UserButton from './UserButton';
 export default function Navbar() {
 	const session = useSession();
 
+	const [isAdmin, setIsAdmin] = useState(false);
+
+	useCallback(() => {
+		fetch('/api/user/isAdmin', {
+			method: 'GET',
+		}, { next: { revalidate: 60 } }).then((res) => res.json()).then((data) => {
+			setIsAdmin(data.isAdmin);
+		}).catch((error) => {
+		});
+	}, []);
+
 	if (!session) return null;
 	if (session.status == "loading") return null;
 
@@ -22,7 +33,7 @@ export default function Navbar() {
 		<header className='text-primary body-font bg-primary-foreground shadow'>
 			<div className='mx-auto flex flex-wrap p-2 flex-row md:flex-row items-center justify-between ml-3 mr-3'>
 				<div className='flex flex-row items-center space-x-2'>
-					<NavButton />
+					<NavButton isAdmin={isAdmin} />
 					{/* icon too // todo */}
 					<Link href='/'>
 						<Button variant='hero'>CustomRLMaps</Button>

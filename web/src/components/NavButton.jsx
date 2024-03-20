@@ -28,7 +28,7 @@ import { useRouter } from 'next/router';
 import IsAdmin from './IsAdmin';
 import { useState } from 'react';
 
-export function NavButton() {
+export function NavButton({ isAdmin }) {
 	const router = useRouter();
 	const { theme, setTheme } = useTheme();
 	const [dropOpen, setDropOpen] = useState(false);
@@ -76,7 +76,7 @@ export function NavButton() {
 						<HomeIcon className="mr-2" />
 						Dashboard
 					</DropdownMenuItem>
-					<IsAdmin>
+					<IsAdmin isAdmin={isAdmin}>
 						<DropdownMenuItem onSelect={() => router.push('/admin')}>
 							<LockClosedIcon className="mr-2" />
 							Admin
