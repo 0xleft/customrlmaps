@@ -1,3 +1,5 @@
+"use client";
+
 import MapSearchForm from '@/components/MapSearchForm';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
