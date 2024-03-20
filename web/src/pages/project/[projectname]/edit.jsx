@@ -26,7 +26,7 @@ import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Markdown from 'react-markdown';
 import { toast } from 'sonner';
@@ -136,7 +136,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
         description: z.string().max(300),
         longDescription: z.string().max(2000),
         status: z.enum(["PUBLISHED", "DRAFT"]).optional(),
-	})
+    })
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -238,9 +238,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                     <div className='flex flex-row space-x-2 items-center w-full justify-between'>
                                         <div className='w-full'>
                                             <h1 className='text-4xl flex md:flex-row flex-col font-bold'>
-                                                <p>
-                                                    Editing <span className='font-normal'>{project.name}</span>
-                                                </p>
+                                                <p>Editing <span className='font-normal'>{project.name}</span></p>
                                                 <div className='flex flex-row space-x-2 md:mt-1'>
                                                     <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.type}</Badge>
                                                     <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.publishStatus}</Badge>
@@ -300,7 +298,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                     </div>
                                 </CardTitle>
                                 <CardDescription>
-                                    <h1>Latest version {project.latestVersion}</h1>
+                                    Latest version {project.latestVersion}
                                 </CardDescription>
                             </CardHeader>
 

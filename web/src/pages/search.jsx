@@ -1,12 +1,32 @@
-import SearchSkeleton from "@/components/SearchSkeleton";
+import SearchSkeleton, { SearchItem } from "@/components/SearchSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
+import prisma from "@/lib/prisma";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export default function Search() {
+const PER_PAGE = 10;
+
+export const getServerSideProps = async ({ req, res, params }) => {
+	const count = await prisma.project.count({
+		where: {
+			deleted: false,
+			publishStatus: "PUBLISHED",
+		},
+	});
+
+	return {
+		props: {
+			maxPage: (Math.ceil(count / PER_PAGE) - 1),
+		},
+	};
+};
+
+export default function Search({ maxPage }) {
+	console.log(maxPage);
 
 	const params = useRouter().query;
 	const page = params.page ? parseInt(params.page) : 0;
@@ -34,7 +54,7 @@ export default function Search() {
 				return;
 			}
 
-			setProjects([]);
+			setProjects(data.projects);
 			setLoading(false);
 		}).catch((error) => {
 			toast.error("Error fetching projects");
@@ -75,15 +95,13 @@ export default function Search() {
                         <CardContent className="mt-0 lg:mt-4 min-h-screen">
 
 							<div className="mt-4 min-h-screen">
-								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 									{loading ? <><SearchSkeleton/></> : <>
 										{projects.map((project) => {
 											return (
-												<div key={project.name} className="mt-4">
-													<ProjectCard project={project} />
-												</div>
+												<SearchItem key={project.name} project={project} />
 											);
-										})};
+										})}
 									</> }
 								</div>
 							</div>
@@ -91,7 +109,12 @@ export default function Search() {
 							<Pagination className="mt-10">
 									<PaginationContent>
 										<PaginationItem>
-										{/* <PaginationPrevious href={page === 1 ? "#" : `/user/${user.username}/projects?page=${page - 1}`} /> */}
+										<PaginationPrevious href={page === 0 ? "#" : `/search?query=${query}&page=${page - 1}&order=${order}&orderType=${orderType}&type=${type}&username=${username}&rating=${rating}`} />
+										</PaginationItem>
+										<PaginationItem>
+										<PaginationLink href={`/search?query=${query}&page=${0}&order=${order}&orderType=${orderType}&type=${type}&username=${username}&rating=${rating}`} aria-current="page">
+											0
+										</PaginationLink>
 										</PaginationItem>
 										<PaginationItem>
 										<PaginationLink href="#" aria-current="page">
@@ -102,7 +125,12 @@ export default function Search() {
 										<PaginationEllipsis />
 										</PaginationItem>
 										<PaginationItem>
-										{/* <PaginationNext href={page === 0 ? "#" : `/user/${user.username}/projects?page=${page + 1}`} /> */}
+										<PaginationLink href={`/search?query=${query}&page=${maxPage}&order=${order}&orderType=${orderType}&type=${type}&username=${username}&rating=${rating}`} aria-current="page">
+											{maxPage}
+										</PaginationLink>
+										</PaginationItem>
+										<PaginationItem>
+										<PaginationNext href={page >= maxPage ? "#" : `/search?query=${query}&page=${page + 1}&order=${order}&orderType=${orderType}&type=${type}&username=${username}&rating=${rating}`} />
 										</PaginationItem>
 									</PaginationContent>
 								</Pagination>

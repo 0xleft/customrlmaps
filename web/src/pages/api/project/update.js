@@ -71,7 +71,7 @@ export default async function handler(req, res) {
             data: updateData,
         });
 
-        if (parsed.banner) {
+        if (parsed.banner && parsed.banner === true) {
             const currentTime = new Date().getTime();
             const bannername = createHash("sha256").update(parsed.name + `3641banner${currentTime}`).digest("hex");
 
