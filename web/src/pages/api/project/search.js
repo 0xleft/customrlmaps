@@ -6,27 +6,48 @@ const formSchema = z.object({
 	username: z.string().max(100),
 	order: z.enum(["createdAt", "likes", "views", "downloads"]),
 	orderType: z.enum(["asc", "desc"]),
+    rating: z.number().int().min(0).max(5),
 });
 
 export default async function handler(req, res) {
 
     try {
         const params = new URL(req.url, "https://localhost").searchParams;
-        const { query, page, username, order, orderType } = formSchema.parse({
+
+        const { query, page, username, order, orderType, rating } = formSchema.parse({
             query: params.get("query") || "",
             page: parseInt(params.get("page")) || 0,
             username: params.get("username") || "",
-            order: params.get("order") || "createdAt",
+            order: params.get("order") || "downloads",
             orderType: params.get("orderType") || "desc",
+            rating: parseInt(params.get("rating")) || 0,
         });
     
-        const projects = await prisma.project.findMany({
+        const projectsQuery = {
             where: {
                 OR: [
-                    { name: { contains: query } },
-                    { description: { contains: query } },
-                    { user: { username: username } },
+                    {
+                        name: {
+                            contains: query,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: "insensitive",
+                        },
+                    },
+                    {
+                        averageRating: {
+                            gte: rating,
+                        },
+                    },
                 ],
+                deleted: false,
+                publishStatus: {
+                    equals: "PUBLISHED",
+                },
             },
             take: 10,
             skip: page * 10,
@@ -36,19 +57,23 @@ export default async function handler(req, res) {
             include: {
                 user: true,
             },
-        });
+        };
+
+        const projects = await prisma.project.findMany(projectsQuery);
     
         return res.status(200).json({
             projects: projects.map((project) => ({
                 name: project.name,
                 description: project.description,
-                likes: project.likes,
+                rating: project.averageRating,
                 views: project.views,
                 downloads: project.downloads,
                 user: project.user.username,
+                imageUrl: project.imageUrl,
+                isRated: project.totalRatings > 0,
             })),
         });
     } catch (error) {
-        return res.status(400).json({ error: error.message });
+        return res.status(400).json({ error: process.env.NODE_ENV === "development" ? error.message : "Invalid request" });
     }
 }

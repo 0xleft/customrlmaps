@@ -43,7 +43,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
         };
     }
 
-    if (project.publishStatus === "DELETED") {
+    if (project.deleted) {
         return {
             props: {
                 notFound: true,
@@ -77,7 +77,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 created: `${project.createdAt.getDate()}/${project.createdAt.getMonth()}/${project.createdAt.getFullYear()}`,
                 updated: `${project.updatedAt.getDate()}/${project.updatedAt.getMonth()}/${project.updatedAt.getFullYear()}`,
                 downloads: project.downloads,
-                tags: project.tags,
                 publishStatus: project.publishStatus,
                 type: project.type,
                 views: project.views,

@@ -24,7 +24,7 @@ export default function UserButton({ session }) {
     // fetch image from api
     const [imageUrl, setImageUrl] = useState(null);
     useEffect(() => {
-        fetch("/api/user/myimage").then((res) => {
+        fetch("/api/user/myimage", { next: { revalidate: 60 } }).then((res) => {
             if (res.ok) {
                 res.json().then((data) => {
                     setImageUrl(data.imageUrl);

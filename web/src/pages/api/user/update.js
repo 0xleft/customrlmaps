@@ -15,7 +15,7 @@ const client = new S3Client({
 
 const schema = z.object({
 	username: z.string().min(3).max(320).optional(),
-    description: z.any().max(300),
+    description: z.string().max(300).optional(),
     image: z.boolean(),
 })
 

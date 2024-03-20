@@ -35,7 +35,7 @@ export default async function handler(req, res) {
             return res.status(403).json({ error: "Forbidden" });
         }
 
-        if (project.publishStatus === "DELETED") {
+        if (project.deleted) {
             return res.status(400).json({ error: "Project has been deleted" });
         }
 

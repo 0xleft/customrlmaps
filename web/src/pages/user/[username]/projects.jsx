@@ -64,9 +64,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 		let projectQuery = {
 			where: {
 				userId: dbUser.id,
-				publishStatus: {
-					not: "DELETED"
-				}
+				deleted: false,
 			},
 			take: PER_PAGE,
 			skip: (page - 1) * PER_PAGE,

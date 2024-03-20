@@ -40,7 +40,7 @@ export default async function handler(req, res) {
             },
             data: {
                 deletedAt: new Date(),
-                publishStatus: "DELETED",
+                deleted: true,
             }
         });
 

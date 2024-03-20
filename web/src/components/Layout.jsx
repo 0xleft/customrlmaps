@@ -21,9 +21,7 @@ export default function RootLayout({ children }) {
 
 				<main className="min-h-screen">
 					<>
-						<div suppressHydrationWarning={true}>
-							<ThemedProgressBar />
-						</div>
+						<ThemedProgressBar />
 						{children}
 					</>
 				</main>

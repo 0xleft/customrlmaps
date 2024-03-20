@@ -37,18 +37,11 @@ export const getServerSideProps = async ({ req, res, params }) => {
     let mapsQuery = {
         where: {
             type: "MAP",
-            publishStatus: {
-                not: "DELETED"
-            }
+            deleted: false,
         },
         take: 6,
         orderBy: {
-            likes: {
-                _count: 'desc',
-            },
-        },
-        include: {
-            likes: true,
+            downloads: "desc",
         },
     };
 

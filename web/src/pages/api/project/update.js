@@ -14,9 +14,9 @@ const client = new S3Client({
 });
 
 const schema = z.object({
-	name: z.any().max(20),
-	description: z.any().max(300),
-	longDescription: z.any().max(2000),
+	name: z.string().max(20),
+	description: z.string().max(300).optional(),
+	longDescription: z.string().max(2000).optional(),
 	status: z.enum(["PUBLISHED", "DRAFT"]).optional(),
     banner: z.any().optional(),
 })
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
             return res.status(403).json({ error: "Forbidden" });
         }
 
-        if (project.publishStatus === "DELETED") {
+        if (project.deleted) {
             return res.status(400).json({ error: "Project has been deleted" });
         }
 
