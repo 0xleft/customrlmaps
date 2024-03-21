@@ -1,49 +1,54 @@
 import { z } from "zod";
 
 const formSchema = z.object({
-	query: z.string().max(100),
+	query: z.string().max(100).optional(),
 	page: z.number().int().min(0),
-	username: z.string().max(100),
-	order: z.enum(["createdAt", "likes", "views", "downloads"]),
+	username: z.string().max(100).optional(),
+	order: z.enum(["createdAt", "likes", "views", "downloads", "averageRating"]),
 	orderType: z.enum(["asc", "desc"]),
-    rating: z.number().int().min(0).max(5),
+    rating: z.number().min(0).max(5),
+    type: z.enum(["MAP", "MOD"]).optional()
 });
 
 export default async function handler(req, res) {
 
+    // sleep for 1 second
+    // todo remove
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     try {
         const params = new URL(req.url, "https://localhost").searchParams;
 
-        const { query, page, username, order, orderType, rating } = formSchema.parse({
-            query: params.get("query") || "",
+        const { query, page, username, order, orderType, rating, type } = formSchema.parse({
+            query: params.get("query") || undefined,
             page: parseInt(params.get("page")) || 0,
-            username: params.get("username") || "",
+            username: params.get("username") || undefined,
             order: params.get("order") || "views",
             orderType: params.get("orderType") || "desc",
-            rating: parseInt(params.get("rating")) || 0,
+            rating: parseFloat(params.get("rating")) || 0,
+            type: params.get("type").toUpperCase() || undefined,
         });
-    
-        const projectsQuery = {
+
+        const projects = await prisma.project.findMany({
             where: {
-                OR: [
-                    {
-                        name: {
-                            contains: query,
-                            mode: "insensitive",
-                        },
+                name: {
+                    contains: query,
+                    mode: "insensitive",
+                },
+                description: {
+                    contains: query,
+                    mode: "insensitive",
+                },
+                user: {
+                    username: {
+                        contains: username,
+                        mode: "insensitive",
                     },
-                    {
-                        description: {
-                            contains: query,
-                            mode: "insensitive",
-                        },
-                    },
-                    {
-                        averageRating: {
-                            gte: rating,
-                        },
-                    },
-                ],
+                },
+                type: type,
+                averageRating: {
+                    gte: rating,
+                },
                 deleted: false,
                 publishStatus: {
                     equals: "PUBLISHED",
@@ -57,9 +62,7 @@ export default async function handler(req, res) {
             include: {
                 user: true,
             },
-        };
-
-        const projects = await prisma.project.findMany(projectsQuery);
+        });
     
         return res.status(200).json({
             projects: projects.map((project) => ({
