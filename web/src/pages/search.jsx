@@ -33,7 +33,8 @@ export const getServerSideProps = async ({ req, res, params }) => {
 export default function Search({ maxPage }) {
 	const params = useRouter().query;
 	const [page, setPage] = useState(params.page ? parseInt(params.page) : 0);
-	const [query, setQuery] = useState(params.query ? params.query : "");
+	const [query, setQuery] = useState(params.query);
+
 	const [order, setOrder] = useState(params.order ? params.order : ""); // order by
 	const [orderType, setOrderType] = useState(params.orderType ? params.orderType : "desc");
 	const [type, setType] =  useState(params.type ? params.type : "");
@@ -146,7 +147,7 @@ export default function Search({ maxPage }) {
 							</div>
 							
 							<div>
-								<Label>Username:</Label>
+								<Label>Creators username:</Label>
 								<Input type="text" value={username} onChange={(e) => {
 									setUsername(e.target.value);
 								}} className="w-full p-2 border border-gray-300 rounded-md" />
@@ -158,6 +159,21 @@ export default function Search({ maxPage }) {
 									setQuery(e.target.value);
 								}} className="w-full p-2 border border-gray-300 rounded-md" />
 							</div>
+
+							<Button onClick={() => {
+								getProjects();
+							}}>Search</Button>
+
+							<Button onClick={() => {
+								setQuery("");
+								setOrder("");
+								setOrderType("desc");
+								setType("");
+								setUsername("");
+								setRating(0);
+								getProjects();
+							}
+							}>Clear</Button>
 
 						</CardContent>
 					</Card>
