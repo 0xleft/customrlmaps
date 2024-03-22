@@ -3,12 +3,15 @@ import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function MapSearchForm() {
     const router = useRouter();
     
+    const initQuery = router.query.query ? router.query.query : "";
+
     const formSchema = z.object({
         query: z.string().min(1, {
             message: "Query must not be empty",
@@ -18,15 +21,15 @@ export default function MapSearchForm() {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-          query: "",
+          query: initQuery,
         },
     });
     
     function onSubmit(values) {
-        router.push({
-            pathname: "/search",
-            query: { query: values.query },
-        });
+        router.push(`/search?query=${values.query}`);
+
+        // i dont like this reaload but else we dont get the query in the search
+        router.reload();
     }
     
     return (
@@ -38,7 +41,9 @@ export default function MapSearchForm() {
                 render={({ field }) => (
                     <FormItem>
                         <FormControl>
-                            <Input placeholder="Search..." {...field} />
+                            <Input placeholder="Search..." {...field} onChange={(e) => {
+                                field.onChange(e);
+                            }} />
                         </FormControl>
                     </FormItem>
                 )}

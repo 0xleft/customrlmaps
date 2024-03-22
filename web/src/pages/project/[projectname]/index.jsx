@@ -199,26 +199,19 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
 
                                 <div>
                                     <h2 className='text-xl md:text-2xl font-bold'>Description:</h2>
-                                    <Card className='mt-4'>
-                                        <CardContent className="mt-4">
-                                            {project.description}
-                                        </CardContent>
-                                    </Card>
+                                    <p className='text-muted-foreground break-words'>
+                                        {project.description}
+                                    </p>
                                 </div>
                                 
                             </div>
                         </div>
-                        
 
                         <div className='mt-4'>
                             <h2 className='text-xl md:text-2xl font-bold'>Long description:</h2>
-                            <Card className='mt-4'>
-                                <CardContent className="mt-4">
-                                    <article className="prose"><Markdown
-                                        allowedElements={["h1", "h2", "h3", "h4", "h5", "h6", "p", "ul", "ol", "li", "a", "strong", "em", "code", "img", "blockquote", "hr", "br"]}
-                                    >{project.longDescription}</Markdown></article>
-                                </CardContent>
-                            </Card>
+                            <article className="prose break-words"><Markdown
+                                allowedElements={["h1", "h2", "h3", "h4", "h5", "h6", "p", "ul", "ol", "li", "a", "strong", "em", "code", "img", "blockquote", "hr", "br"]}
+                            >{project.longDescription}</Markdown></article>
                         </div>
 
                     </CardContent>

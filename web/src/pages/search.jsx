@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import prisma from "@/lib/prisma";
+import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const PER_PAGE = 10;
@@ -32,8 +33,11 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
 export default function Search({ maxPage }) {
 	const params = useRouter().query;
+
+	const timeOut = useRef(null);
+
 	const [page, setPage] = useState(params.page ? parseInt(params.page) : 0);
-	const [query, setQuery] = useState(params.query);
+	const [query, setQuery] = useState(params.query ? params.query : ""); // search query
 
 	const [order, setOrder] = useState(params.order ? params.order : ""); // order by
 	const [orderType, setOrderType] = useState(params.orderType ? params.orderType : "desc");
@@ -43,6 +47,8 @@ export default function Search({ maxPage }) {
 
 	const [loading, setLoading] = useState(true);
 	const [projects, setProjects] = useState([]);
+
+	const [filtersShown, setFiltersShown] = useState(false);
 
 	const router = useRouter();
 
@@ -71,7 +77,10 @@ export default function Search({ maxPage }) {
 	}, []);
 
 	useEffect(() => {
-		getProjects();
+		clearTimeout(timeOut.current);
+		timeOut.current = setTimeout(() => {
+			getProjects();
+		}, 500);
 	}, [page, query, order, orderType, type, username, rating]);
 
 	return (
@@ -85,8 +94,8 @@ export default function Search({ maxPage }) {
 							</CardTitle>
 						</CardHeader>
 						<CardContent className="flex flex-col space-y-4">
-							<div className="flex flex-col space-y-2">
-								<Label>Rating: {rating}</Label>
+							<div className="flex flex-col space-y-4">
+								<Label>Rating: {rating === 0 ? "Any" : rating}</Label>
 								<Slider max={5} step={0.5} defaultValue={[rating]} onValueChange={(value) => {
 									setRating(value[0]);
 								}} />
@@ -97,7 +106,7 @@ export default function Search({ maxPage }) {
 								<Select onValueChange={(value) => {
 									setOrder(value);
 								}}>
-									<SelectTrigger className="w-[180px]">
+									<SelectTrigger className="w-full">
 										<SelectValue placeholder="Order by" />
 									</SelectTrigger>
 									<SelectContent>
@@ -116,7 +125,7 @@ export default function Search({ maxPage }) {
 								<Select onValueChange={(value) => {
 									setOrderType(value);
 								}}>
-									<SelectTrigger className="w-[180px]">
+									<SelectTrigger className="w-full">
 										<SelectValue placeholder="Order type" />
 									</SelectTrigger>
 									<SelectContent>
@@ -134,7 +143,7 @@ export default function Search({ maxPage }) {
 									setType(value);
 								}
 								}>
-									<SelectTrigger className="w-[180px]">
+									<SelectTrigger className="w-full">
 										<SelectValue placeholder="Type" />
 									</SelectTrigger>
 									<SelectContent>
@@ -182,11 +191,117 @@ export default function Search({ maxPage }) {
 				<div className="w-full p-2 lg:w-[66%] min-h-screen">
 					<Card className="w-full h-full">
 						<CardHeader className="flex-col flex lg:hidden">
-								<CardTitle>
+								<CardTitle className="pb-2 flex flex-row justify-between items-center">
 									Filters
 									<div className='flex flex-row items-center space-x-2'>
+										<Button onClick={() => {
+											setFiltersShown(!filtersShown);
+										}}
+										variant={filtersShown ? "outline" : "solid"}
+										>{filtersShown ? "Hide" : "Show"}
+
+										{filtersShown ? <ArrowUpIcon /> : <ArrowDownIcon />}
+										</Button>
 									</div>
 								</CardTitle>
+
+								<CardContent className="flex flex-col space-y-4" style={{display: filtersShown ? "block" : "none"}}>
+								<div className="flex flex-col space-y-4">
+									<Label>Rating: {rating === 0 ? "Any" : rating}</Label>
+									<Slider max={5} step={0.5} defaultValue={[rating]} onValueChange={(value) => {
+										setRating(value[0]);
+									}} />
+								</div>
+
+								<div className="flex flex-row space-x-2 w-full">
+									<div className="w-full">
+										<Label>Order by:</Label>
+										<Select onValueChange={(value) => {
+											setOrder(value);
+										}}>
+											<SelectTrigger className="w-full">
+												<SelectValue placeholder="Order by" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+												<SelectItem value="createdAt">Date</SelectItem>
+												<SelectItem value="downloads">Downloads</SelectItem>
+												<SelectItem value="views">Views</SelectItem>
+												<SelectItem value="averageRating">Rating</SelectItem>
+												</SelectGroup>
+											</SelectContent>
+										</Select>
+									</div>
+									
+									<div className="w-full">
+										<Label>Order type:</Label>
+										<Select onValueChange={(value) => {
+											setOrderType(value);
+										}}>
+											<SelectTrigger className="w-full">
+												<SelectValue placeholder="Order type" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectGroup>
+												<SelectItem value="desc">Descending</SelectItem>
+												<SelectItem value="asc">Ascending</SelectItem>
+												</SelectGroup>
+											</SelectContent>
+										</Select>
+									</div>
+								</div>
+
+								<div className="w-full">
+									<Label>Type:</Label>
+									<Select onValueChange={(value) => {
+										setType(value);
+									}
+									}>
+										<SelectTrigger className="w-full">
+											<SelectValue placeholder="Type" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+											<SelectItem value="mod">Mod</SelectItem>
+											<SelectItem value="map">Map</SelectItem>
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+								</div>
+
+								<div className="w-full">
+									<Label>Creators username:</Label>
+									<Input type="text" value={username} onChange={(e) => {
+										setUsername(e.target.value);
+									}} className="w-full p-2 border border-gray-300 rounded-md" />
+								</div>
+
+								<div className="w-full">
+									<Label>Search:</Label>
+									<Input type="text" value={query} onChange={(e) => {
+										setQuery(e.target.value);
+									}} className="w-full p-2 border border-gray-300 rounded-md" />
+								</div>
+
+								<div className="flex flex-row space-x-2 w-full">
+									
+
+									<Button onClick={() => {
+										getProjects();
+									}}>Search</Button>
+
+									<Button onClick={() => {
+										setQuery("");
+										setOrder("");
+										setOrderType("desc");
+										setType("");
+										setUsername("");
+										setRating(0);
+										getProjects();
+									}
+									}>Clear</Button>
+								</div>
+								</CardContent>
 						</CardHeader>
 
 						<CardContent className="mt-0 lg:mt-4 min-h-screen">
@@ -219,7 +334,7 @@ export default function Search({ maxPage }) {
 											setPage(page - 1);
 										}} />
 										</PaginationItem>
-										<PaginationItem>
+										<PaginationItem hidden={page === 0}>
 										<PaginationLink href="#" onClick={() => {
 											setPage(0);
 										}}>
@@ -232,9 +347,9 @@ export default function Search({ maxPage }) {
 										</PaginationLink>
 										</PaginationItem>
 										<PaginationItem>
-										<PaginationEllipsis />
+										<PaginationEllipsis hidden={page === maxPage} />
 										</PaginationItem>
-										<PaginationItem>
+										<PaginationItem hidden={page === maxPage}>
 										<PaginationLink href="#" onClick={() => {
 											setPage(maxPage);
 										}}>
