@@ -33,7 +33,6 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { DangerDialog } from './_DangerDialog';
-import { VersionDialog } from './_VersionDialog';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -150,7 +149,6 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
 	const bannerRef = form.register("banner");
     const [bannerSrc, setBannerSrc] = useState("");
 
-    const [versionDialogOpen, setVersionDialogOpen] = useState(false);
     const [dangerDialogOpen, setDangerDialogOpen] = useState(false);
 
     function onSubmit(data) {
@@ -259,12 +257,6 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                                                     <DropdownMenuGroup>
                                                         <DropdownMenuItem onSelect={() => router.push(`/project/${project.name}/version/new`)}>
                                                             New version
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem onSelect={() => {
-                                                            // open dialog for version list and then select the version and then open the edit page for the version
-                                                            setVersionDialogOpen(true);
-                                                        }}>
-                                                            Edit version
                                                         </DropdownMenuItem>
                                                     </DropdownMenuGroup>
                                                     <DropdownMenuSeparator />
@@ -408,13 +400,6 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
 
                             <CardFooter>
                                 <DateComponent text={`Last updated ${project.updated}`} />
-
-                                <VersionDialog open={versionDialogOpen} projectname={project.name} versions={versions.map((version) => {
-                                    return {
-                                        value: version.version,
-                                        label: version.version,
-                                    };
-                                })} onClose={() => setVersionDialogOpen(false)} />
 
                                 <DangerDialog open={dangerDialogOpen} projectname={project.name} onClose={() => setDangerDialogOpen(false)} />
                             </CardFooter>
