@@ -1,3 +1,4 @@
+import RecaptchaNotice from '@/components/RecapchaNotice';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { signIn, getProviders } from 'next-auth/react'
@@ -20,7 +21,7 @@ export default function Signin({ providers }) {
                     <CardTitle>Sign in </CardTitle>
                     <CardDescription>Sign in or register to your account</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="max-w-[300px]">
                     <div className='flex flex-col space-y-2'>
                         {Object.values(providers).map((provider) => (
                             <div key={provider.name}>
@@ -31,6 +32,8 @@ export default function Signin({ providers }) {
                             </div>
                         ))}
                     </div>
+
+                    <RecaptchaNotice className="text-center mt-2" />
                 </CardContent>
             </Card>
         </div>

@@ -1,7 +1,7 @@
-export default function RecaptchaNotice() {
+export default function RecaptchaNotice({...props}) {
     return (
         <>
-            <p className='text-sm sm:ml-4 sm:pl-4 sm:py-2 sm:mt-0 mt-4 text-center w-full'>
+            <p className={'text-sm w-full ' + (props.className ? ` ${props.className}` : '')}>
             This site is protected by reCAPTCHA and the Google{" "}
             <a className="underline" href="https://policies.google.com/privacy">Privacy Policy</a> and{" "}
             <a className="underline" href="https://policies.google.com/terms">Terms of Service</a> apply.
