@@ -74,7 +74,14 @@ async function getAllUserInfoServer(req, res) {
     }
     const user = await getUserFromEmail(session.user.email);
     
-    if (user.dbUser.deleted || user.dbUser.banned) {
+    if (!user) {
+        return {
+            session: session,
+            dbUser: null,
+        };
+    }
+
+    if (user.deleted || user.banned) {
         return {
             session: session,
             dbUser: null,
