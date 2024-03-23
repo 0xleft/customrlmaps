@@ -16,7 +16,7 @@ const client = new S3Client({
 
 const schema = z.object({
     id: z.number().optional(),
-	username: z.string().min(3).max(320).optional(),
+	username: z.string().min(3).max(320).regex(/^[a-zA-Z0-9_]*$/).optional(),
     description: z.string().max(300).optional(),
     image: z.boolean(),
     gRecaptchatoken: z.string(),
