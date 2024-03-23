@@ -96,6 +96,9 @@ async function getAllUserInfoServer(req, res) {
 }
 
 function isAdmin(user) {
+    if (!user) return false;
+    if (!user.dbUser) return false;
+
     return user.dbUser.roles.includes("admin");
 }
 

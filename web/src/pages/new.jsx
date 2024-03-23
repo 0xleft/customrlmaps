@@ -1,4 +1,5 @@
 import CustomError from '@/components/CustomError';
+import RecaptchaNotice from '@/components/RecapchaNotice';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';

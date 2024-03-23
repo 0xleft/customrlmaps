@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { z } from 'zod';
 
 const schema = z.object({

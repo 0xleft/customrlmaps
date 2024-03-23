@@ -11,6 +11,7 @@ function isPublic(path) {
 
 export default withAuth(req => {
 	if (isPublic(new URL(req.url).pathname)) {
+		console.log('public path', new URL(req.url).pathname);
 		return NextResponse.next();
 	}
 
@@ -23,5 +24,5 @@ export default withAuth(req => {
 });
 
 export const config = {
-	matcher: ['/admin/:path*', '/new', '/user/:path*', '/projects', '/profile']
+	matcher: ['/admin/:path*', '/new', '/user', '/projects', '/profile']
 };

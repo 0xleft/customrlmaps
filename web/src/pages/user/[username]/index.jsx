@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import UserLeftCom from '@/components/UserLeftCom';
 import prisma from '@/lib/prisma';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { AvatarImage } from '@radix-ui/react-avatar';
 
 export const getServerSideProps = async ({ req, res, params }) => {
@@ -27,16 +27,14 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     if (!dbUser || dbUser.deleted) {
         return {
-            redirect: {
-                destination: "/",
-                permanent: false,
-            }
+            notFound: true,
         };
     }
 
     let mapsQuery = {
         where: {
             type: "MAP",
+            userId: dbUser.id,
             deleted: false,
         },
         take: 6,
@@ -45,7 +43,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
         },
     };
 
-    if (!currentUser || currentUser?.dbUser.id !== dbUser.id) {
+    if (!currentUser || (currentUser?.dbUser?.id !== dbUser.id && !isAdmin(currentUser))) {
         mapsQuery.where.publishStatus = "PUBLISHED";
     }
 
@@ -67,7 +65,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 imageUrl: dbUser.imageUrl,
                 created: `${dbUser.createdAt.getDate()}/${dbUser.createdAt.getMonth()}/${dbUser.createdAt.getFullYear()}`,
                 roles: dbUser.roles,
-                isOwner: dbUser.id === currentUser.dbUser.id,
+                isOwner: dbUser.id === currentUser?.dbUser?.id,
             },
             topMaps: topMaps.map((map) => {
                 return {
@@ -112,7 +110,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
 };
 
 export default function UserPage({ user, topMaps, topMods, modCount, mapCount }) {
-
     return (
         <>
             <div className='flex flex-row justify-center p-4 min-h-screen'>
@@ -132,6 +129,8 @@ export default function UserPage({ user, topMaps, topMods, modCount, mapCount })
                                             {user.username}
                                         </div>
                                         {user.roles.map((role) => {
+                                            if (role.length === 0) return (null);
+
                                             return (
                                                 <Badge key={role} className="ml-2">{role}</Badge>
                                             );
