@@ -77,6 +77,7 @@ export default async function handler(req, res) {
                 imageUrl: project.imageUrl,
                 isRated: project.totalRatings > 0,
                 averageRating: project.averageRating,
+                latestVersion: project.latestVersion,
                 updated: `${project.updatedAt.getDate()}/${project.updatedAt.getMonth()}/${project.updatedAt.getFullYear()}`,
             })),
         });

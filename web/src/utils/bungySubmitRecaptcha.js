@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 
+// bungy as in a trampoline
 function bungySubmit(onSubmit, executeRecaptcha, action, setUploading = () => {}, values = {}) {
     setUploading(true);
     if (!executeRecaptcha) {

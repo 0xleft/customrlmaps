@@ -62,15 +62,7 @@ export default async function handler(req, res) {
         if (rating) {
             return res.status(400).json({ error: "Rating already submitted" });
         }
-
-        await prisma.rating.create({
-            data: {
-                rating: parsed.rating,
-                projectId: parsed.projectId,
-                userId: user.dbUser.id,
-            }
-        });
-
+        
         await prisma.project.update({
             where: {
                 id: parsed.projectId,
@@ -85,6 +77,14 @@ export default async function handler(req, res) {
                 averageRating: {
                     increment: parsed.rating,
                 }
+            }
+        });
+
+        await prisma.rating.create({
+            data: {
+                rating: parsed.rating,
+                projectId: parsed.projectId,
+                userId: user.dbUser.id,
             }
         });
 

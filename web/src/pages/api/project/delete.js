@@ -3,7 +3,7 @@ import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import { z } from 'zod';
 
 const schema = z.object({
-	name: z.any().max(20),
+	name: z.string().max(20),
 })
 
 export default async function handler(req, res) {
