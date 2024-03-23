@@ -170,7 +170,7 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
                 return;
             }
 
-            if (data.message) {
+            if (data.bannerFields) {
                 toast.loading("Started uploading files...");
                 const secondFormData = new FormData();
                 Object.keys(data.bannerFields).forEach((key) => {

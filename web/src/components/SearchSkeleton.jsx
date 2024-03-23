@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
 import { Card, CardDescription, CardTitle } from "./ui/card";
 import { Skeleton } from "./ui/skeleton";
 import { useRouter } from "next/router";
 import { DownloadIcon, EyeOpenIcon } from "@radix-ui/react-icons";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { AspectRatio } from "./ui/aspect-ratio";
+import { getNiceNumber } from "@/utils/numberUtils";
 
 function SingleSeachSkeleton() {
 	return (
@@ -26,33 +26,23 @@ function SingleSeachSkeleton() {
 export function SearchItem({ project }) {
 	const router = useRouter();
 
-	function getNiceNumber(number) {
-		if (number < 1000) {
-			return number;
-		}
-	
-		if (number < 1000000) {
-			return (number / 1000).toFixed(1) + "k";
-		}
-	
-		return (number / 1000000).toFixed(1) + "m";
-	}
-
 	return (
 		<>
-			<Card className="flex flex-col space-y-2 min-h-64 w-full hover:shadow-lg transition hover:scale-105 duration-75">
-				<img src={project.imageUrl} className="aspect-video hover:cursor-pointer" onClick={() => {
-					router.push(`/project/${project.name}`);
-				}} />
+			<Card className="flex flex-col space-y-2 min-h-80 w-full hover:shadow-lg transition hover:scale-105 duration-75">
+				<AspectRatio ratio={16 / 9} className="w-full h-52 overflow-clip max-h-52">
+					<img src={project.imageUrl} className="hover:cursor-pointer w-full" onClick={() => {
+						router.push(`/project/${project.name}`);
+					}} />
+				</AspectRatio>
 				
-				<div className="flex flex-col justify-between space-x-2">
+				<div className="flex flex-col justify-between space-x-2 pb-4">
 					<Link className="pl-2 text-xl hover:underline" href={`/project/${project.name}`}
 					>{
 						project.name
 					}</Link>
 
-					<CardDescription className="h-full text-clip text-md">
-						By <Link href={`/user/${project.user}`} className="hover:underline">@{project.user}</Link>
+					<CardDescription className="h-full text-clip text-md overflow-clip">
+						{project.description.length > 40 ? project.description.substring(0, 40) + "..." : project.description}
 					</CardDescription>
 				</div>
 

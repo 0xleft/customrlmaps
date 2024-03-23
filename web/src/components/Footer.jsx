@@ -1,4 +1,4 @@
-const Footer = () => {
+export default function Footer() {
     return (
         <>
             <footer className='text-center py-4 shadow-md'>
@@ -12,5 +12,3 @@ const Footer = () => {
         </>
     );
 };
-
-export default Footer;

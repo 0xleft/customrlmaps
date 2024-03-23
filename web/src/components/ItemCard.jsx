@@ -48,11 +48,3 @@ export function ItemCard({title, description, image, createdAt, link, isPrivate,
         </Card>
     )
 }
-
-export function BigItemCard({title, description, image, createdAt, link, isPrivate, type}) {
-    return (
-        <>
-            
-        </>
-    );
-}
