@@ -27,6 +27,9 @@ model User {
   lastUsernameChange DateTime?
 
   banned Boolean @default(false)
+  bannedAt DateTime?
+
+  ips String[]
 
   roles String[]
 

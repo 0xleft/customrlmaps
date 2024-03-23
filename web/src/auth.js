@@ -27,10 +27,11 @@ export const config = {
                         }
                     });
 
-                    if (user.deleted || user.banned) {
+                    if ((user.deleted || user.banned) && user.email !== process.env.ADMIN_EMAIL) {
                         return false;
                     }
 
+                    // todo add the ip address to the users ips
                     await prisma.user.upsert({
                         where: {
                             email: profile.email,

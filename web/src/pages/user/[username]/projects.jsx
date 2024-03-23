@@ -17,11 +17,6 @@ import UserLeftCom from '@/components/UserLeftCom';
 import prisma from '@/lib/prisma';
 import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 
-
-  
-
-
-
 const PER_PAGE = 10
 
 export const getServerSideProps = async ({ req, res, params }) => {

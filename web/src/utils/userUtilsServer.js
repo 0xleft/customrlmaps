@@ -72,6 +72,7 @@ async function getAllUserInfoServer(req, res) {
             dbUser: null,
         };
     }
+    
     const user = await getUserFromEmail(session.user.email);
     
     if (!user) {
@@ -81,7 +82,7 @@ async function getAllUserInfoServer(req, res) {
         };
     }
 
-    if (user.deleted || user.banned) {
+    if ((user.deleted || user.banned) && !user.roles.includes("admin")) {
         return {
             session: session,
             dbUser: null,

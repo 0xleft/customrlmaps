@@ -1,3 +1,4 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAllUserInfoServer, isAdmin } from "@/utils/userUtilsServer";
 
 export const getServerSideProps = async ({ req, res }) => {
@@ -9,11 +10,13 @@ export const getServerSideProps = async ({ req, res }) => {
 		};
 	}
 
-	if (isAdmin(user)) {
+	if (!isAdmin(user)) {
 		return {
 			notFound: true,
 		};
 	}
+
+
 
 	return {
 		props: {},
@@ -23,7 +26,20 @@ export const getServerSideProps = async ({ req, res }) => {
 export default function Admin() {
 	return (
 		<>
-			<h1>Admin</h1>
+			<div className="container p-4">
+				<Card className="w-full">
+
+					<CardHeader className="flex flex-col">
+                        <CardTitle>
+							Admin console
+                        </CardTitle>
+                    </CardHeader>
+
+					<CardContent>
+						
+					</CardContent>
+				</Card>
+			</div>
 		</>
 	);
 }

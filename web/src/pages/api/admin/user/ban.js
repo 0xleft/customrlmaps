@@ -2,6 +2,11 @@ import prisma from '@/lib/prisma';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { z } from 'zod';
 
+const schema = z.object({
+    id: z.number().optional(),
+    banned: z.boolean().optional(),
+});
+
 export default async function handler(req, res) {
 	const user = await getAllUserInfoServer(req, res);
 
@@ -13,18 +18,30 @@ export default async function handler(req, res) {
 		return res.status(405).json({ error: "Method not allowed" });
 	}
 
+    if (!isAdmin(user)) {
+        return res.status(403).json({ error: "Forbidden" });
+    }
+
 	try {
-        if (user.dbUser.deleted) {
-            return res.status(400).json({ error: "User has been deleted" });
+        const { id, banned } = schema.parse(req.body);
+
+        if (!id) {
+            return res.status(400).json({ error: "Missing id" });
         }
 
-        const projects = prisma.project.findMany({
+        const dbUser = await prisma.user.findFirst({
             where: {
-                userId: user.dbUser.id,
+                id: id,
             }
         });
 
-        for (const project of projects) {
+        const projects = await prisma.project.findMany({
+            where: {
+                userId: dbUser.id,
+            }
+        });
+
+        projects.forEach(async (project) => {
             await prisma.version.updateMany({
                 where: {
                     projectId: project.id,
@@ -34,11 +51,11 @@ export default async function handler(req, res) {
                     deletedAt: new Date(),
                 }
             });
-        }
+        });
 
         await prisma.project.updateMany({
             where: {
-                userId: user.dbUser.id,
+                userId: dbUser.id,
             },
             data: {
                 deleted: true,
@@ -48,11 +65,11 @@ export default async function handler(req, res) {
 
         await prisma.user.update({
             where: {
-                id: user.dbUser.id,
+                id: dbUser.id,
             },
             data: {
-                deleted: true,
-                deletedAt: new Date(),
+                banned: banned,
+                bannedAt: banned ? new Date() : null,
             }
         });
 
