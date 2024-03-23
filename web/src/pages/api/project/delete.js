@@ -44,6 +44,16 @@ export default async function handler(req, res) {
             }
         });
 
+        await prisma.version.updateMany({
+            where: {
+                projectId: project.id,
+            },
+            data: {
+                deletedAt: new Date(),
+                deleted: true,
+            }
+        });
+
         return res.status(200).json({ message: "Deleted" });
 	} catch (e) {
 		return res.status(400).json(process.env.NODE_ENV === "development" ? { error: e.message} : { error: "An error occurred"});
