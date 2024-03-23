@@ -13,7 +13,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -49,7 +49,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     }
 
-    if (project.deleted) {
+    if (project.deleted && !isAdmin(currentUser)) {
         return {
             notFound: true,
         };
@@ -59,7 +59,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
         where: {
             projectId: project.id,
             version: versionname,
-            deleted: false,
+            deleted: isAdmin(currentUser) ? undefined : false,
         }
     });
 

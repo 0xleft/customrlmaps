@@ -70,7 +70,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     }
 
-    if (project.deleted) {
+    if (project.deleted && !isAdmin(currentUser)) {
         return {
             notFound: true,
         };
