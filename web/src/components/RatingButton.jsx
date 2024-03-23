@@ -33,8 +33,12 @@ export default function RatingButton({ project }) {
             }),
         }).then((data) => data.json().then((data) => {
             setIsLoading(false);
-            if (data.error) {
-                toast.error("An error occurred! " + data.error);
+            if (data.error === "Rating already submitted") {
+                toast.error(data.error);
+                return;
+            } else if (data.error) {
+                setIsRated(false);
+                toast.error(data.error);
                 return;
             }
             toast.success("Rating submitted!");

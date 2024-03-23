@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
+import { getAllUserInfoServer } from './utils/userUtilsServer';
 
 export const config = {
     theme: {
@@ -17,6 +18,17 @@ export const config = {
     callbacks: {
         async signIn({ user, account, profile}) {
             if (account.provider === "google" && profile.email_verified === true) {
+
+                const user = prisma.user.findUnique({
+                    where: {
+                        email: profile.email,
+                    }
+                });
+
+                if (user.deleted || user.banned) {
+                    return false;
+                }
+
                 await prisma.user.upsert({
                     where: {
                         email: user.email,

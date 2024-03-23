@@ -47,7 +47,7 @@ export default function Home() {
 			</div>
 
 			<div className="container">
-				<section className="mx-auto flex max-w-[980px] flex-col items-center gap-8 pt-32 pb-24 md:py-24 lg:py-96 lg:pb-20">
+				<section className="mx-auto flex max-w-[980px] flex-col items-center gap-8 pt-72 pb-24 md:py-24 lg:py-[500px] lg:pb-48">
                     <h1 className="text-center lg:text-6xl md:text-5xl text-3xl font-bold">About</h1>
 
 					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
