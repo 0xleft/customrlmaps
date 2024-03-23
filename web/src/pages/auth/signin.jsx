@@ -5,7 +5,6 @@ import { signIn, getProviders } from 'next-auth/react'
 export async function getServerSideProps() {
     const providers = await getProviders();
 
-
     return {
         props: {
             providers,
@@ -26,9 +25,9 @@ export default function Signin({ providers }) {
                         {Object.values(providers).map((provider) => (
                             <div key={provider.name}>
                                 <Button className="w-full"
-                                onClick={() => signIn(provider.id
-                                    , { callbackUrl: `/afterlog` }
-                                )}>Sign in with {provider.name}</Button>
+                                onClick={() => signIn(provider.id, {
+                                    callbackUrl: "/",
+                                })}>Sign in with {provider.name}</Button>
                             </div>
                         ))}
                     </div>

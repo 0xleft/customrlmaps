@@ -19,13 +19,13 @@ export default function FAQ() {
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="item-2">
-							<AccordionTrigger>Where can I download and install the official plugin?</AccordionTrigger>
+							<AccordionTrigger>Where can I install the official plugin?</AccordionTrigger>
 							<AccordionContent>
 								{/* todo */}
-								<p>You can download the plugin from the official BakkesMod website: <a href="https://bakkesmod.com/" target="_blank" rel="noreferrer"
+								<p>You can install the plugin from the official BakkesMod website: <a href="https://bakkesmod.com/" target="_blank" rel="noreferrer"
 									className='underline'
 								>BakkesMod</a></p>
-								<p>Or you can download from the official GitHub repository: <a href="https://github.com/pageuplt/CustomRLMapsPlugin/releases/latest" target="_blank" rel="noreferrer"
+								<p>Or you can follow the instrucitons from the official GitHub repository: <a href="https://github.com/pageuplt/CustomRLMapsPlugin/releases/latest" target="_blank" rel="noreferrer"
 									className='underline'
 								>GitHub</a></p>
 							</AccordionContent>

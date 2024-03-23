@@ -39,7 +39,7 @@ export default function Search({ maxPage }) {
 	const [page, setPage] = useState(params.page ? parseInt(params.page) : 0);
 	const [query, setQuery] = useState(params.query ? params.query : ""); // search query
 
-	const [order, setOrder] = useState(params.order ? params.order : ""); // order by
+	const [order, setOrder] = useState(params.order ? params.order : ""); // Sort by
 	const [orderType, setOrderType] = useState(params.orderType ? params.orderType : "desc");
 	const [type, setType] =  useState(params.type ? params.type : "");
 	const [username, setUsername] = useState(params.username ? params.username : "");
@@ -102,12 +102,12 @@ export default function Search({ maxPage }) {
 							</div>
 							
 							<div>
-								<Label>Order by:</Label>
+								<Label>Sort by:</Label>
 								<Select onValueChange={(value) => {
 									setOrder(value);
 								}}>
 									<SelectTrigger className="w-full">
-										<SelectValue placeholder="Order by" />
+										<SelectValue placeholder="Sort by" />
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>
@@ -130,8 +130,8 @@ export default function Search({ maxPage }) {
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>
-										<SelectItem value="desc">Descending</SelectItem>
-										<SelectItem value="asc">Ascending</SelectItem>
+										<SelectItem value="desc">Going down</SelectItem>
+										<SelectItem value="asc">Going up</SelectItem>
 										</SelectGroup>
 									</SelectContent>
 								</Select>
@@ -215,12 +215,12 @@ export default function Search({ maxPage }) {
 
 								<div className="flex flex-row space-x-2 w-full">
 									<div className="w-full">
-										<Label>Order by:</Label>
+										<Label>Sort by:</Label>
 										<Select onValueChange={(value) => {
 											setOrder(value);
 										}}>
 											<SelectTrigger className="w-full">
-												<SelectValue placeholder="Order by" />
+												<SelectValue placeholder="Sort by" />
 											</SelectTrigger>
 											<SelectContent>
 												<SelectGroup>
@@ -243,8 +243,8 @@ export default function Search({ maxPage }) {
 											</SelectTrigger>
 											<SelectContent>
 												<SelectGroup>
-												<SelectItem value="desc">Descending</SelectItem>
-												<SelectItem value="asc">Ascending</SelectItem>
+												<SelectItem value="desc">Going down</SelectItem>
+												<SelectItem value="asc">Going up</SelectItem>
 												</SelectGroup>
 											</SelectContent>
 										</Select>

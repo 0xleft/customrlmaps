@@ -1,0 +1,91 @@
+import prisma from '@/lib/prisma';
+import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { S3Client } from '@aws-sdk/client-s3';
+import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
+import { createHash } from 'crypto';
+import { z } from 'zod';
+
+const client = new S3Client({
+	region: process.env.AWS_REGION,
+	credentials: {
+		accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+	},
+});
+
+const schema = z.object({
+	rating: z.number().min(0).max(5),
+    projectId: z.number(),
+});
+
+export default async function handler(req, res) {
+	const user = await getAllUserInfoServer(req, res);
+
+	if (!user) {
+		return res.status(401).json({ error: "Unauthorized" });
+	}
+
+	if (req.method !== "POST") {
+		return res.status(405).json({ error: "Method not allowed" });
+	}
+
+	try {
+		const parsed = schema.parse(JSON.parse(req.body));
+
+        const project = await prisma.project.findUnique({
+            where: {
+                id: parsed.projectId,
+            }
+        });
+
+        if (!project) {
+            return res.status(400).json({ error: "Project not found" });
+        }
+
+        if (project.deleted) {
+            return res.status(400).json({ error: "Project has been deleted" });
+        }
+
+        const rating = await prisma.rating.findFirst({
+            where: {
+                projectId: parsed.projectId,
+                userId: user.dbUser.id,
+            }
+        });
+
+        if (rating) {
+            return res.status(400).json({ error: "Rating already submitted" });
+        }
+
+        await prisma.rating.create({
+            data: {
+                rating: parsed.rating,
+                projectId: parsed.projectId,
+                userId: user.dbUser.id,
+            }
+        });
+
+        await prisma.project.update({
+            where: {
+                id: parsed.projectId,
+            },
+            data: {
+                ratings: {
+                    increment: 1,
+                },
+                totalRatings: {
+                    increment: parsed.rating,
+                },
+                averageRating: {
+                    increment: parsed.rating,
+                }
+            }
+        });
+
+        return res.status(200).json({ message: "Submited" });
+	} catch (e) {
+		return res.status(400).json(process.env.NODE_ENV === "development" ? { error: e.message} : { error: "An error occurred"});
+	}
+
+	return res.status(500).json({ error: "An error occurred" });
+}

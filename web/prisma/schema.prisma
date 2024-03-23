@@ -60,6 +60,7 @@ model Project {
 
   averageRating Float @default(0)
   totalRatings Int @default(0)
+  ratingSum Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -88,6 +89,8 @@ model Rating {
   userId Int
   project Project @relation(fields: [projectId], references: [id])
   projectId Int
+
+  rating Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

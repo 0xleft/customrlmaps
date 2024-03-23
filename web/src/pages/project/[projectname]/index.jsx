@@ -1,6 +1,7 @@
 import { Combobox } from '@/components/Combobox';
 import CustomError from '@/components/CustomError';
 import DateComponent from '@/components/DateComponent';
+import RatingButton from '@/components/RatingButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -74,6 +75,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 	return {
 		props: {
             project: {
+                projectId: project.id,
                 name: project.name,
                 description: project.description,
                 longDescription: project.longDescription,
@@ -85,6 +87,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 type: project.type,
                 views: project.views,
                 latestVersion: project.latestVersion,
+                rating: project.averageRating,
             },
             creator: {
                 username: creator.username
@@ -178,8 +181,6 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                         @{creator.username}
                                     </Link></span></h2>
 
-                                <h2 className='text-xl md:text-2xl font-bold'>Info:</h2>
-
                                 <div className='flex md:flex-row md:space-x-10 flex-col'>
                                     <div>
                                         <div className='flex flex-row items-center space-x-2'>
@@ -187,14 +188,19 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                             <DateComponent text={`${project.created}`} />
                                         </div>
                                         <div className='flex flex-row items-center space-x-2'>
-                                            <h2 className='md:text-xl'>Last update: </h2>
-                                            <DateComponent text={`${project.updated}`} />
+                                            <h2 className='md:text-xl'>Average rating: </h2>
+                                            <Badge>{project.rating === 0 ? "No rating" : project.rating.toFixed(1)}</Badge>
                                         </div>
                                     </div>
                                     <div>
                                         <h2 className='md:text-xl'>Downloads: <span className='text-muted-foreground font-normal'>{project.downloads}</span></h2>
                                         <h2 className='md:text-xl'>Views: <span className='text-muted-foreground font-normal'>{project.views}</span></h2>
                                     </div>
+                                </div>
+
+                                <div className='py-10'>
+                                    <h2 className='text-xl md:text-2xl font-bold'>Submit rating:</h2>
+                                    <RatingButton project={project} />
                                 </div>
 
                                 <div>
