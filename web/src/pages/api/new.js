@@ -61,7 +61,7 @@ export default async function handler(req, res) {
 			],
 			Fields: {
 				acl: "public-read",
-				"Content-Type": parsed.type === "mod" ? "application/x-msdownload" : "application/octet-stream",
+				"Content-Type": "application/octet-stream",
 			},
 			Expires: 60,
 		});

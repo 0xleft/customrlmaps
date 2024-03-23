@@ -1,3 +1,4 @@
+import CustomError from '@/components/CustomError';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -20,10 +21,7 @@ function checkFileType(file, type) {
 	}
 
 	const fileType = file[0]?.name?.split(".").pop();
-	if (fileType === "dll" && type === "mod") {
-		return true;
-	}
-	if (fileType === "upk" && type === "map") {
+	if (fileType === "zip") {
 		return true;
 	}
     return false;
@@ -46,10 +44,18 @@ export default function NewProject() {
 	const router = useRouter();
 	const type = router.query.type;
 
+	if (type !== "mod" && type !== "map") {
+		return (
+			<CustomError error="404">
+				<h1 className='text-muted-foreground'>Invalid type</h1>
+			</CustomError>
+		);
+	}
+
     const formSchema = z.object({
 		file: z.any()
 		.refine((file) => file?.length !== 0, "File is required")
-		.refine((file) => checkFileType(file, type), type === "mod" ? "Only .dll formats are supported." : "Only .upk formats are supported."),
+		.refine((file) => checkFileType(file, type), "Only .zip formats are supported."),
 		name: z.string().max(20).min(1, {
 			message: "Name must not be empty",
 		}).regex(/^[a-zA-Z0-9-_]+$/, {

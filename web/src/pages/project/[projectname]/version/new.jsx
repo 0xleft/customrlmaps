@@ -306,7 +306,7 @@ export default function NewVersionProject({ project, notFound, canEdit }) {
                                                 <FormLabel>Project files</FormLabel>
                                                 <div className='flex flex-row space-x-2'>
                                                     <FormControl>
-                                                        <Input type="file" {...filesRef} accept={project.type == "MOD" ? ".dll" : ".upk"} onChange={(e) => {
+                                                        <Input type="file" {...filesRef} accept={project.type == ".zip"} onChange={(e) => {
                                                             filesRef.onChange(e);
                                                             const reader = new FileReader();
                                                             reader.onload = function(e) {

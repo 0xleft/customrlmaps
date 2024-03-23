@@ -14,7 +14,7 @@ const client = new S3Client({
 });
 
 const schema = z.object({
-    name: z.any().max(20),
+    name: z.string().max(20).optional(),
     changes: z.string().min(1, {
         message: "Changes are required",
     }).max(300),
