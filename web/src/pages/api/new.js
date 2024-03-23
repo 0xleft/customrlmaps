@@ -34,8 +34,6 @@ export default async function handler(req, res) {
 	try {
 		const parsed = schema.parse(JSON.parse(req.body));
 
-		
-		
 		const exists = await prisma.project.findFirst({
 			where: {
 				name: parsed.name,

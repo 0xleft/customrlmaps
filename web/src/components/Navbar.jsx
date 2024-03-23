@@ -54,6 +54,7 @@ export default function Navbar() {
 		}).catch((error) => {
 		});
 	}, []);
+
 	if (!session) return <NavbarSkeleton />;
 	if (session.status == "loading") return <NavbarSkeleton />;
 

@@ -9,7 +9,7 @@ import { getNiceNumber } from "@/utils/numberUtils";
 function SingleSeachSkeleton() {
 	return (
 		<>
-			<div className="flex flex-col space-y-2 min-h-64 w-full">
+			<div className="flex flex-col space-y-2 min-h-80 w-full">
 				<Skeleton className="aspect-video" />
 				<Skeleton className="h-6 w-1/2" />
 				<div className="flex flex-row justify-between space-x-2">
@@ -29,7 +29,7 @@ export function SearchItem({ project }) {
 	return (
 		<>
 			<Card className="flex flex-col space-y-2 min-h-80 w-full hover:shadow-lg transition hover:scale-105 duration-75">
-				<AspectRatio ratio={16 / 9} className="w-full h-52 overflow-clip max-h-52">
+				<AspectRatio ratio={16 / 9} className="w-full h-52 max-h-52">
 					<img src={project.imageUrl} className="hover:cursor-pointer w-full" onClick={() => {
 						router.push(`/project/${project.name}`);
 					}} />
@@ -41,8 +41,8 @@ export function SearchItem({ project }) {
 						project.name
 					}</Link>
 
-					<CardDescription className="h-full text-clip text-md overflow-clip">
-						{project.description.length > 40 ? project.description.substring(0, 40) + "..." : project.description}
+					<CardDescription className="h-full text-clip text-md overflow-clip break-words">
+						{project.description.length > 60 ? project.description.substring(0, 60) + "..." : project.description}
 					</CardDescription>
 				</div>
 

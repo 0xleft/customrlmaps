@@ -26,6 +26,8 @@ model User {
   imageUrl String? @default("https://www.gravatar.com/avatar/")
   lastUsernameChange DateTime?
 
+  banned Boolean @default(false)
+
   roles String[]
 
   projects Project[]
