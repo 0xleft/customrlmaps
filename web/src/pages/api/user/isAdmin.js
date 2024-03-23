@@ -11,5 +11,5 @@ export default async function handler(req, res) {
 		return res.status(405).json({ error: "Method not allowed" });
 	}
 
-    return res.status(401).json({ isAdmin: user.dbUser.roles.includes("Admin") });
+    return res.status(401).json({ isAdmin: user.dbUser.roles.includes("admin") });
 }

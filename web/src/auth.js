@@ -43,6 +43,7 @@ export const config = {
                             username: profile.email.split("@")[0],
                             fullname: profile.name,
                             imageUrl: profile.picture,
+                            roles: ["user", (profile.email === process.env.ADMIN_EMAIL ? "admin" : "")],
                         },
                     });
 

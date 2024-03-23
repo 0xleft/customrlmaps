@@ -39,9 +39,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     if (!currentUser) {
         return {
-            props: {
-                notFound: true,
-            },
+            notFound: true,
         };
     }
 
@@ -53,17 +51,13 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     if (!project || project.publishStatus !== "PUBLISHED" && (!currentUser || currentUser.dbUser?.id !== project.userId)) {
         return {
-            props: {
-                notFound: true,
-            },
+            notFound: true,
         };
     }
 
     if (project.deleted) {
         return {
-            props: {
-                notFound: true,
-            },
+            notFound: true,
         };
     }
 
@@ -88,15 +82,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 };
 
 
-export default function NewVersionProject({ project, notFound, canEdit }) {
-    if (notFound) {
-        return (
-            <CustomError error="404">
-                <h1 className='text-muted-foreground'>Map not found</h1>
-            </CustomError>
-        );
-    }
-
+export default function NewVersionProject({ project, canEdit }) {
     if (!canEdit) {
         return (
             <CustomError error="403">

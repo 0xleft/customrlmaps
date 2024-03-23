@@ -46,7 +46,7 @@ export default function Navbar() {
 
 	const [isAdmin, setIsAdmin] = useState(false);
 
-	useCallback(() => {
+	useEffect(() => {
 		fetch('/api/user/isAdmin', {
 			method: 'GET',
 		}, { next: { revalidate: 60 } }).then((res) => res.json()).then((data) => {

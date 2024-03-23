@@ -94,6 +94,10 @@ async function getAllUserInfoServer(req, res) {
     };
 }
 
+function isAdmin(user) {
+    return user.dbUser.roles.includes("admin");
+}
+
 export {
     getUserFromUsername,
     userExists,
@@ -107,4 +111,6 @@ export {
     userCanEditVersion,
     getUserInfoServer,
     getAllUserInfoServer,
+    getUserFromEmail,
+    isAdmin,
 }

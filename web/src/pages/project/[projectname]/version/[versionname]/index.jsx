@@ -37,17 +37,13 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     if (!project || project.publishStatus !== "PUBLISHED" && (!currentUser || currentUser.dbUser?.id !== project.userId)) {
         return {
-            props: {
-                notFound: true,
-            },
+            notFound: true,
         };
     }
 
     if (project.deleted) {
         return {
-            props: {
-                notFound: true,
-            },
+            notFound: true,
         };
     }
 
@@ -61,9 +57,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     if (!version) {
         return {
-            props: {
-                notFound: true,
-            },
+            notFound: true,
         };
     }
 
@@ -94,15 +88,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 };
 
 
-export default function VersionIndexView({ project, notFound, version, canEdit }) {
-    if (notFound) {
-        return (
-            <CustomError error="404">
-                <h1 className='text-muted-foreground'>Map not found</h1>
-            </CustomError>
-        );
-    }
-
+export default function VersionIndexView({ project, version, canEdit }) {
     const [dangerDialogOpen, setDangerDialogOpen] = useState(false);
     const router = useRouter();
 

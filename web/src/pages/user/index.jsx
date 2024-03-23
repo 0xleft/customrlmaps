@@ -50,7 +50,8 @@ export const getServerSideProps = async ({ req, res }) => {
             user: {
                 username: currentUser.dbUser.username,
                 imageUrl: currentUser.dbUser.imageUrl,
-                updated: `${currentUser.dbUser.updatedAt.getDay()}/${currentUser.dbUser.updatedAt.getMonth()}/${currentUser.dbUser.updatedAt.getFullYear()}`
+                updated: `${currentUser.dbUser.updatedAt.getDay()}/${currentUser.dbUser.updatedAt.getMonth()}/${currentUser.dbUser.updatedAt.getFullYear()}`,
+                roles: currentUser.dbUser.roles
             }
         },
 	};

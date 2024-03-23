@@ -10,9 +10,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 
     if (!currentUser.session || !currentUser.dbUser) {
         return {
-            props: {
-                notFound: true,
-            },
+            notFound: true,
         };
     }
 
