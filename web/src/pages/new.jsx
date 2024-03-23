@@ -5,11 +5,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { set, useForm } from 'react-hook-form';
 import Markdown from 'react-markdown';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -89,14 +91,15 @@ export default function NewProject() {
 
 	const [uploading, setUploading] = useState(false);
     
-    function onSubmit(values) {
-		setUploading(true);
+	const { executeRecaptcha } = useGoogleReCaptcha();
 
+    function onSubmit(values, token) {
 		fetch(`/api/new`, {
 			method: "POST",
 			body: JSON.stringify({
 				...values,
 				type: type,
+				gRecaptchatoken: token,
 			}),
 		}).then((res) => res.json()).then((data) => {
 			if (data.error) {
@@ -174,7 +177,7 @@ export default function NewProject() {
 
 					<CardContent>
 						<Form {...form}>
-							<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
+							<form onSubmit={form.handleSubmit((values) => {bungySubmit(onSubmit, executeRecaptcha, "new", setUploading, values)})} className="flex flex-col space-y-4">
 								<FormField
 									control={form.control}
 									name="name"

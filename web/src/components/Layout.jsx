@@ -7,28 +7,33 @@ import Navbar from './Navbar';
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import ThemedProgressBar from './ThemedProgressBar';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 export default function RootLayout({ children }) {
 		
 	return (
 		<>
-			<ThemeProvider
-				attribute="class"
-				defaultTheme="light"
-				disableTransitionOnChange
-          	>
-				<Navbar />
+			<GoogleReCaptchaProvider
+				reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+			>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="light"
+					disableTransitionOnChange
+				>
+					<Navbar />
 
-				<main className="min-h-screen">
-					<>
-						<ThemedProgressBar />
-						{children}
-					</>
-				</main>
-				
-				<Footer />
-				<Toaster />
-			</ThemeProvider>
+					<main className="min-h-screen">
+						<>
+							<ThemedProgressBar />
+							{children}
+						</>
+					</main>
+					
+					<Footer />
+					<Toaster />
+				</ThemeProvider>
+			</GoogleReCaptchaProvider>
 		</>
  );
 };

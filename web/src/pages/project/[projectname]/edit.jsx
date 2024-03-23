@@ -33,6 +33,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { DangerDialog } from './_DangerDialog';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -226,11 +227,13 @@ export default function EditProjectPage ( { project, notFound, versions, canEdit
         });
     }
 
+    const { executeRecaptcha } = useGoogleReCaptcha();
+
     return (
         <>
             <div className='container pt-6'>
                 <Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form onSubmit={form.handleSubmit((values) => {bungySubmit(onSubmit, executeRecaptcha, "updateProject", setUploading, values)})}>
                         <Card className="w-full">
                             <CardHeader className="w-full">
                                 <CardTitle className="flex flex-row space-x-2 items-center w-full">

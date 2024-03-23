@@ -17,6 +17,7 @@ const schema = z.object({
 	username: z.string().min(3).max(320).optional(),
     description: z.string().max(300).optional(),
     image: z.boolean(),
+    gRecaptchatoken: z.string(),
 })
 
 export default async function handler(req, res) {
@@ -32,6 +33,10 @@ export default async function handler(req, res) {
 
 	try {
 		const parsed = schema.parse(JSON.parse(req.body));
+
+        if (await verifyCaptcha(parsed.gRecaptchatoken, "updateUser") === false) {
+            return res.status(400).json({ error: "Captcha failed" });
+        }
 
         if (user.dbUser.deleted) {
             return res.status(400).json({ error: "User has been deleted" });

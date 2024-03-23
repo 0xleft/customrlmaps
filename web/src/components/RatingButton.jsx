@@ -1,5 +1,7 @@
+import { bungySubmit } from "@/utils/bungySubmitRecaptcha";
 import { StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 
 function RatingStar({ isFilled, ...props }) {
@@ -15,7 +17,9 @@ export default function RatingButton({ project }) {
     const [rating, setRating] = useState(project.rating || 0);
     const [isRated, setIsRated] = useState(false);
 
-    function submitRating() {
+    const { executeRecaptcha } = useGoogleReCaptcha();
+
+    function submitRating(values, token) {
         if (isLoading || isRated) return;
 
         setIsLoading(true);
@@ -25,6 +29,7 @@ export default function RatingButton({ project }) {
             body: JSON.stringify({
                 rating: rating,
                 projectId: project.projectId,
+                gRecaptchatoken: token,
             }),
         }).then((data) => data.json().then((data) => {
             setIsLoading(false);
@@ -39,14 +44,15 @@ export default function RatingButton({ project }) {
         });
     }
 
+
     return (
         <>
             <div className="flex items-center space-x-2 flex-row" aria-disabled={isLoading}>
-                <RatingStar isFilled={rating >= 1} onMouseEnter={() => {if (isLoading || isRated) return; setRating(1)}} onClick={submitRating} disabled={isLoading || isRated} />
-                <RatingStar isFilled={rating >= 2} onMouseEnter={() => {if (isLoading || isRated) return; setRating(2)}} onClick={submitRating} disabled={isLoading || isRated} />
-                <RatingStar isFilled={rating >= 3} onMouseEnter={() => {if (isLoading || isRated) return; setRating(3)}} onClick={submitRating} disabled={isLoading || isRated} /> 
-                <RatingStar isFilled={rating >= 4} onMouseEnter={() => {if (isLoading || isRated) return; setRating(4)}} onClick={submitRating} disabled={isLoading || isRated} /> 
-                <RatingStar isFilled={rating >= 5} onMouseEnter={() => {if (isLoading || isRated) return; setRating(5)}} onClick={submitRating} disabled={isLoading || isRated} /> 
+                <RatingStar isFilled={rating >= 1} onMouseEnter={() => {if (isLoading || isRated) return; setRating(1)}} onClick={() => {bungySubmit(submitRating, executeRecaptcha, "submitRating", setIsLoading)}} disabled={isLoading || isRated} />
+                <RatingStar isFilled={rating >= 2} onMouseEnter={() => {if (isLoading || isRated) return; setRating(2)}} onClick={() => {bungySubmit(submitRating, executeRecaptcha, "submitRating", setIsLoading)}} disabled={isLoading || isRated} />
+                <RatingStar isFilled={rating >= 3} onMouseEnter={() => {if (isLoading || isRated) return; setRating(3)}} onClick={() => {bungySubmit(submitRating, executeRecaptcha, "submitRating", setIsLoading)}} disabled={isLoading || isRated} /> 
+                <RatingStar isFilled={rating >= 4} onMouseEnter={() => {if (isLoading || isRated) return; setRating(4)}} onClick={() => {bungySubmit(submitRating, executeRecaptcha, "submitRating", setIsLoading)}} disabled={isLoading || isRated} /> 
+                <RatingStar isFilled={rating >= 5} onMouseEnter={() => {if (isLoading || isRated) return; setRating(5)}} onClick={() => {bungySubmit(submitRating, executeRecaptcha, "submitRating", setIsLoading)}} disabled={isLoading || isRated} /> 
                 {rating}
             </div>
         </>

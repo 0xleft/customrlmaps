@@ -25,6 +25,8 @@ import { toast } from 'sonner';
 import { DangerDialog } from './_DangerDialog';
 import { z } from 'zod';
 import CustomError from '@/components/CustomError';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
 
 export const getServerSideProps = async ({ req, res }) => {
     res.setHeader(
@@ -86,8 +88,9 @@ export default function User({ user }) {
 
 	const router = useRouter();
 
-	function onSubmit(data) {
-		setUploading(true);
+    const { executeRecaptcha } = useGoogleReCaptcha();
+
+	function onSubmit(data, token) {
 		let submitData = {
 			username: data.username,
 			description: data.description,
@@ -151,7 +154,7 @@ export default function User({ user }) {
 		<>
 			<div className='container pt-6'>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form onSubmit={form.handleSubmit((values) => {bungySubmit(onSubmit, executeRecaptcha, "updateUser", setUploading, values)})}>
                         <Card className="w-full">
                             <CardHeader className="w-full">
                                 <CardTitle className="flex flex-row space-x-2 items-center w-full">

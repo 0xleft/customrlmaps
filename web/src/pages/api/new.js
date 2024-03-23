@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { verifyCaptcha } from '@/utils/captchaUtils';
 import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import { S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
@@ -18,6 +19,7 @@ const schema = z.object({
 	description: z.string().max(300).min(1, { message: "Description must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Description must only contain letter characters" }),
 	longDescription: z.string().max(2000).min(1, { message: "Long description must not be empty" }),
 	type: z.enum(["mod", "map"]),
+	gRecaptchatoken: z.string(),
 })
 
 export default async function handler(req, res) {
@@ -33,6 +35,10 @@ export default async function handler(req, res) {
 
 	try {
 		const parsed = schema.parse(JSON.parse(req.body));
+
+		if (await verifyCaptcha(parsed.gRecaptchatoken, "new") === false) {
+			return res.status(400).json({ error: "Captcha failed" });
+		}
 
 		const exists = await prisma.project.findFirst({
 			where: {

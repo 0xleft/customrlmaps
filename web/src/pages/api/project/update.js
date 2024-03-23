@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { verifyCaptcha } from '@/utils/captchaUtils';
 import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import { S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
@@ -19,6 +20,7 @@ const schema = z.object({
 	longDescription: z.string().max(2000).optional(),
 	status: z.enum(["PUBLISHED", "DRAFT"]).optional(),
     banner: z.any().optional(),
+    gRecaptchatoken: z.string(),
 })
 
 export default async function handler(req, res) {
@@ -34,6 +36,10 @@ export default async function handler(req, res) {
 
 	try {
 		const parsed = schema.parse(JSON.parse(req.body));
+
+        if (await verifyCaptcha(parsed.gRecaptchatoken, "updateProject") === false) {
+            return res.status(400).json({ error: "Captcha failed" });
+        }
 
         const project = await prisma.project.findUnique({
             where: {

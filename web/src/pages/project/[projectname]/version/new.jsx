@@ -17,11 +17,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
 import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -133,6 +135,7 @@ export default function NewVersionProject({ project, notFound, canEdit }) {
             return parseInt(v);
         });
     }
+    const { executeRecaptcha } = useGoogleReCaptcha();
 
     const router = useRouter();
 
@@ -195,7 +198,7 @@ export default function NewVersionProject({ project, notFound, canEdit }) {
         <>
             <div className='container pt-6'>
                 <Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form onSubmit={form.handleSubmit((values) => {bungySubmit(onSubmit, executeRecaptcha, "newVersion", setUploading, values)})}>
                         <Card className="w-full">
                             <CardHeader className="w-full">
                                 <CardTitle className="flex flex-row space-x-2 items-center w-full">
