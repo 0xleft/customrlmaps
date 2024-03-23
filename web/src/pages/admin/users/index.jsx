@@ -96,7 +96,7 @@ export default function AdminUsers({ users, page }) {
                     </CardHeader>
 
 					<CardContent>
-                        <AdminUserTable users={users} page={page} />
+            			<AdminUserTable users={users} page={page} />
 					</CardContent>
 				</Card>
 			</div>

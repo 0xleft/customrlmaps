@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 const schema = z.object({
     id: z.number().optional(),
+    deleted: z.boolean().optional(),
 });
 
 export default async function handler(req, res) {
@@ -22,7 +23,7 @@ export default async function handler(req, res) {
     }
 
 	try {
-        const { id } = schema.parse(req.body);
+        const { id, deleted } = schema.parse(req.body);
 
         if (!id) {
             return res.status(400).json({ error: "Missing id" });
@@ -46,8 +47,8 @@ export default async function handler(req, res) {
                     projectId: project.id,
                 },
                 data: {
-                    deleted: true,
-                    deletedAt: new Date(),
+                    deleted: deleted,
+                    deletedAt: deleted ? new Date() : null,
                 }
             });
         });
@@ -57,8 +58,8 @@ export default async function handler(req, res) {
                 userId: dbUser.id,
             },
             data: {
-                deleted: true,
-                deletedAt: new Date(),
+                deleted: deleted,
+                deletedAt: deleted ? new Date() : null,
             },
         });
 
@@ -67,8 +68,8 @@ export default async function handler(req, res) {
                 id: dbUser.id,
             },
             data: {
-                deleted: true,
-                deletedAt: new Date(),
+                deleted: deleted,
+                deletedAt: deleted ? new Date() : null,
             }
         });
 

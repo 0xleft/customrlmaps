@@ -47,8 +47,8 @@ export default async function handler(req, res) {
                     projectId: project.id,
                 },
                 data: {
-                    deleted: true,
-                    deletedAt: new Date(),
+                    deleted: banned,
+                    deletedAt: banned ? new Date() : null,
                 }
             });
         });
@@ -58,8 +58,8 @@ export default async function handler(req, res) {
                 userId: dbUser.id,
             },
             data: {
-                deleted: true,
-                deletedAt: new Date(),
+                deleted: banned,
+                deletedAt: banned ? new Date() : null,
             },
         });
 

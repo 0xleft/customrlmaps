@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { verifyCaptcha } from '@/utils/captchaUtils';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { createHash } from 'crypto';
@@ -14,6 +15,7 @@ const client = new S3Client({
 });
 
 const schema = z.object({
+    id: z.number().optional(),
 	username: z.string().min(3).max(320).optional(),
     description: z.string().max(300).optional(),
     image: z.boolean(),
@@ -44,7 +46,7 @@ export default async function handler(req, res) {
 
         let updateData = {}
         if (parsed.username && parsed.username !== user.dbUser.username) {
-        // check if username is taken
+            // check if username is taken
             const exists = await prisma.user.findFirst({
                 where: {
                     username: parsed.username,
@@ -57,16 +59,26 @@ export default async function handler(req, res) {
 
             updateData.username = parsed.username;
         }
+
         if (parsed.description) {
             updateData.description = parsed.description;
         }
 
-        await prisma.user.update({
-            where: {
-                id: user.dbUser.id,
-            },
-            data: updateData,
-        });
+        if (parsed.id && isAdmin(user)) {
+            await prisma.user.update({
+                where: {
+                    id: parsed.id,
+                },
+                data: updateData,
+            });
+        } else {
+            await prisma.user.update({
+                where: {
+                    id: user.dbUser.id,
+                },
+                data: updateData,
+            });
+        }
 
         if (parsed.image) {
             const currentTime = new Date().getTime();
@@ -86,14 +98,29 @@ export default async function handler(req, res) {
                 Expires: 60,
             });
 
-            await prisma.user.update({
-                where: {
-                    id: user.dbUser.id,
-                },
-                data: {
-                    imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/avatars/${imagename}`,
-                }
-            });
+            if (!imageReturn) {
+                return res.status(500).json({ error: "An error occurred" });
+            }
+
+            if (id && isAdmin(user)) {
+                await prisma.user.update({
+                    where: {
+                        id: parsed.id,
+                    },
+                    data: {
+                        imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/avatars/${imagename}`,
+                    }
+                });
+            } else {
+                await prisma.user.update({
+                    where: {
+                        id: user.dbUser.id,
+                    },
+                    data: {
+                        imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/avatars/${imagename}`,
+                    }
+                });
+            }
 
             return res.status(200).json({
                 message: "Uploading image...",

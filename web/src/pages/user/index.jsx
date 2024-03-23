@@ -13,7 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
@@ -36,12 +36,41 @@ export const getServerSideProps = async ({ req, res }) => {
 
     const currentUser = await getAllUserInfoServer(req, res);
 
+
     if (!currentUser || !currentUser.session || !currentUser.dbUser || currentUser.dbUser.deleted) {
         return {
             redirect: {
                 destination: "/",
                 permanent: false,
             }
+        };
+    }
+
+    const id = parseInt(new URL(req.url, "https://localhost").searchParams.get('id')) || undefined;
+
+    if (id && isAdmin(currentUser)) {
+        const dbUser = await prisma.user.findUnique({
+            where: {
+                id: id,
+            }
+        });
+
+        if (!dbUser) {
+            return {
+                notFound: true,
+            };
+        }
+
+        return {
+            props: {
+                user: {
+                    id: dbUser.id,
+                    username: dbUser.username,
+                    imageUrl: dbUser.imageUrl,
+                    updated: `${dbUser.updatedAt.getDay()}/${dbUser.updatedAt.getMonth()}/${dbUser.updatedAt.getFullYear()}`,
+                    roles: dbUser.roles
+                }
+            },
         };
     }
 
@@ -68,6 +97,7 @@ export default function User({ user }) {
     }
 
 	const formSchema = z.object({
+        id: z.number().optional(),
 		username: z.string().max(20).min(1, "Username is required"),
 		description: z.string().max(300).optional(),
 	})
@@ -95,7 +125,9 @@ export default function User({ user }) {
 		let submitData = {
 			username: data.username,
 			description: data.description,
-			image: imageSrc != user.imageUrl
+			image: imageSrc != user.imageUrl,
+            gRecaptchatoken: token,
+            id: user.id
 		}
 
 		toast.loading("Saving...");
@@ -151,6 +183,8 @@ export default function User({ user }) {
 		});
 	}
 
+    console.log(user.id !== undefined);
+
 	return (
 		<>
 			<div className='container pt-6'>
@@ -175,8 +209,8 @@ export default function User({ user }) {
 													View profile
 												</Link>
 											</Button>
-                                            <DropdownMenu className="">
-                                                <DropdownMenuTrigger asChild>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild >
                                                     <Button variant="outline">
                                                         Settings
                                                     </Button>
@@ -184,7 +218,8 @@ export default function User({ user }) {
                                                 <DropdownMenuContent className="w-56">
                                                     <DropdownMenuLabel>Settings</DropdownMenuLabel>
                                                     <DropdownMenuGroup>
-                                                        <DropdownMenuItem onSelect={() => setDangerDialogOpen(true)}>
+                                                        <DropdownMenuItem
+                                                        onSelect={() => {if (user.id !== undefined) { return; } setDangerDialogOpen(true)}}>
                                                             Delete
                                                         </DropdownMenuItem>
                                                     </DropdownMenuGroup>

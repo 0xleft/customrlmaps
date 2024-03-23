@@ -40,7 +40,6 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import Link from "next/link"
-import axios from "axios"
 
 function banUser(id, banned = true) {
     fetch(`/api/admin/user/ban`, {
@@ -59,13 +58,13 @@ function banUser(id, banned = true) {
         console.error("An error occurred! " + err)
     });
 }
-function deleteUser(id) {
+function deleteUser(id, deleted = true) {
     fetch(`/api/admin/user/delete`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id, deleted: deleted }),
     }).then((res) => {
         if (res.status !== 200) {
             console.error("An error occurred! " + res.statusText)
@@ -214,9 +213,10 @@ export const columns = [
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => console.log("Edit")}
-            >
-            Edit {/* todo */}
+            <DropdownMenuItem onClick={() => 
+                window.location.href = `/user?id=${user.id}`
+            }>
+            Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -227,8 +227,12 @@ export const columns = [
                 {user.banned ? "Unban" : "Ban"}
             </DropdownMenuItem>
             <DropdownMenuItem
-                onClick={() => deleteUser(user.id)}
-            >Delete</DropdownMenuItem>
+                onClick={() => {
+                    user.deleted ? deleteUser(user.id, false) : deleteUser(user.id)
+                }}
+            >
+                {user.deleted ? "Undelete" : "Delete"}
+            </DropdownMenuItem>
         </DropdownMenuContent>
         </DropdownMenu>
     )
@@ -374,7 +378,10 @@ export default function AdminUserTable({ users, page }) {
             <Button disabled={!table.getSelectedRowModel().rows.length}
                 size="sm"
                 onClick={() => {
-                    // todo
+                    let selected = table.getSelectedRowModel().rows.map((row) => row.original.id)
+                    selected.forEach((id) => {
+                        deleteUser(id)
+                    })
                 }}
             >
                 Delete
