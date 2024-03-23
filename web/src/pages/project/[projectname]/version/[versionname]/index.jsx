@@ -35,10 +35,18 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     });
 
-    if (!project || project.publishStatus !== "PUBLISHED" && (!currentUser || currentUser.dbUser?.id !== project.userId)) {
+    if (!project) {
         return {
             notFound: true,
         };
+    }
+
+    if (project.publishStatus !== "PUBLISHED" && !currentUser && !isAdmin(currentUser)) {
+        if (!currentUser || currentUser.dbUser?.id !== project.userId) {
+            return {
+                notFound: true,
+            };
+        }
     }
 
     if (project.deleted) {
@@ -82,7 +90,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 downloadUrl: version.downloadUrl,
                 updated: `${version.updatedAt.getDate()}/${version.updatedAt.getMonth()}/${version.updatedAt.getFullYear()}`,
             },
-            canEdit: currentUser && currentUser.dbUser?.id === project.userId, // todo admin
+            canEdit: currentUser && currentUser.dbUser?.id === project.userId || isAdmin(currentUser),
         },
 	};
 };

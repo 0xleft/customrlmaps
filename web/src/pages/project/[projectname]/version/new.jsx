@@ -49,10 +49,18 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     });
 
-    if (!project || project.publishStatus !== "PUBLISHED" && (!currentUser || currentUser.dbUser?.id !== project.userId)) {
+    if (!project) {
         return {
             notFound: true,
         };
+    }
+
+    if (project.publishStatus !== "PUBLISHED" && !currentUser && !isAdmin(currentUser)) {
+        if (!currentUser || currentUser.dbUser?.id !== project.userId) {
+            return {
+                notFound: true,
+            };
+        }
     }
 
     if (project.deleted) {
@@ -76,21 +84,12 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 views: project.views,
                 latestVersion: project.latestVersion,
             },
-            canEdit: currentUser && currentUser.dbUser?.id === project.userId, // todo admin
         },
 	};
 };
 
 
-export default function NewVersionProject({ project, canEdit }) {
-    if (!canEdit) {
-        return (
-            <CustomError error="403">
-                <h1 className='text-muted-foreground'>You do not have permission to edit this map</h1>
-            </CustomError>
-        );
-    }
-
+export default function NewVersionProject({ project }) {
     const [uploading, setUploading] = useState(false);
 
     const [projectFiles, setProjectFiles] = useState(false);

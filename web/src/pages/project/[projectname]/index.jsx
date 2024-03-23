@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -28,21 +28,23 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     });
 
-    if (!project || project.publishStatus !== "PUBLISHED" && (!currentUser || currentUser.dbUser?.id !== project.userId)) {
+    if (!project) {
         return {
-            redirect: {
-                destination: "/",
-                permanent: false,
-            }
+            notFound: true,
         };
+    }
+
+    if (project.publishStatus !== "PUBLISHED" && !currentUser && !isAdmin(currentUser)) {
+        if (!currentUser || currentUser.dbUser?.id !== project.userId) {
+            return {
+                notFound: true,
+            };
+        }
     }
 
     if (project.deleted) {
         return {
-            redirect: {
-                destination: "/",
-                permanent: false,
-            }
+            notFound: true,
         };
     }
 
@@ -99,7 +101,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                     downloadUrl: version.downloadUrl,
                 };
             }),
-            canEdit: currentUser && currentUser.dbUser?.id === project.userId,
+            canEdit: currentUser && currentUser.dbUser?.id === project.userId || isAdmin(currentUser),
         },
 	};
 };

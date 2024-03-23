@@ -31,7 +31,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Project not found" });
         }
 
-        if (project.userId !== user.dbUser.id) {
+        if ((project.userId !== user.dbUser.id) && !isAdmin(user)) {
             return res.status(403).json({ error: "Forbidden" });
         }
 
