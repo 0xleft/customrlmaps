@@ -45,6 +45,14 @@ export default async function handler(req, res) {
 			return res.status(400).json({ error: "Captcha failed" });
 		}
 
+		if (parsed.type === "mod" && !appConfig.canCreateMods) {
+			return res.status(401).json({ error: "Creating mods is currently disabled" });
+		}
+
+		if (parsed.type === "map" && !appConfig.canCreateMaps) {
+			return res.status(401).json({ error: "Creating maps is currently disabled" });
+		}
+
 		const exists = await prisma.project.findFirst({
 			where: {
 				name: parsed.name,

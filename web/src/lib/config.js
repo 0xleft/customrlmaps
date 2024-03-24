@@ -15,6 +15,8 @@ if (!global.appConfig) {
         canDeleteVersions: true, // done
         canSetLatestVersion: true, // done
         adminOnly: false, // done kinda
+        canUploadMods: true, // done 
+        canUploadMaps: true, // done
     }
 }
 

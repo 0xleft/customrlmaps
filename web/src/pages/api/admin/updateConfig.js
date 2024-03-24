@@ -17,6 +17,8 @@ const schema = z.object({
     canDeleteVersions: z.boolean(),
     canSetLatestVersion: z.boolean(),
     adminOnly: z.boolean(),
+    canUploadMods: z.boolean(),
+    canUploadMaps: z.boolean(),
 });
 
 export default async function handler(req, res) {
