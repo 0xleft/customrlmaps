@@ -1,6 +1,4 @@
-import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
-import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { z } from 'zod';
 
 const schema = z.object({
