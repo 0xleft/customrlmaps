@@ -79,27 +79,50 @@ export default function Explore({ recent, popular, best }) {
 							className="w-full h-[300px]"
 							>
 							<CarouselContent className="-mt-1 h-[300px]">
-								{best.map((project, index) => (
-								<CarouselItem key={index} className="pt-1 basis-1/3">
-									<div className="p-1">
-									<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105">
-										<img src={project.imageUrl} alt={project.name} className="absolute top-0 left-0 w-[33%] h-full object-cover rounded-s-md hover:scale-105 hover:cursor-pointer transition-all"
-										onClick={() => router.push(`/project/${project.name}`)} />
-										<CardContent className="ml-[33%]">
-											<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
-											{project.name} <Badge>{project.type}</Badge>
-											</div>
-											<p className="text-left text-sm text-muted-foreground overflow-clip">
-											{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
-											</p>
-											<p className="text-muted-foreground text-left text-sm pt-4">
-												Rating: {project.rating === 0 ? "No rating" : project.rating.toFixed(1)}
-											</p>
-										</CardContent>
-									</Card>
-									</div>
-								</CarouselItem>
-								))}
+								{Array.from({ length: 10 }).map((_, index) => {
+									if (best[index] == null) {
+										return (
+											<CarouselItem key={index} className="pt-1 basis-1/3">
+												<div className="p-1">
+												<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105 justify-center items-center">
+													<h1
+													className="pt-4 text-3xl font-bold text-center text-muted-foreground"
+													>TBD</h1>
+													<p className="text-muted-foreground text-center text-sm">
+														To be determined
+													</p>
+												</Card>
+												</div>
+											</CarouselItem>
+										)
+									} else {
+										const project = best[index];
+
+										return (
+
+
+											<CarouselItem key={index} className="pt-1 basis-1/3">
+												<div className="p-1">
+												<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105">
+													<img src={project.imageUrl} alt={project.name} className="absolute top-0 left-0 w-[33%] h-full object-cover rounded-s-md hover:scale-105 hover:cursor-pointer transition-all"
+													onClick={() => router.push(`/project/${project.name}`)} />
+													<CardContent className="ml-[33%]">
+														<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
+														{project.name} <Badge>{project.type}</Badge>
+														</div>
+														<p className="text-left text-sm text-muted-foreground overflow-clip">
+														{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
+														</p>
+														<p className="text-muted-foreground text-left text-sm pt-4">
+															Rating: {project.rating === 0 ? "No rating" : project.rating.toFixed(1)}
+														</p>
+													</CardContent>
+												</Card>
+												</div>
+											</CarouselItem>
+										)
+									}
+								})}
 							</CarouselContent>
 							<CarouselNext />
 						</Carousel>
@@ -119,27 +142,50 @@ export default function Explore({ recent, popular, best }) {
 							className="w-full h-[300px]"
 							>
 							<CarouselContent className="-mt-1 h-[300px]">
-								{recent.map((project, index) => (
-								<CarouselItem key={index} className="pt-1 basis-1/3">
-									<div className="p-1">
-									<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105">
-										<img src={project.imageUrl} alt={project.name} className="absolute top-0 left-0 w-[33%] h-full object-cover rounded-s-md hover:scale-105 hover:cursor-pointer transition-all"
-										onClick={() => router.push(`/project/${project.name}`)} />
-										<CardContent className="ml-[33%]">
-											<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
-											{project.name} <Badge>{project.type}</Badge>
-											</div>
-											<p className="text-left text-sm text-muted-foreground overflow-clip">
-											{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
-											</p>
-											<p className="text-muted-foreground text-left text-sm pt-4">
-												Updated: {project.updated}
-											</p>
-										</CardContent>
-									</Card>
-									</div>
-								</CarouselItem>
-								))}
+								{Array.from({ length: 10 }).map((_, index) => {
+									if (recent[index] == null) {
+										return (
+											<CarouselItem key={index} className="pt-1 basis-1/3">
+												<div className="p-1">
+												<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105 justify-center items-center">
+													<h1
+													className="pt-4 text-3xl font-bold text-center text-muted-foreground"
+													>TBD</h1>
+													<p className="text-muted-foreground text-center text-sm">
+														To be determined
+													</p>
+												</Card>
+												</div>
+											</CarouselItem>
+										)
+									} else {
+										const project = recent[index];
+
+										return (
+
+
+											<CarouselItem key={index} className="pt-1 basis-1/3">
+												<div className="p-1">
+												<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105">
+													<img src={project.imageUrl} alt={project.name} className="absolute top-0 left-0 w-[33%] h-full object-cover rounded-s-md hover:scale-105 hover:cursor-pointer transition-all"
+													onClick={() => router.push(`/project/${project.name}`)} />
+													<CardContent className="ml-[33%]">
+														<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
+														{project.name} <Badge>{project.type}</Badge>
+														</div>
+														<p className="text-left text-sm text-muted-foreground overflow-clip">
+														{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
+														</p>
+														<p className="text-muted-foreground text-left text-sm pt-4">
+															Updated: {project.updated}
+														</p>
+													</CardContent>
+												</Card>
+												</div>
+											</CarouselItem>
+										)
+									}
+								})}
 							</CarouselContent>
 							<CarouselNext />
 						</Carousel>
@@ -158,27 +204,50 @@ export default function Explore({ recent, popular, best }) {
 							className="w-full h-[300px]"
 							>
 							<CarouselContent className="-mt-1 h-[300px]">
-								{popular.map((project, index) => (
-								<CarouselItem key={index} className="pt-1 basis-1/3">
-									<div className="p-1">
-									<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105">
-										<img src={project.imageUrl} alt={project.name} className="absolute top-0 left-0 w-[33%] h-full object-cover rounded-s-md hover:scale-105 hover:cursor-pointer transition-all"
-										onClick={() => router.push(`/project/${project.name}`)} />
-										<CardContent className="ml-[33%]">
-											<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
-											{project.name} <Badge>{project.type}</Badge>
-											</div>
-											<p className="text-left text-sm text-muted-foreground overflow-clip">
-											{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
-											</p>
-											<p className="text-muted-foreground text-left text-sm pt-4">
-												Views: {getNiceNumber(project.views)}
-											</p>
-										</CardContent>
-									</Card>
-									</div>
-								</CarouselItem>
-								))}
+								{Array.from({ length: 10 }).map((_, index) => {
+									if (popular[index] == null) {
+										return (
+											<CarouselItem key={index} className="pt-1 basis-1/3">
+												<div className="p-1">
+												<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105 justify-center items-center">
+													<h1
+													className="pt-4 text-3xl font-bold text-center text-muted-foreground"
+													>TBD</h1>
+													<p className="text-muted-foreground text-center text-sm">
+														To be determined
+													</p>
+												</Card>
+												</div>
+											</CarouselItem>
+										)
+									} else {
+										const project = popular[index];
+
+										return (
+
+
+											<CarouselItem key={index} className="pt-1 basis-1/3">
+												<div className="p-1">
+												<Card className="relative overflow-hidden h-[100px] hover:shadow-lg transition-all hover:scale-105">
+													<img src={project.imageUrl} alt={project.name} className="absolute top-0 left-0 w-[33%] h-full object-cover rounded-s-md hover:scale-105 hover:cursor-pointer transition-all"
+													onClick={() => router.push(`/project/${project.name}`)} />
+													<CardContent className="ml-[33%]">
+														<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
+														{project.name} <Badge>{project.type}</Badge>
+														</div>
+														<p className="text-left text-sm text-muted-foreground overflow-clip">
+														{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
+														</p>
+														<p className="text-muted-foreground text-left text-sm pt-4">
+															Views: {getNiceNumber(project.views)}
+														</p>
+													</CardContent>
+												</Card>
+												</div>
+											</CarouselItem>
+										)
+									}
+								})}
 							</CarouselContent>
 							<CarouselNext />
 						</Carousel>

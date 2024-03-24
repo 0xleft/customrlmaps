@@ -34,6 +34,7 @@ import { z } from 'zod';
 
 import { DangerDialog } from './_DangerDialog';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
@@ -178,12 +179,23 @@ export default function EditProjectPage ( { project }) {
     }
 
     function setStatus(status) {
+        if (status === project.publishStatus) {
+            return;
+        }
+
+        executeRecaptcha("updateProject").then((token) => {
+            setStatusFinal(status, token);
+        });
+    }
+
+    function setStatusFinal(status, token) {
         toast.loading("Updating status...");
         fetch(`/api/project/update`, {
             method: "POST",
             body: JSON.stringify({
                 name: project.name,
                 status: status,
+                gRecaptchatoken: token,
             }),
         }).then((res) => res.json()).then((data) => {
             if (data.error) {

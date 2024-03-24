@@ -9,7 +9,7 @@ export default function FAQ() {
     return (
         <>
             <div className="container">
-                <section className="mx-auto flex max-w-[980px] flex-col items-center gap-2 py-96 md:py-72 lg:py-72 lg:pb-20">
+                <section className="mx-auto flex max-w-[980px] flex-col items-center gap-2 py-24 md:py-72 lg:py-48 lg:pb-20">
 					<h1 className="text-center lg:text-4xl md:text-3xl text-2xl font-bold">FAQ</h1>
 					<Accordion type="single" collapsible className="w-full">
 						<AccordionItem value="item-1">
