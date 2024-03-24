@@ -17,6 +17,7 @@ services:
       context: ./purge-service
       dockerfile: Dockerfile
     restart: always
+    
     networks:
       - internal-customrlmaps
     depends_on:

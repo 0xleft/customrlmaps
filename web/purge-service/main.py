@@ -3,6 +3,7 @@ import psycopg2
 from dotenvit import DotEnvIt
 from boto3.session import Session
 import weehok.weehok
+import time
 
 dotenv = DotEnvIt()
 
@@ -84,3 +85,6 @@ if __name__ == '__main__':
         webhook.send()
         print(e)
         print('Purge failed')
+    
+    # one hour
+    time.sleep(3600)
