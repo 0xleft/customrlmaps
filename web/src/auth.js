@@ -57,7 +57,6 @@ export const config = {
                             email: profile.email,
                             username: profile.email.split("@")[0],
                             fullname: "", // privacy
-                            imageUrl: profile.picture,
                             roles: ["user", (profile.email === process.env.ADMIN_EMAIL ? "admin" : "")],
                         },
                     });

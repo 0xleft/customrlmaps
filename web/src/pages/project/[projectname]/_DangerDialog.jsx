@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
  
-export function DangerDialog({ projectname, open, onClose }) {
+export default function DangerDialog({ projectname, open, onClose }) {
 
     const router = useRouter();
     const [confirmationText, setConfirmationText] = useState("");

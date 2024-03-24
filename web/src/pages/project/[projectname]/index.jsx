@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import prisma from '@/lib/prisma';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import Link from 'next/link';

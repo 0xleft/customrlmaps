@@ -11,7 +11,7 @@ const FormSchema = z.object({
     version: z.string().nonempty("Version is required"),
 })
 
-export function DangerDialog({ projectname, open, onClose, version }) {
+export default function DangerDialog({ projectname, open, onClose, version }) {
 
     const router = useRouter();
     const [understood, setUnderstood] = useState(false);

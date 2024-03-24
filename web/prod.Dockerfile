@@ -14,11 +14,8 @@ COPY prisma ./prisma
 COPY .env* ./
 COPY next.config.mjs .
 COPY jsconfig.json .
-
-ARG ENV_VARIABLE
-ENV ENV_VARIABLE=${ENV_VARIABLE}
-ARG NEXT_PUBLIC_ENV_VARIABLE
-ENV NEXT_PUBLIC_ENV_VARIABLE=${NEXT_PUBLIC_ENV_VARIABLE}
+COPY tailwind.config.js .
+COPY postcss.config.js .
 
 RUN npx prisma generate
 RUN npm run build

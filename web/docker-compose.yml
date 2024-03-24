@@ -11,6 +11,17 @@ services:
     networks:
       - internal-customrlmaps
 
+  purge-service:
+    container_name: purge-service
+    build:
+      context: ./purge-service
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - internal-customrlmaps
+    depends_on:
+      - database
+
   customrlmaps-app:
     container_name: customrlmaps-app
     build:
@@ -18,7 +29,7 @@ services:
       dockerfile: prod.Dockerfile
     restart: always
     ports:
-      - "3000"
+      - "3000:3000"
     networks:
       - global-reverse-proxy
       - internal-customrlmaps

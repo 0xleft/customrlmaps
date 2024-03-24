@@ -29,7 +29,6 @@ export default function Signin() {
                                     setLoading(false);
                                     toast.error("An error occurred");
                                 }
-                                
                             }}>Sign out</Button>
                     </div>
                 </CardContent>
