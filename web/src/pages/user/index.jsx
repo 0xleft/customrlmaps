@@ -22,11 +22,11 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { DangerDialog } from './_DangerDialog';
 import { z } from 'zod';
 import CustomError from '@/components/CustomError';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
+import DangerDialog from './_DangerDialog';
 
 export const getServerSideProps = async ({ req, res }) => {
     res.setHeader(

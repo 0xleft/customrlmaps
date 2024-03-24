@@ -17,7 +17,7 @@ services:
       context: ./purge-service
       dockerfile: Dockerfile
     restart: always
-    
+
     networks:
       - internal-customrlmaps
     depends_on:
@@ -30,7 +30,7 @@ services:
       dockerfile: prod.Dockerfile
     restart: always
     ports:
-      - "3000:3000"
+      - "3000"
     networks:
       - global-reverse-proxy
       - internal-customrlmaps

@@ -2,7 +2,7 @@ import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { verifyCaptcha } from '@/utils/captchaUtils';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
-import { S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { createHash } from 'crypto';
 import { z } from 'zod';
@@ -43,6 +43,10 @@ export default async function handler(req, res) {
 
         if (await verifyCaptcha(parsed.gRecaptchatoken, "updateUser") === false) {
             return res.status(400).json({ error: "Captcha failed" });
+        }
+
+        if (parsed.id && !isAdmin(user)) {
+            return res.status(403).json({ error: "Forbidden" });
         }
 
         if (user.dbUser.deleted) {
@@ -92,6 +96,31 @@ export default async function handler(req, res) {
         }
 
         if (parsed.image) {
+            // delete the old image
+            if (parsed.id && isAdmin(user)) {
+                const dbUser = await prisma.user.findUnique({
+                    where: {
+                        id: parsed.id,
+                    }
+                });
+
+                if (dbUser.imageUrl) {
+                    const key = dbUser.imageUrl.replace("https://customrlmaps.s3.amazonaws.com/", "");
+                    await client.send(new DeleteObjectCommand({
+                        Bucket: process.env.AWS_BUCKET_NAME,
+                        Key: key,
+                    }));
+                }
+            } else {
+                if (user.dbUser.imageUrl) {
+                    const key = user.dbUser.imageUrl.replace("https://customrlmaps.s3.amazonaws.com/", "");
+                    await client.send(new DeleteObjectCommand({
+                        Bucket: process.env.AWS_BUCKET_NAME,
+                        Key: key,
+                    }));
+                }
+            }
+
             const currentTime = new Date().getTime();
             const imagename = createHash("sha256").update(parsed.username + `3641avatar${currentTime}`).digest("hex");
 
@@ -113,7 +142,7 @@ export default async function handler(req, res) {
                 return res.status(500).json({ error: "An error occurred" });
             }
 
-            if (id && isAdmin(user)) {
+            if (parsed.id && isAdmin(user)) {
                 await prisma.user.update({
                     where: {
                         id: parsed.id,

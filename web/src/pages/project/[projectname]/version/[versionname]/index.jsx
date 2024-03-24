@@ -17,8 +17,7 @@ import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
-import { DangerDialog } from './_DangerDialog';
+import DangerDialog from './_DangerDialog';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(

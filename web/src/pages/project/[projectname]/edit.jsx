@@ -32,9 +32,9 @@ import Markdown from 'react-markdown';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { DangerDialog } from './_DangerDialog';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
+import DangerDialog from './_DangerDialog';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
