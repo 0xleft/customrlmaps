@@ -119,7 +119,7 @@ export default async function handler(req, res) {
                         id: parsed.id,
                     },
                     data: {
-                        imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/avatars/${imagename}`,
+                        imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/avatars/${imagename}`,
                     }
                 });
             } else {
@@ -128,7 +128,7 @@ export default async function handler(req, res) {
                         id: user.dbUser.id,
                     },
                     data: {
-                        imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/avatars/${imagename}`,
+                        imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/avatars/${imagename}`,
                     }
                 });
             }

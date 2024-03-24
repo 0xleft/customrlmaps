@@ -20,7 +20,7 @@ export function DangerDialog({ projectname, open, onClose }) {
                 <DialogHeader>
                 <DialogTitle>Delete {projectname}?</DialogTitle>
                 <DialogDescription className="mb-4">
-                    Your project will be marked as deleted and noone will be able to visit it. Deleted projects are purged after 6 months. Type <span className="font-bold">{projectname}</span> to confirm.
+                    Your project will be marked as deleted and noone will be able to visit it. Deleted projects are purged every hour. Type <span className="font-bold">{projectname}</span> to confirm.
                 </DialogDescription >
 
                 </DialogHeader>

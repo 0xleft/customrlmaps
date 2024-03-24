@@ -105,7 +105,7 @@ export default async function handler(req, res) {
                     id: project.id,
                 },
                 data: {
-                    imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/banners/${bannername}`,
+                    imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/banners/${bannername}`,
                 }
             });
 

@@ -34,11 +34,11 @@ export const config = {
                         }
                     }
 
-                    if (dbUser && (dbUser.deleted || dbUser.banned) && dbUser.email !== process.env.ADMIN_EMAIL) {
+                    if (dbUser && (dbUser.deleted || dbUser.banned) && profile.email !== process.env.ADMIN_EMAIL) {
                         throw new Error("User is banned or deleted");
                     }
 
-                    if (dbUser.email !== process.env.ADMIN_EMAIL) {
+                    if (profile.email !== process.env.ADMIN_EMAIL) {
                         if (!appConfig.isUserLoginEnabled) {
                             throw new Error("Login is disabled");
                         }

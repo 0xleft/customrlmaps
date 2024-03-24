@@ -29,9 +29,9 @@ export function SearchItem({ project }) {
 	return (
 		<>
 			<Card className="flex flex-col space-y-2 min-h-80 w-full hover:shadow-lg transition hover:scale-105 duration-75">
-					<img src={project.imageUrl} className="hover:cursor-pointer w-full h-52 max-h-52 aspect-video" onClick={() => {
-						router.push(`/project/${project.name}`);
-					}} />
+				<img src={project.imageUrl} className="hover:cursor-pointer w-full h-52 max-h-52 aspect-video" onClick={() => {
+					router.push(`/project/${project.name}`);
+				}} />
 				
 				<div className="flex flex-col justify-between space-x-2 pb-4">
 					<Link className="pl-2 text-xl hover:underline" href={`/project/${project.name}`}

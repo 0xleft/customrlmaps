@@ -23,7 +23,7 @@ export function DangerDialog({ projectname, open, onClose, version }) {
                 <DialogHeader>
                 <DialogTitle>Delete version {version}?</DialogTitle>
                 <DialogDescription className="mb-4">
-                    Your version will be marked as deleted and noone will be able to visit it. Deleted versions are purged after 6 months
+                    Your version will be marked as deleted and noone will be able to visit it. Deleted versions are purged every hour
                 </DialogDescription >
 
                 </DialogHeader>

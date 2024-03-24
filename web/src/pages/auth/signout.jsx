@@ -18,7 +18,7 @@ export default function Signin() {
                 </CardHeader>
                 <CardContent className="max-w-[300px]">
                     <div className='flex flex-col space-y-2'>
-                            <Button className="w-full" disabled={loading}
+                            <Button className="w-full" disabled={loading} variant="destructive"
                             onClick={async () => {
                                 try {
                                     setLoading(true);

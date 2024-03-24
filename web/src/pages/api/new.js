@@ -97,7 +97,7 @@ export default async function handler(req, res) {
 				longDescription: parsed.longDescription,
 				type: parsed.type.toUpperCase(),
 				userId: user.dbUser.id,
-				imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/banners/${bannername}`,
+				imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/banners/${bannername}`,
 				latestVersion: "1.0.0",
 			},
 		});
@@ -107,7 +107,7 @@ export default async function handler(req, res) {
 			data: {
 				projectId: project.id,
 				version: "1.0.0",
-				downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${parsed.type}s/${filename}`,
+				downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${parsed.type}s/${filename}`,
 				changes: "Initial version",
 			},
 		})
