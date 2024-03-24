@@ -32,11 +32,6 @@ USER nextjs
 
 COPY --from=builder --chown=nextjs:nodejs /app ./
 
-ARG ENV_VARIABLE
-ENV ENV_VARIABLE=${ENV_VARIABLE}
-ARG NEXT_PUBLIC_ENV_VARIABLE
-ENV NEXT_PUBLIC_ENV_VARIABLE=${NEXT_PUBLIC_ENV_VARIABLE}
-
 COPY docker-entrypoint.sh .
 
 CMD ["sh", "docker-entrypoint.sh"]
