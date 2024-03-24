@@ -142,7 +142,7 @@ export default function EditProjectPage ( { project }) {
             }
 
             if (data.bannerFields) {
-                toast.loading("Started uploading files...");
+                toast.loading("Started uploading files...", { dismissible: true });
                 const secondFormData = new FormData();
                 Object.keys(data.bannerFields).forEach((key) => {
                     secondFormData.append(key, data.bannerFields[key]);
@@ -189,7 +189,7 @@ export default function EditProjectPage ( { project }) {
     }
 
     function setStatusFinal(status, token) {
-        toast.loading("Updating status...");
+        toast.loading("Updating status...", { dismissible: true });
         fetch(`/api/project/update`, {
             method: "POST",
             body: JSON.stringify({

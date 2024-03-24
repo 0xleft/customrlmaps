@@ -126,7 +126,7 @@ export default function NewVersionProject({ project }) {
 
     function onSubmit(data) {
         setUploading(true);
-        toast.loading("Uploading...");
+        toast.loading("Uploading...", { dismissible: true });
 
         fetch(`/api/project/version/new`, {
             method: 'POST',

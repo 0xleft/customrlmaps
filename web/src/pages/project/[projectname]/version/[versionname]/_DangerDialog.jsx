@@ -42,7 +42,7 @@ export function DangerDialog({ projectname, open, onClose, version }) {
 
                 <div className="flex flex-row space-x-2">
                     <Button variant="destructive" type="button" onClick={() => {
-                        toast.loading("Deleting version...");
+                        toast.loading("Deleting version...", { dismissible: true });
                         setLoading(true);
                         fetch(`/api/project/version/delete`, {
                             method: 'POST',

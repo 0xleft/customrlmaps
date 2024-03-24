@@ -42,7 +42,7 @@ export function DangerDialog({ username, open, onClose }) {
                         setConfirmationText(e.target.value);
                     }} />
                     <Button variant="destructive" type="button" onClick={() => {
-                        toast.loading("Deleting user...");
+                        toast.loading("Deleting user...", { dismissible: true });
                         setLoading(true);
                         fetch(`/api/user/delete`, {
                             method: 'POST',

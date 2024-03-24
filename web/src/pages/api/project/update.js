@@ -25,7 +25,7 @@ const schema = z.object({
 })
 
 export default async function handler(req, res) {
-    user = await getAllUserInfoServer(req, res);
+    const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {
 		return res.status(401).json({ error: "Unauthorized" });

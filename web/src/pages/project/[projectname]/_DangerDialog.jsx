@@ -42,7 +42,7 @@ export function DangerDialog({ projectname, open, onClose }) {
                         setConfirmationText(e.target.value);
                     }} />
                     <Button variant="destructive" type="button" onClick={() => {
-                        toast.loading("Deleting project...");
+                        toast.loading("Deleting project...", { dismissible: true });
                         setLoading(true);
                         fetch(`/api/project/delete`, {
                             method: 'POST',

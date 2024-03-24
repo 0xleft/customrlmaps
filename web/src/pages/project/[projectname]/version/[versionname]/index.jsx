@@ -101,7 +101,7 @@ export default function VersionIndexView({ project, version, canEdit }) {
     const router = useRouter();
 
     function setAsLatest() {
-        toast.loading("Setting as latest");
+        toast.loading("Setting as latest", { dismissible: true });
         fetch("/api/project/version/setlatest", {
             method: "POST",
             body: JSON.stringify({

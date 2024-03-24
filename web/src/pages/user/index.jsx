@@ -127,7 +127,7 @@ export default function User({ user }) {
             id: user.id
 		}
 
-		toast.loading("Saving...");
+		toast.loading("Saving...", { dismissible: true });
 		fetch("/api/user/update", {
 			method: "POST",
 			body: JSON.stringify(submitData),
@@ -140,7 +140,7 @@ export default function User({ user }) {
 			}
 
 			if (data.url) {
-				toast.loading("Started uploading files...");
+				toast.loading("Started uploading files...", { dismissible: true });
 				const secondFormData = new FormData();
 				Object.keys(data.fields).forEach((key) => {
 					secondFormData.append(key, data.fields[key]);

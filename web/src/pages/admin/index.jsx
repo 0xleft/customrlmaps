@@ -36,7 +36,7 @@ export default function Admin({ config }) {
 	const [newConfig, setNewConfig] = useState(config);
 
 	function updateConfig() {
-		toast.loading("Updating config");
+		toast.loading("Updating config", { dismissible: true });
 		fetch("/api/admin/updateConfig", {
 			method: "POST",
 			body: JSON.stringify({
