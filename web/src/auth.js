@@ -38,11 +38,14 @@ export const config = {
                         },
                         update: {
                             lastLogin: new Date(),
+                            ips: {
+                                set: [...user.ips, ""], // todo add ip address
+                            }
                         },
                         create: {
                             email: profile.email,
                             username: profile.email.split("@")[0],
-                            fullname: profile.name,
+                            fullname: "", // privacy
                             imageUrl: profile.picture,
                             roles: ["user", (profile.email === process.env.ADMIN_EMAIL ? "admin" : "")],
                         },

@@ -200,9 +200,10 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                     </div>
                                 </div>
 
-                                <div className='py-10'>
+                                <div className='py-4 md:py-10 lg:py-10 space-y-2'>
                                     <h2 className='text-xl md:text-2xl font-bold'>Submit rating:</h2>
                                     <RatingButton project={project} />
+                                    <p className='text-muted-foreground text-sm'>You can only submit rating once.</p>
                                 </div>
 
                                 <div>

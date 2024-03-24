@@ -68,14 +68,14 @@ export default async function handler(req, res) {
                 id: parsed.projectId,
             },
             data: {
-                ratings: {
+                totalRatings: {
                     increment: 1,
                 },
-                totalRatings: {
+                ratingSum: {
                     increment: parsed.rating,
                 },
                 averageRating: {
-                    increment: parsed.rating,
+                    set: (project.ratingSum + parsed.rating) / (project.totalRatings + 1),
                 }
             }
         });

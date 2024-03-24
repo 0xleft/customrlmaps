@@ -19,7 +19,7 @@ export default function CookieBanner() {
             <div className="fixed bottom-0 w-full bg-accent-foreground p-4">
                 <div className="flex flex-row space-x-2 justify-center items-center">
                     <p className="text-center text-primary-foreground">We use cookies to ensure the best experience on our website. By continuing to use the website, we assume that you're okay with this. To find out more please click <a
-                        href="/legal/policy"
+                        href="/privacypolicy"
                         className='underline'
                     >here</a>.</p>
                     <Button onClick={() => {

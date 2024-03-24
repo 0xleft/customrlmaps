@@ -46,6 +46,15 @@ export default function FAQ() {
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="item-4">
+							<AccordionTrigger>I found a bug how to report it?</AccordionTrigger>
+							<AccordionContent>
+								Report it on the discord server
+								<p>Or even better make a github issue <a href="https://github.com/pageuplt/issues/issues/new"
+									className='underline'
+								>here</a></p>
+							</AccordionContent>
+						</AccordionItem>
+						<AccordionItem value="item-5">
 							<AccordionTrigger>Reporting a vulnerability?</AccordionTrigger>
 							<AccordionContent>
 								<p>You can contact us via <a href="mailto:bugs@customrlmaps.com"
