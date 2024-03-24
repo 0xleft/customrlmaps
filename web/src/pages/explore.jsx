@@ -11,46 +11,55 @@ export const getServerSideProps = async ({ req, res }) => {
 		'Cache-Control',
 		'public, s-maxage=10, stale-while-revalidate=360'
 	);
-
-	const recentPromise = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/project/search?query=&page=0&order=updatedAt&orderType=asc&type=&username=&rating=0`);
-	const popularPromise = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/project/search?query=&page=0&order=views&orderType=desc&type=&username=&rating=0`);
-	const bestPromise = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/project/search?query=&page=0&order=averageRating&orderType=desc&type=&username=&rating=0`);
-
-	const [recent, popular, best] = await Promise.all([recentPromise, popularPromise, bestPromise]);
-
-	return {
-		props: {
-			recent: recent.data.projects.map((project) => {
-				return {
-					type: project.type,
-					name: project.name,
-					imageUrl: project.imageUrl,
-					description: project.description,
-					updated: project.updated,
-				}
-			}),
-
-			popular: popular.data.projects.map((project) => {
-				return {
-					type: project.type,
-					name: project.name,
-					imageUrl: project.imageUrl,
-					description: project.description,
-					views: project.views,
-				}
-			}),
-
-			best: best.data.projects.map((project) => {
-				return {
-					type: project.type,
-					name: project.name,
-					imageUrl: project.imageUrl,
-					description: project.description,
-					rating: project.averageRating,
-				}
-			}),
-		},
-	};
+	try {
+		const recentPromise = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/project/search?query=&page=0&order=updatedAt&orderType=asc&type=&username=&rating=0`);
+		const popularPromise = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/project/search?query=&page=0&order=views&orderType=desc&type=&username=&rating=0`);
+		const bestPromise = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/project/search?query=&page=0&order=averageRating&orderType=desc&type=&username=&rating=0`);
+	
+		const [recent, popular, best] = await Promise.all([recentPromise, popularPromise, bestPromise]);
+	
+		return {
+			props: {
+				recent: recent.data.projects.map((project) => {
+					return {
+						type: project.type,
+						name: project.name,
+						imageUrl: project.imageUrl,
+						description: project.description,
+						updated: project.updated,
+					}
+				}),
+	
+				popular: popular.data.projects.map((project) => {
+					return {
+						type: project.type,
+						name: project.name,
+						imageUrl: project.imageUrl,
+						description: project.description,
+						views: project.views,
+					}
+				}),
+	
+				best: best.data.projects.map((project) => {
+					return {
+						type: project.type,
+						name: project.name,
+						imageUrl: project.imageUrl,
+						description: project.description,
+						rating: project.averageRating,
+					}
+				}),
+			},
+		};
+	} catch (error) {
+		return {
+			props: {
+				recent: [],
+				popular: [],
+				best: [],
+			}
+		};
+	}
 };
 
 export default function Explore({ recent, popular, best }) {
