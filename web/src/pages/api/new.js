@@ -1,3 +1,4 @@
+import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { verifyCaptcha } from '@/utils/captchaUtils';
 import { getAllUserInfoServer } from '@/utils/userUtilsServer';
@@ -23,6 +24,10 @@ const schema = z.object({
 })
 
 export default async function handler(req, res) {
+	if (!appConfig.canCreateNewProjects) {
+		return res.status(401).json({ error: "Creating new projects is currently disabled" });
+	}
+
 	const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {

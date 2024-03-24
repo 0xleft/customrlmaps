@@ -1,3 +1,4 @@
+import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { z } from 'zod';
@@ -8,6 +9,10 @@ const schema = z.object({
 });
 
 export default async function handler(req, res) {
+    if (!appConfig.canDeleteVersions) {
+        return res.status(403).json({ error: "Deleting versions is disabled" });
+    }
+
 	const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {

@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import { getAllUserInfoServer } from './utils/userUtilsServer';
 import prisma from './lib/prisma';
+import appConfig from './lib/config';
 
 export const config = {
     theme: {
@@ -21,14 +22,26 @@ export const config = {
             try {
                 if (account.provider === "google" && profile.email_verified === true) {
 
-                    const user = prisma.user.findFirst({
+                    const dbUser = await prisma.user.findFirst({
                         where: {
                             email: profile.email,
                         }
                     });
 
-                    if ((user.deleted || user.banned) && user.email !== process.env.ADMIN_EMAIL) {
-                        return false;
+                    if (!dbUser) {
+                        if (!appConfig.isUserRegistrationEnabled) {
+                            throw new Error("Registration is disabled");
+                        }
+                    }
+
+                    if (dbUser && (dbUser.deleted || dbUser.banned) && dbUser.email !== process.env.ADMIN_EMAIL) {
+                        throw new Error("User is banned or deleted");
+                    }
+
+                    if (dbUser.email !== process.env.ADMIN_EMAIL) {
+                        if (!appConfig.isUserLoginEnabled) {
+                            throw new Error("Login is disabled");
+                        }
                     }
 
                     // todo add the ip address to the users ips
@@ -38,9 +51,7 @@ export const config = {
                         },
                         update: {
                             lastLogin: new Date(),
-                            ips: {
-                                set: [...user.ips, ""], // todo add ip address
-                            }
+                            // todo ips
                         },
                         create: {
                             email: profile.email,

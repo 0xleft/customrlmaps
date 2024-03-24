@@ -1,3 +1,4 @@
+import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { verifyCaptcha } from '@/utils/captchaUtils';
 import { getAllUserInfoServer } from '@/utils/userUtilsServer';
@@ -21,6 +22,10 @@ const schema = z.object({
 });
 
 export default async function handler(req, res) {
+    if (!appConfig.canRateProjects) {
+        return res.status(403).json({ error: "Rating projects is disabled" });
+    }
+
 	const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {

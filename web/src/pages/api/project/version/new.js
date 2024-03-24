@@ -1,3 +1,4 @@
+import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { S3Client } from '@aws-sdk/client-s3';
@@ -23,6 +24,10 @@ const schema = z.object({
 });
 
 export default async function handler(req, res) {
+    if (!appConfig.canCreateVersions) {
+        return res.status(403).json({ error: "Creating versions is disabled" });
+    }
+
 	const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {

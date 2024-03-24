@@ -39,10 +39,7 @@ export const getServerSideProps = async ({ req, res }) => {
 
     if (!currentUser || !currentUser.session || !currentUser.dbUser || currentUser.dbUser.deleted) {
         return {
-            redirect: {
-                destination: "/",
-                permanent: false,
-            }
+            notFound: true,
         };
     }
 

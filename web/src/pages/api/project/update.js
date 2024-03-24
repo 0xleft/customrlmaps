@@ -1,3 +1,4 @@
+import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { verifyCaptcha } from '@/utils/captchaUtils';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
@@ -24,6 +25,10 @@ const schema = z.object({
 })
 
 export default async function handler(req, res) {
+    if (!appConfig.canUpdateProjects) {
+        return res.status(403).json({ error: "Updating projects is disabled" });
+    }
+
 	const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {

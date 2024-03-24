@@ -23,7 +23,7 @@ export default function Home() {
 		<>
 			<Hero />
 
-			<div className="container">
+			{/* <div className="container">
 				<div className="flex flex-col gap-2 w-full text-center lg:text-3xl md:text-2xl text-xl">
 				<Carousel
 				plugins={[plugin.current]}
@@ -44,7 +44,7 @@ export default function Home() {
 				</CarouselContent>
 				</Carousel>
 				</div>
-			</div>
+			</div> */}
 
 			<div className="container">
 				<section className="mx-auto flex max-w-[980px] flex-col items-center gap-8 pt-12 pb-24 md:py-24 lg:py-48 lg:pb-24">

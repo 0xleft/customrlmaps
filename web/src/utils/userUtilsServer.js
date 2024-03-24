@@ -1,3 +1,4 @@
+import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 
@@ -76,6 +77,13 @@ async function getAllUserInfoServer(req, res) {
     const user = await getUserFromEmail(session.user.email);
     
     if (!user) {
+        return {
+            session: session,
+            dbUser: null,
+        };
+    }
+
+    if (appConfig.adminOnly && !user.roles.includes("admin")) {
         return {
             session: session,
             dbUser: null,

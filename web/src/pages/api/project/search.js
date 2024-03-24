@@ -1,3 +1,4 @@
+import appConfig from "@/lib/config";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 
@@ -13,10 +14,10 @@ const formSchema = z.object({
 
 export default async function handler(req, res) {
 
-    // sleep for 1 second
-    // todo remove
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
+    if (!appConfig.canSearchProjects) {
+        return res.status(403).json({ error: "Searching projects is disabled" });
+    }
+    
     try {
         const params = new URL(req.url, "https://localhost").searchParams;
 

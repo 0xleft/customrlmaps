@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/pagination';
 import UserLeftCom from '@/components/UserLeftCom';
 import prisma from '@/lib/prisma';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 
 const PER_PAGE = 10
 
@@ -35,24 +35,12 @@ export const getServerSideProps = async ({ req, res, params }) => {
 			}
 		});
 	
-		if (!dbUser) {
+		if (!dbUser || dbUser.deleted) {
 			return {
-				redirect: {
-					destination: "/",
-					permanent: false,
-				}
+				notFound: true,
 			};
 		}
 
-		if (dbUser.deleted) {
-			return {
-				redirect: {
-					destination: "/",
-					permanent: false,
-				}
-			};
-		}
-	
 		// todo
 		const page = parseInt(new URL(req.url, "https://localhost").searchParams.get('page')) || 1;
 	
@@ -68,8 +56,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 			},
 		};
 
-		// todo
-		if (!currentUser || currentUser.dbUser.id !== dbUser.id) {
+    	if (!currentUser || (currentUser?.dbUser?.id !== dbUser.id && !isAdmin(currentUser))) {
 			projectQuery.where.publishStatus = "PUBLISHED";
 		}
 
@@ -110,16 +97,12 @@ export const getServerSideProps = async ({ req, res, params }) => {
 		};
 	} catch (e) {
 		return {
-			redirect: {
-				destination: "/",
-				permanent: false,
-			}
+			notFound: true,
 		};
 	}
 };
 
 export default function projects({ user, projects, currentPage, maxPage }) {
-
 	return (
 		<>
 			<div className='flex flex-row justify-center p-4 min-h-screen'>

@@ -1,8 +1,13 @@
+import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { z } from 'zod';
 
 export default async function handler(req, res) {
+    if (!appConfig.canDeleteProfile) {
+        return res.status(403).json({ error: "Deleting profiles is disabled" });
+    }
+
 	const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {

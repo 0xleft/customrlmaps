@@ -65,7 +65,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 imageUrl: dbUser.imageUrl,
                 created: `${dbUser.createdAt.getDate()}/${dbUser.createdAt.getMonth()}/${dbUser.createdAt.getFullYear()}`,
                 roles: dbUser.roles,
-                isOwner: dbUser.id === currentUser?.dbUser?.id,
+                isOwner: dbUser.id === currentUser?.dbUser?.id || isAdmin(currentUser),
             },
             topMaps: topMaps.map((map) => {
                 return {
