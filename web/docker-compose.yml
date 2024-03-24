@@ -32,13 +32,24 @@ services:
     ports:
       - "3000"
     networks:
-      - global-reverse-proxy
+      - reverse-proxy
       - internal-customrlmaps
     depends_on:
       - database
 
+  reverse-proxy:
+    container_name: reverse-proxy
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - reverse-proxy
+
 networks:
-  global-reverse-proxy:
+  reverse-proxy:
     driver: bridge
   internal-customrlmaps:
     driver: bridge
