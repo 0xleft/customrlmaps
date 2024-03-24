@@ -8,6 +8,7 @@ import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import ThemedProgressBar from './ThemedProgressBar';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import CookieBanner from './CookieBanner';
 
 export default function RootLayout({ children }) {
 		
@@ -31,6 +32,8 @@ export default function RootLayout({ children }) {
 					</main>
 					
 					<Footer />
+
+					<CookieBanner />
 					<Toaster />
 				</ThemeProvider>
 			</GoogleReCaptchaProvider>
