@@ -4,7 +4,7 @@ import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import appConfig from "@/lib/config";
+import { getConfig } from "@/lib/config";
 import { getAllUserInfoServer, isAdmin } from "@/utils/userUtilsServer";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -24,6 +24,10 @@ export const getServerSideProps = async ({ req, res }) => {
 			notFound: true,
 		};
 	}
+
+	const appConfig = await getConfig();
+
+	delete appConfig.id;
 
 	return {
 		props: {

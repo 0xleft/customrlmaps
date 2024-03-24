@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import { getAllUserInfoServer } from './utils/userUtilsServer';
 import prisma from './lib/prisma';
-import appConfig from './lib/config';
+import appConfig, { getConfig } from './lib/config';
 
 export const config = {
     theme: {
@@ -27,6 +27,8 @@ export const config = {
                             email: profile.email,
                         }
                     });
+
+                    const appConfig = await getConfig();
 
                     if (!dbUser) {
                         if (!appConfig.isUserRegistrationEnabled) {

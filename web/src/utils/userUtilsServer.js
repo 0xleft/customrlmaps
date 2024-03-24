@@ -1,4 +1,3 @@
-import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 
@@ -83,12 +82,12 @@ async function getAllUserInfoServer(req, res) {
         };
     }
 
-    if (appConfig.adminOnly && !user.roles.includes("admin")) {
-        return {
-            session: session,
-            dbUser: null,
-        };
-    }
+    // if ((await getConfig()).adminOnly && !user.roles.includes("admin")) {
+    //     return {
+    //         session: session,
+    //         dbUser: null,
+    //     };
+    // }
 
     if ((user.deleted || user.banned) && !user.roles.includes("admin")) {
         return {

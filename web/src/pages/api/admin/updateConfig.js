@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
 	try {
         const parsed = schema.parse(JSON.parse(req.body));
-        updateConfig(parsed);
+        await updateConfig(parsed);
 
         return res.status(200).json({ success: true });
     } catch (e) {

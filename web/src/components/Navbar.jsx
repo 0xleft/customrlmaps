@@ -49,7 +49,7 @@ export default function Navbar() {
 	useEffect(() => {
 		fetch('/api/user/isAdmin', {
 			method: 'GET',
-		}, { next: { revalidate: 60 } }).then((res) => res.json()).then((data) => {
+		}, { next: { revalidate: 3600 } }).then((res) => res.json()).then((data) => {
 			setIsAdmin(data.isAdmin);
 		}).catch((error) => {
 		});

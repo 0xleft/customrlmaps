@@ -1,4 +1,4 @@
-import appConfig from "@/lib/config";
+import { getConfig } from "@/lib/config";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 
@@ -14,7 +14,7 @@ const formSchema = z.object({
 
 export default async function handler(req, res) {
 
-    if (!appConfig.canSearchProjects) {
+    if (!(await getConfig()).canSearchProjects) {
         return res.status(403).json({ error: "Searching projects is disabled" });
     }
     

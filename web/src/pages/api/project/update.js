@@ -1,4 +1,4 @@
-import appConfig from '@/lib/config';
+import { getConfig } from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { verifyCaptcha } from '@/utils/captchaUtils';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 		return res.status(405).json({ error: "Method not allowed" });
 	}
 
-    if (!appConfig.canUpdateProjects && !isAdmin(user)) {
+    if (!(await getConfig()).canUpdateProjects && !isAdmin(user)) {
         return res.status(403).json({ error: "Updating projects is disabled" });
     }
 

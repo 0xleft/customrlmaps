@@ -1,31 +1,40 @@
-let appConfig;
+import prisma from "./prisma";
 
-if (!global.appConfig) {
-    global.appConfig = {
-        isUserLoginEnabled: true, // done // todo add errors
-        isUserRegistrationEnabled: true, // done // todo add errors
-        canCreateNewProjects: true, // done
-        canUpdateProjects: true,  // done
-        canDeleteProjects: true, // done
-        canRateProjects: true, // done
-        canUpdateProfile: true, // done
-        canDeleteProfile: true, // done
-        canSearchProjects: true, // done
-        canCreateVersions: true, // done
-        canDeleteVersions: true, // done
-        canSetLatestVersion: true, // done
-        adminOnly: false, // done kinda
-        canUploadMods: true, // done 
-        canUploadMaps: true, // done
+async function getConfig() {
+    let appConfig = await prisma.appConfig.findFirst();
+
+    if (!appConfig) {
+        appConfig = await prisma.appConfig.create({
+            data: {
+                isUserLoginEnabled: true,
+                isUserRegistrationEnabled: true,
+                canCreateNewProjects: true,
+                canUpdateProjects: true,
+                canDeleteProjects: true,
+                canRateProjects: true,
+                canUpdateProfile: true,
+                canDeleteProfile: true,
+                canSearchProjects: true,
+                canCreateVersions: true,
+                canDeleteVersions: true,
+                canSetLatestVersion: true,
+                adminOnly: false, // not implemented
+                canUploadMods: true,
+                canUploadMaps: true,
+            }
+        });
     }
+
+    return appConfig;
 }
 
-appConfig = global.appConfig;
-
-function updateConfig(config) {
-    appConfig = config;
-    global.appConfig = config;
+async function updateConfig(config) {
+    await prisma.appConfig.update({
+        where: {
+            id: (await getConfig()).id
+        },
+        data: config,
+    });
 }
 
-export { updateConfig };
-export default appConfig;
+export { updateConfig, getConfig };

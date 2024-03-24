@@ -102,3 +102,23 @@ model Rating {
 
   deletedAt DateTime?
 }
+
+model appConfig {
+  id Int @id @default(autoincrement())
+
+  isUserLoginEnabled Boolean @default(true)
+  isUserRegistrationEnabled Boolean @default(true)
+  canCreateNewProjects Boolean @default(true)
+  canUpdateProjects Boolean @default(true)
+  canDeleteProjects Boolean @default(true)
+  canRateProjects Boolean @default(true)
+  canUpdateProfile Boolean @default(true)
+  canDeleteProfile Boolean @default(true)
+  canSearchProjects Boolean @default(true)
+  canCreateVersions Boolean @default(true)
+  canDeleteVersions Boolean @default(true)
+  canSetLatestVersion Boolean @default(true)
+  adminOnly Boolean @default(false)
+  canUploadMods Boolean @default(true)
+  canUploadMaps Boolean @default(true)
+}
