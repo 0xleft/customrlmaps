@@ -40,7 +40,7 @@ services:
   reverse-proxy:
     container_name: reverse-proxy
     build:
-      context: .
+      context: ./reverse-proxy
       dockerfile: Dockerfile
     ports:
       - "80:80"
