@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import appConfig from '@/lib/config';
 import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
+import { isAdmin } from '@/utils/userUtilsServer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
@@ -17,14 +18,6 @@ import { set, useForm } from 'react-hook-form';
 import Markdown from 'react-markdown';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-export const getServerSideProps = async ({ req, res, params }) => {
-	return {
-		props: {
-			isEnabled: appConfig.canCreateNewProjects,
-		},
-	}
-}
 
 function checkFileType(file, type) {
 	if (!file) {
@@ -50,16 +43,7 @@ function checkBannerType(file) {
     return false;
 }
 
-export default function NewProject({ isEnabled }) {
-
-	if (!isEnabled) {
-		return (
-			<CustomError error="401">
-				<h1 className='text-muted-foreground'>Creating new projects is currently disabled</h1>
-			</CustomError>
-		);
-	}
-
+export default function NewProject() {
 	const router = useRouter();
 	const type = router.query.type;
 

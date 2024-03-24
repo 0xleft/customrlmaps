@@ -24,10 +24,6 @@ const schema = z.object({
 })
 
 export default async function handler(req, res) {
-    if (!appConfig.canUpdateProfile) {
-        return res.status(403).json({ error: "Updating profile is disabled" });
-    }
-
 	const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {
@@ -37,6 +33,10 @@ export default async function handler(req, res) {
 	if (req.method !== "POST") {
 		return res.status(405).json({ error: "Method not allowed" });
 	}
+
+    if (!appConfig.canUpdateProfile && !isAdmin(user)) {
+        return res.status(403).json({ error: "Updating profile is disabled" });
+    }
 
 	try {
 		const parsed = schema.parse(JSON.parse(req.body));

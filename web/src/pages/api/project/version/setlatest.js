@@ -9,11 +9,7 @@ const schema = z.object({
 });
 
 export default async function handler(req, res) {
-    if (!appConfig.canSetLatestVersion) {
-        return res.status(403).json({ error: "Setting latest version is disabled" });
-    }
-
-	const user = await getAllUserInfoServer(req, res);
+    user = await getAllUserInfoServer(req, res);
 
 	if (!user) {
 		return res.status(401).json({ error: "Unauthorized" });
@@ -22,6 +18,10 @@ export default async function handler(req, res) {
 	if (req.method !== "POST") {
 		return res.status(405).json({ error: "Method not allowed" });
 	}
+
+    if (!appConfig.canSetLatestVersion && !isAdmin(user)) {
+        return res.status(403).json({ error: "Setting latest version is disabled" });
+    }
 
 	try {
 		const parsed = schema.parse(JSON.parse(req.body));

@@ -1,7 +1,7 @@
 import appConfig from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { verifyCaptcha } from '@/utils/captchaUtils';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { createHash } from 'crypto';
@@ -24,10 +24,6 @@ const schema = z.object({
 })
 
 export default async function handler(req, res) {
-	if (!appConfig.canCreateNewProjects) {
-		return res.status(401).json({ error: "Creating new projects is currently disabled" });
-	}
-
 	const user = await getAllUserInfoServer(req, res);
 
 	if (!user) {
@@ -36,6 +32,10 @@ export default async function handler(req, res) {
 
 	if (req.method !== "POST") {
 		return res.status(405).json({ error: "Method not allowed" });
+	}
+
+	if (!appConfig.canCreateNewProjects && !isAdmin(user)) {
+		return res.status(401).json({ error: "Creating new projects is currently disabled" });
 	}
 
 	try {
