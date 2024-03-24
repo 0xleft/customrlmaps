@@ -46,6 +46,10 @@ export default async function handler(req, res) {
 
         let updateData = {}
         if (parsed.username && parsed.username !== user.dbUser.username) {
+            if (user.dbUser.lastUsernameChange && (new Date().getTime() - user.dbUser.lastUsernameChange.getTime()) < 2592000000) {
+                return res.status(400).json({ error: "You can only change your username once every 30 days" });
+            }
+
             // check if username is taken
             const exists = await prisma.user.findFirst({
                 where: {
@@ -57,6 +61,8 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: "Username is taken" });
             }
 
+
+            updateData.lastUsernameChange = new Date();
             updateData.username = parsed.username;
         }
 

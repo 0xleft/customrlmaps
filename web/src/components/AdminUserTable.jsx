@@ -53,7 +53,6 @@ function banUser(id, banned = true) {
             console.error("An error occurred! " + res.statusText)
             return
         }
-        console.log("Deleted user")
     }).catch((err) => {
         console.error("An error occurred! " + err)
     });
@@ -70,7 +69,6 @@ function deleteUser(id, deleted = true) {
             console.error("An error occurred! " + res.statusText)
             return
         }
-        console.log("Deleted user")
     }).catch((err) => {
         console.error("An error occurred! " + err)
     });

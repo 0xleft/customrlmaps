@@ -183,8 +183,6 @@ export default function User({ user }) {
 		});
 	}
 
-    console.log(user.id !== undefined);
-
 	return (
 		<>
 			<div className='container pt-6'>
