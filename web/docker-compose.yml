@@ -54,11 +54,6 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
 
   reverse-proxy:
     container_name: reverse-proxy
@@ -71,8 +66,7 @@ services:
     networks:
       - reverse-proxy
     depends_on:
-      customrlmaps-app:
-        condition: service_healthy
+      - customrlmaps-app
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 30s
