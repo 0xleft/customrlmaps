@@ -104,7 +104,7 @@ export default async function handler(req, res) {
                     }
                 });
 
-                if (dbUser.imageUrl) {
+                if (dbUser.imageUrl && dbUser.imageUrl.startsWith("https://customrlmaps.s3.amazonaws.com/")) {
                     const key = dbUser.imageUrl.replace("https://customrlmaps.s3.amazonaws.com/", "");
                     await client.send(new DeleteObjectCommand({
                         Bucket: process.env.AWS_BUCKET_NAME,
@@ -112,7 +112,7 @@ export default async function handler(req, res) {
                     }));
                 }
             } else {
-                if (user.dbUser.imageUrl) {
+                if (user.dbUser.imageUrl && user.dbUser.imageUrl.startsWith("https://customrlmaps.s3.amazonaws.com/")) {
                     const key = user.dbUser.imageUrl.replace("https://customrlmaps.s3.amazonaws.com/", "");
                     await client.send(new DeleteObjectCommand({
                         Bucket: process.env.AWS_BUCKET_NAME,
