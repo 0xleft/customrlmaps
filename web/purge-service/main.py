@@ -73,9 +73,9 @@ def purge():
 
         for key in to_delete:
             # delete ratings
-            cur.execute('DELETE FROM "Rating" where "ProjectId" = %s;', (key[0],))
+            cur.execute('DELETE FROM "Rating" where "projectId" = %s;', (key[0],))
             # delete versions
-            cur.execute('DELETE FROM "Version" where "ProjectId" = %s;', (key[0],))
+            cur.execute('DELETE FROM "Version" where "projectId" = %s;', (key[0],))
 
         cur.execute('DELETE FROM "Project" where deleted = true;')
         conn.commit()
@@ -94,3 +94,8 @@ if __name__ == '__main__':
     
     # one hour
     time.sleep(3600)
+
+
+
+
+# TODO purge users too
