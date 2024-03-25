@@ -198,7 +198,7 @@ export default function User({ user }) {
                                                 </div>
                                             </h1>
                                         </div>
-                                        <div className='flex flex-row space-x-2'>
+                                        <div className='flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0'>
 											<Button asChild>
 												<Link href="/user/[username]" as={`/user/${user.username}`}>
 													View profile
