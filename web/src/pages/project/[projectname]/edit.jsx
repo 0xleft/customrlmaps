@@ -35,6 +35,7 @@ import { z } from 'zod';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
 import DangerDialog from './_DangerDialog';
+import prisma from '@/lib/prisma';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(

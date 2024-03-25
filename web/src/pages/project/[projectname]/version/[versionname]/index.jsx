@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import DangerDialog from './_DangerDialog';
+import prisma from '@/lib/prisma';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     res.setHeader(
