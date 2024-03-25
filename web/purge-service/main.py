@@ -61,7 +61,7 @@ def purge():
 
     cur.execute('SELECT * FROM "Project" where deleted = true;')
     rows = cur.fetchall()
-    to_delete = [(row[0], row[5].replace("https://customrlmaps.s3.amazonaws.com/", "")) for row in rows]
+    to_delete = [(row[1], row[5].replace("https://customrlmaps.s3.amazonaws.com/", "")) for row in rows]
     
     if len(to_delete) > 0:
         response = customrlmapsBucket.delete_objects(
