@@ -20,11 +20,6 @@ import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 const PER_PAGE = 10
 
 export const getServerSideProps = async ({ req, res, params }) => {
-	res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=60'
-    )
-
 	try {
 		const currentUser = await getAllUserInfoServer(req, res);
 		const { username } = params;

@@ -30,11 +30,6 @@ import DangerDialog from './_DangerDialog';
 import prisma from '@/lib/prisma';
 
 export const getServerSideProps = async ({ req, res }) => {
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=60'
-    )
-
     const currentUser = await getAllUserInfoServer(req, res);
 
 

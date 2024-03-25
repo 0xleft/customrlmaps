@@ -63,6 +63,14 @@ export default async function handler(req, res) {
             },
             include: {
                 user: true,
+                versions: {
+                    where: {
+                        deleted: false,
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                },
             },
         });
     
@@ -79,6 +87,10 @@ export default async function handler(req, res) {
                 isRated: project.totalRatings > 0,
                 averageRating: project.averageRating,
                 latestVersion: project.latestVersion,
+                versions: project.versions.map((version) => ({
+                    checked: version.checked,
+                    downloadUrl: version.downloadUrl,
+                })),
                 updated: `${project.updatedAt.getDate()}/${project.updatedAt.getMonth()}/${project.updatedAt.getFullYear()}`,
             })),
         });

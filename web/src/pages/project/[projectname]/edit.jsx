@@ -20,7 +20,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import { Separator } from '@radix-ui/react-dropdown-menu';
@@ -38,11 +38,6 @@ import DangerDialog from './_DangerDialog';
 import prisma from '@/lib/prisma';
 
 export const getServerSideProps = async ({ req, res, params }) => {
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=60'
-    )
-
     const { projectname } = params;
     const currentUser = await getAllUserInfoServer(req, res);
 
@@ -64,7 +59,9 @@ export const getServerSideProps = async ({ req, res, params }) => {
         };
     }
 
-    if (project.publishStatus !== "PUBLISHED" && !currentUser && !isAdmin(currentUser)) {
+    // check if project is published
+    if (project.publishStatus === "DRAFT" && !isAdmin(currentUser)) {
+        // check if the current user owns the project
         if (!currentUser || currentUser.dbUser?.id !== project.userId) {
             return {
                 notFound: true,

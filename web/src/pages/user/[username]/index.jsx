@@ -11,11 +11,6 @@ import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { AvatarImage } from '@radix-ui/react-avatar';
 
 export const getServerSideProps = async ({ req, res, params }) => {
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=60'
-    )
-
     const { username } = params;
     const currentUser = await getAllUserInfoServer(req, res);
 

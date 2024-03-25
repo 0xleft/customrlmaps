@@ -11,6 +11,7 @@ export const getServerSideProps = async ({ req, res }) => {
 		'Cache-Control',
 		'public, s-maxage=10, stale-while-revalidate=360'
 	);
+	
 	try {
 		const recentPromise = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/project/search?query=&page=0&order=updatedAt&orderType=asc&type=&username=&rating=0`);
 		const popularPromise = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/project/search?query=&page=0&order=views&orderType=desc&type=&username=&rating=0`);

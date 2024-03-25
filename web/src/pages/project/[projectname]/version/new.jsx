@@ -19,7 +19,7 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import prisma from '@/lib/prisma';
 import { bungySubmit } from '@/utils/bungySubmitRecaptcha';
-import { getAllUserInfoServer } from '@/utils/userUtilsServer';
+import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UpdateIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
@@ -30,11 +30,6 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const getServerSideProps = async ({ req, res, params }) => {
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=60'
-    )
-
     const { projectname } = params;
     const currentUser = await getAllUserInfoServer(req, res);
 
@@ -56,7 +51,9 @@ export const getServerSideProps = async ({ req, res, params }) => {
         };
     }
 
-    if (project.publishStatus !== "PUBLISHED" && !currentUser && !isAdmin(currentUser)) {
+    // check if project is published
+    if (project.publishStatus === "DRAFT" && !isAdmin(currentUser)) {
+        // check if the current user owns the project
         if (!currentUser || currentUser.dbUser?.id !== project.userId) {
             return {
                 notFound: true,

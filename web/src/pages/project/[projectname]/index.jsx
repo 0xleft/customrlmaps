@@ -15,11 +15,6 @@ import { useState } from 'react';
 import Markdown from 'react-markdown';
 
 export const getServerSideProps = async ({ req, res, params }) => {
-    res.setHeader(
-        'Cache-Control',
-        'public, s-maxage=10, stale-while-revalidate=60'
-    )
-
     const { projectname } = params;
     const currentUser = await getAllUserInfoServer(req, res);
 
@@ -35,7 +30,9 @@ export const getServerSideProps = async ({ req, res, params }) => {
         };
     }
 
-    if (project.publishStatus !== "PUBLISHED" && !currentUser && !isAdmin(currentUser)) {
+    // check if project is published
+    if (project.publishStatus === "DRAFT" && !isAdmin(currentUser)) {
+        // check if the current user owns the project
         if (!currentUser || currentUser.dbUser?.id !== project.userId) {
             return {
                 notFound: true,
