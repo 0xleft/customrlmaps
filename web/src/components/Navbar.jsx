@@ -29,7 +29,9 @@ function NavbarSkeleton() {
 					</div>
 				</div>
 				<div className='md:flex items-center space-x-2 flex-row flex'>
-					<AddButton />
+					<div className='hidden md:flex'>
+						<AddButton />
+					</div>
 					<div className='hidden md:flex space-x-2'>
 						<Skeleton className='w-52 h-10' />
 						<Skeleton className='w-10 h-10' />
