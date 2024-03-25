@@ -34,6 +34,7 @@ export default async function handler(req, res) {
 
         return res.status(200).json({
             downloadUrl: version.downloadUrl,
+            checked: version.checked,
         });
     } catch (e) {
 		return res.status(400).json(process.env.NODE_ENV === "development" ? { error: e.message} : { error: "An error occurred"});

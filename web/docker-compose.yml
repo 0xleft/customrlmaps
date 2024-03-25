@@ -17,7 +17,17 @@ services:
       context: ./purge-service
       dockerfile: Dockerfile
     restart: always
+    networks:
+      - internal-customrlmaps
+    depends_on:
+      - database
 
+  validity-service:
+    container_name: validity-service
+    build:
+      context: ./validity-service
+      dockerfile: Dockerfile
+    restart: always
     networks:
       - internal-customrlmaps
     depends_on:

@@ -84,6 +84,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 latestVersion: project.latestVersion,
             },
             version: {
+                checked: version.checked,
                 changes: version.changes,
                 version: version.version,
                 downloadUrl: version.downloadUrl,
@@ -137,9 +138,11 @@ export default function VersionIndexView({ project, version, canEdit }) {
                                         <div className='flex flex-row space-x-2 md:mt-1'>
                                             <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.type}</Badge>
                                             <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.publishStatus}</Badge>
+                                            <Badge className='md:ml-2 h-6 mt-2 w-max'
+                                                variant={version.checked === true ? "default" : "destructive"}
+                                            >{version.checked === true ? "Checked" : "Unchecked"}</Badge>
                                         </div>
                                     </h1>
-                                    
                                 </div>
                                 <div className='flex flex-row space-x-2 md:mt-0 mt-2'>
                                 <Button onClick={() => {

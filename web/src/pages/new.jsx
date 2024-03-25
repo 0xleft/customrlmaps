@@ -2,6 +2,7 @@ import CustomError from '@/components/CustomError';
 import RecaptchaNotice from '@/components/RecapchaNotice';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -93,14 +94,23 @@ export default function NewProject() {
 	const [uploading, setUploading] = useState(false);
     
 	const { executeRecaptcha } = useGoogleReCaptcha();
+	const [alertShowing, setAlertShowing] = useState(false);
+	const [captchaToken, setToken] = useState("");
 
-    function onSubmit(values, token) {
+    function onSubmit(values, token, shouldUpload) {
+		setToken(token);
+		if (!shouldUpload) {
+			setAlertShowing(true);
+			setUploading(false);
+			return;
+		}
+
 		fetch(`/api/new`, {
 			method: "POST",
 			body: JSON.stringify({
 				...values,
 				type: type,
-				gRecaptchatoken: token,
+				gRecaptchatoken: captchaToken,
 			}),
 		}).then((res) => res.json()).then((data) => {
 			if (data.error) {
@@ -164,6 +174,7 @@ export default function NewProject() {
     }
 
 	const [longDescription, setLongDescription] = useState("");
+
 
 	return (
 		<>
@@ -283,6 +294,30 @@ export default function NewProject() {
 						</Form>
 					</CardContent>
 				</Card>
+
+				<Dialog open={alertShowing}>
+					<DialogContent>
+						<DialogTitle>Important!</DialogTitle>
+						- Make sure your project structure is correct. The selected file is a .zip file. <br /> {
+							type === "mod" ? `- Zip file should contain a ${form.getValues().name}.dll file.` : `- Zip file should contain a ${form.getValues().name}.upk file.`
+						}
+						
+						<br />
+
+						- The banner should be a .png, .jpg or .jpeg file.
+
+						<br />
+
+						<p className='text-muted-foreground'>Invalid versions will be deleted.</p>
+
+						<br />
+
+						<Button onClick={() => {
+							setAlertShowing(false);
+							onSubmit(form.getValues(), captchaToken, true);
+						}}>Upload</Button>
+					</DialogContent>
+				</Dialog>
 			</div>
 		</>
 	);

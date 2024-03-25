@@ -47,11 +47,11 @@ export default async function handler(req, res) {
 			return res.status(400).json({ error: "Captcha failed" });
 		}
 
-		if (parsed.type === "mod" && !appConfig.canCreateMods) {
+		if (parsed.type === "mod" && !appConfig.canUploadMods && !isAdmin(user)) {
 			return res.status(401).json({ error: "Creating mods is currently disabled" });
 		}
 
-		if (parsed.type === "map" && !appConfig.canCreateMaps) {
+		if (parsed.type === "map" && !appConfig.canUploadMaps && !isAdmin(user)) {
 			return res.status(401).json({ error: "Creating maps is currently disabled" });
 		}
 
