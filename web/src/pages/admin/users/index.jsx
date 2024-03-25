@@ -60,25 +60,25 @@ export const getServerSideProps = async ({ req, res }) => {
 		};
 	}
 
-    const page = parseInt(new URL(req.url, "https://localhost").searchParams.get('page')) || 1;
+	const page = parseInt(new URL(req.url, "https://localhost").searchParams.get('page')) || 1;
 
-    const users = await prisma.user.findMany({
-        take: PER_PAGE,
-        skip: (page - 1) * PER_PAGE,
-    });
+	const users = await prisma.user.findMany({
+		take: PER_PAGE,
+		skip: (page - 1) * PER_PAGE,
+	});
 
-    return {
+  	return {
 		props: {
-            users: users.map((user) => ({
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                roles: user.roles,
-                banned: user.banned,
-                deleted: user.deleted,
-            })),
-            page,
-        },
+			users: users.map((user) => ({
+				id: user.id,
+				username: user.username,
+				email: user.email,
+				roles: user.roles,
+				banned: user.banned,
+				deleted: user.deleted,
+			})),
+			page,
+		},
 	};
 }
 

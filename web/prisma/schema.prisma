@@ -23,7 +23,7 @@ model User {
   fullname String
   description String?
   email String @unique
-  imageUrl String? @default("https://www.gravatar.com/avatar/")
+  imageUrl String? @default("/default.png")
   lastUsernameChange DateTime?
 
   banned Boolean @default(false)
