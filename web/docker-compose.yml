@@ -10,6 +10,11 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - internal-customrlmaps
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   purge-service:
     container_name: purge-service
@@ -46,6 +51,13 @@ services:
       - internal-customrlmaps
     depends_on:
       - database
+      - purge-service
+      - validity-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   reverse-proxy:
     container_name: reverse-proxy
@@ -59,6 +71,11 @@ services:
       - reverse-proxy
     depends_on:
       - customrlmaps-app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 networks:
   reverse-proxy:
