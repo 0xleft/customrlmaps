@@ -31,7 +31,7 @@ export default function FAQ() {
 							</AccordionContent>
 						</AccordionItem>
 						<AccordionItem value="item-3">
-							<AccordionTrigger>Something is not working. How to get support?</AccordionTrigger>
+							<AccordionTrigger>Where can I reach support?</AccordionTrigger>
 							<AccordionContent>
 								<p>You can contact us via <a href="mailto:support@customrlmaps.com"
 									className='underline'
@@ -39,7 +39,7 @@ export default function FAQ() {
 								<p>
 									{/* todo */}
 									Or join our discord server:{" "}
-									<a href="" target="_blank" rel="noreferrer"
+									<a href="https://discord.gg/7PWVSkyseW" target="_blank" rel="noreferrer"
 										className='underline'
 									>Discord</a>
 								</p>
