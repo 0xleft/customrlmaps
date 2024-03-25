@@ -7,7 +7,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MagicWandIcon, RocketIcon } from '@radix-ui/react-icons';
+import { CubeIcon, LightningBoltIcon, MagicWandIcon, RocketIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
@@ -25,11 +25,11 @@ export function AddButton() {
 			<DropdownMenuLabel>Create</DropdownMenuLabel>
 			<DropdownMenuSeparator />
 			<DropdownMenuItem value="map" onSelect={() => router.push("/new?type=map")}>
-				<RocketIcon className="mr-2" />
+				<CubeIcon className="mr-2" />
 				Map
 			</DropdownMenuItem>
 			<DropdownMenuItem value="mod" onSelect={() => router.push("/new?type=mod")}>
-				<MagicWandIcon className="mr-2" />
+				<LightningBoltIcon className="mr-2" />
 				Mod
 			</DropdownMenuItem>
 			</DropdownMenuContent>

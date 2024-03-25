@@ -43,32 +43,63 @@ export function NavButton({ isAdmin }) {
 			<DropdownMenuContent className="w-56">
 				<DropdownMenuLabel>CustomRLMaps</DropdownMenuLabel>
 				<DropdownMenuSeparator />
+				<div className='md:hidden'>
+					<DropdownMenuGroup>
+						<DropdownMenuSub>
+							<DropdownMenuSubTrigger>
+								<MagnifyingGlassIcon className="mr-2" />
+								New
+							</DropdownMenuSubTrigger>
+							<DropdownMenuPortal>
+							<DropdownMenuSubContent>
+								<DropdownMenuItem onSelect={() => router.push("/new?type=map")}>
+									<CubeIcon className="mr-2" />
+									Maps
+								</DropdownMenuItem>
+								<DropdownMenuItem onSelect={() => router.push("/new?type=mod")}>
+									<LightningBoltIcon className="mr-2" />
+									Mods
+								</DropdownMenuItem>
+							</DropdownMenuSubContent>
+							</DropdownMenuPortal>
+						</DropdownMenuSub>
+					</DropdownMenuGroup>
+					<DropdownMenuSeparator />
+				</div>
 				<DropdownMenuGroup>
 					<DropdownMenuItem onSelect={() => router.push('/explore')}>
 						<RocketIcon className="mr-2" />
 						Explore
 					</DropdownMenuItem>
-					<DropdownMenuSub>
-						<DropdownMenuSubTrigger onClick={() => {
-							setDropOpen(false);
-							router.push('/search');
-						}}>
+					<div className='hidden md:block'>
+						<DropdownMenuSub>
+							<DropdownMenuSubTrigger onClick={() => {
+								setDropOpen(false);
+								router.push('/search');
+							}}>
+								<MagnifyingGlassIcon className="mr-2" />
+								Search
+							</DropdownMenuSubTrigger>
+							<DropdownMenuPortal>
+							<DropdownMenuSubContent>
+								<DropdownMenuItem onSelect={() => router.push("/search?type=map")}>
+									<CubeIcon className="mr-2" />
+									Maps
+								</DropdownMenuItem>
+								<DropdownMenuItem onSelect={() => router.push("/search?type=mod")}>
+									<LightningBoltIcon className="mr-2" />
+									Mods
+								</DropdownMenuItem>
+							</DropdownMenuSubContent>
+							</DropdownMenuPortal>
+						</DropdownMenuSub>
+					</div>
+					<div className='md:hidden'>
+						<DropdownMenuItem onSelect={() => router.push('/search')}>
 							<MagnifyingGlassIcon className="mr-2" />
 							Search
-						</DropdownMenuSubTrigger>
-						<DropdownMenuPortal>
-						<DropdownMenuSubContent>
-							<DropdownMenuItem onSelect={() => router.push("/search?type=map")}>
-								<CubeIcon className="mr-2" />
-								Maps
-							</DropdownMenuItem>
-							<DropdownMenuItem onSelect={() => router.push("/search?type=mod")}>
-								<LightningBoltIcon className="mr-2" />
-								Mods
-							</DropdownMenuItem>
-						</DropdownMenuSubContent>
-						</DropdownMenuPortal>
-					</DropdownMenuSub>
+						</DropdownMenuItem>
+					</div>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>

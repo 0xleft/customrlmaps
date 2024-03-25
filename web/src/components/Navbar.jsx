@@ -72,7 +72,9 @@ export default function Navbar() {
 					</div>
 				</div>
 				<div className='md:flex items-center space-x-2 flex-row flex'>
-					<AddButton />
+					<div className='hidden md:flex'>
+						<AddButton />
+					</div>
 					<div className='hidden md:flex'>
 						<MapSearchForm />
 					</div>
