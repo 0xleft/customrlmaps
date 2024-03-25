@@ -16,6 +16,7 @@ export const config = {
     pages: {
         signIn: "/auth/signin",
         signOut: "/auth/signout",
+        error: "/auth/error",
     },
     callbacks: {
         async signIn({ user, account, profile}) {
@@ -66,7 +67,15 @@ export const config = {
                     return true;
                 }
             } catch (error) {
-                console.error(error);
+                if (error.message === "Registration is disabled") {
+                    throw new Error("Registration is disabled");
+                }
+                if (error.message === "Login is disabled") {
+                    throw new Error("Login is disabled");
+                }
+                if (error.message === "User is banned or deleted") {
+                    throw new Error("User is banned or deleted");
+                }
                 return false;
             }
 
