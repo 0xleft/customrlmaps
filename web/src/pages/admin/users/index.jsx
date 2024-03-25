@@ -41,6 +41,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import AdminUserTable from "@/components/AdminUserTable";
+import prisma from "@/lib/prisma";
 
 const PER_PAGE = 100;
 
