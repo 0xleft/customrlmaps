@@ -132,7 +132,6 @@ export default async function handler(req, res) {
                     ["starts-with", "$Content-Type", "image/"],
                 ],
                 Fields: {
-                    acl: "public-read",
                     "Content-Type": "image/png", 
                 },
                 Expires: 60,

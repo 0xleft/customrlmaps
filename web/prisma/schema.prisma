@@ -85,7 +85,10 @@ model Version {
   project Project @relation(fields: [projectId], references: [id])
   projectId Int
   version String
-  downloadUrl String
+
+  downloadUrl String // points to api download endpoint
+  downloadKey String? // use to generate presigne urls
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   changes String
@@ -130,4 +133,5 @@ model appConfig {
   adminOnly Boolean @default(false)
   canUploadMods Boolean @default(true)
   canUploadMaps Boolean @default(true)
+  canDownload Boolean @default(true)
 }

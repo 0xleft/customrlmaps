@@ -37,12 +37,26 @@ def checkmaps(cur, conn, maps):
     for (id, link) in download_links:
         filename = hashlib.md5(link.encode()).hexdigest()
 
-        response = requests.get(link)
+        response = requests.get(f"{dotenv["ACTIVE_HOST"]}{link}", headers={
+            "x-local-host-bypass": "true"
+        }).json()
+
+        print(response)
+
+        if not response.get("downloadUrl"):
+            cur.execute('UPDATE "Version" SET "checkedStatus" = \'DENIED\' WHERE id = %s', (id,))
+            cur.execute('UPDATE "Version" SET "checkedMessage" = \'Failed to download (300)\' WHERE id = %s', (id,))
+            conn.commit()
+            continue
+
+        response = requests.get(response["downloadUrl"])
         if response.status_code == 200:
             with open(f'{filename}.zip', 'wb') as file:
                 file.write(response.content)
         else:
-            print('Failed to download the file')
+            cur.execute('UPDATE "Version" SET "checkedStatus" = \'DENIED\' WHERE id = %s', (id,))
+            cur.execute('UPDATE "Version" SET "checkedMessage" = \'Failed to download (200)\' WHERE id = %s', (id,))
+            conn.commit()
             continue
 
         with zipfile.ZipFile(f'{filename}.zip', 'r') as zip_ref:

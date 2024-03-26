@@ -21,6 +21,7 @@ async function getConfig() {
                 adminOnly: false, // not implemented
                 canUploadMods: true,
                 canUploadMaps: true,
+                canDownload: true,
             }
         });
     }

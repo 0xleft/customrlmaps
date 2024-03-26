@@ -2,10 +2,10 @@ import { getConfig } from '@/lib/config';
 import prisma from '@/lib/prisma';
 import { verifyCaptcha } from '@/utils/captchaUtils';
 import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
-import { S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { createHash } from 'crypto';
 import { z } from 'zod';
+import { S3Client } from '@aws-sdk/client-s3';
 
 const client = new S3Client({
 	region: process.env.AWS_REGION,
@@ -16,7 +16,7 @@ const client = new S3Client({
 });
 
 const schema = z.object({
-	name: z.string().max(20),
+	name: z.string().max(20).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }),
 	description: z.string().max(300).optional(),
 	longDescription: z.string().max(2000).optional(),
 	status: z.enum(["PUBLISHED", "DRAFT"]).optional(),
@@ -83,18 +83,29 @@ export default async function handler(req, res) {
         });
 
         if (parsed.banner && parsed.banner === true) {
-            const currentTime = new Date().getTime();
-            const bannername = createHash("sha256").update(parsed.name + `3641banner${currentTime}`).digest("hex");
+            // delete old banner // TODO test
+
+            const bannerExists = await prisma.project.findFirst({
+                where: {
+                    imageUrl: project.imageUrl,
+                }
+            });
+
+            if (bannerExists) {
+                await client.send(new DeleteObjectCommand({
+                    Bucket: process.env.AWS_BUCKET_NAME,
+                    Key: `banners/${project.name}`,
+                }));
+            }
 
             const bannerReturn = await createPresignedPost(client, {
                 Bucket: process.env.AWS_BUCKET_NAME,
-                Key: `banners/${bannername}`,
+                Key: `banners/${project.name}`,
                 Conditions: [
                     ["content-length-range", 0, 10000000], // 10mb
                     ["starts-with", "$Content-Type", "image/"],
                 ],
                 Fields: {
-                    acl: "public-read",
                     "Content-Type": "image/png", 
                 },
                 Expires: 60,
@@ -105,7 +116,7 @@ export default async function handler(req, res) {
                     id: project.id,
                 },
                 data: {
-                    imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/banners/${bannername}`,
+                    imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/banners/${project.name}`,
                 }
             });
 

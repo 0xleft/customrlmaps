@@ -15,7 +15,7 @@ const client = new S3Client({
 });
 
 const schema = z.object({
-    name: z.string().max(20).optional(),
+    name: z.string().max(20).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }).optional(),
     changes: z.string().min(1, {
         message: "Changes are required",
     }).max(300),
@@ -59,8 +59,6 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Project has been deleted" });
         }
 
-        const projectType = project.type.toLowerCase();
-
         const exists = await prisma.version.findFirst({
             where: {
                 projectId: project.id,
@@ -83,28 +81,26 @@ export default async function handler(req, res) {
             });
         }
 
-        const filename = createHash("sha256").update(parsed.name + `3641file${new Date().getTime()}`).digest("hex");
+        const fileReturn = await createPresignedPost(client, {
+			Bucket: process.env.AWS_BUCKET_NAME,
+            Key: `projects/${parsed.name}/${parsed.versionString}.zip`,
+            Conditions: [
+				["content-length-range", 0, 300000000] // 300mb
+            ],
+            Fields: {
+            },
+            Expires: 60,
+        });
 
         await prisma.version.create({
             data: {
                 projectId: project.id,
                 changes: parsed.changes,
                 version: parsed.versionString,
-                downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${projectType}s/${filename}`,
+                downloadUrl: `/api/project/download?p=${project.name}&v=${parsed.versionString}`,
+                downloadKey: `projects/${parsed.name}/${parsed.versionString}.zip`,
             }
         });
-        
-        const fileReturn = await createPresignedPost(client, {
-			Bucket: process.env.AWS_BUCKET_NAME,
-            Key: `${projectType}s/${filename}`,
-            Conditions: [
-				["content-length-range", 0, 300000000] // 300mb
-			],
-			Fields: {
-				acl: "public-read",
-			},
-			Expires: 60,
-		});
 
         return res.status(200).json({
             message: "Created",

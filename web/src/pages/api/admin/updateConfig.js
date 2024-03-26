@@ -19,6 +19,7 @@ const schema = z.object({
     adminOnly: z.boolean(),
     canUploadMods: z.boolean(),
     canUploadMaps: z.boolean(),
+    canDownload: z.boolean(),
 });
 
 export default async function handler(req, res) {

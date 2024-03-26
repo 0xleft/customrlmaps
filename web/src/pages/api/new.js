@@ -66,20 +66,14 @@ export default async function handler(req, res) {
 			return res.status(400).json({ error: "Already exists" });
 		}
 
-		const currentTime = new Date().getTime();
-
-		const filename = createHash("sha256").update(parsed.name + `3641file${currentTime}`).digest("hex");
-		const bannername = createHash("sha256").update(parsed.name + `3641banner${currentTime}`).digest("hex");
-
 		// create presigned post
 		const fileReturn = await createPresignedPost(client, {
 			Bucket: process.env.AWS_BUCKET_NAME,
-			Key: `projects/${filename}`,
+			Key: `projects/${parsed.name}/1.0.0.zip`,
 			Conditions: [
 				["content-length-range", 0, 300000000] // 300mb
 			],
 			Fields: {
-				acl: "public-read",
 				"Content-Type": "application/octet-stream",
 			},
 			Expires: 60,
@@ -87,13 +81,12 @@ export default async function handler(req, res) {
 
 		const bannerReturn = await createPresignedPost(client, {
 			Bucket: process.env.AWS_BUCKET_NAME,
-			Key: `banners/${bannername}`,
+			Key: `banners/${parsed.name}`,
 			Conditions: [
 				["content-length-range", 0, 10000000], // 10mb
 				["starts-with", "$Content-Type", "image/"],
 			],
 			Fields: {
-				acl: "public-read",
 				"Content-Type": "image/png", 
 			},
 			Expires: 60,
@@ -107,7 +100,7 @@ export default async function handler(req, res) {
 				longDescription: parsed.longDescription,
 				type: parsed.type.toUpperCase(),
 				userId: user.dbUser.id,
-				imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/banners/${bannername}`,
+				imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/banners/${parsed.name}`,
 				latestVersion: "1.0.0",
 			},
 		});
@@ -117,8 +110,9 @@ export default async function handler(req, res) {
 			data: {
 				projectId: project.id,
 				version: "1.0.0",
-				downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/projects/${filename}`,
+				downloadUrl: `/api/project/download?p=${project.name}&v=1.0.0`,
 				changes: "Initial version",
+				downloadKey: `projects/${parsed.name}/1.0.0.zip`,
 			},
 		})
 
