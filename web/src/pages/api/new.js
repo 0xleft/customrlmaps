@@ -17,7 +17,7 @@ const client = new S3Client({
 
 const schema = z.object({
 	name: z.string().max(20).min(1, { message: "Name must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Name must only contain letter characters" }),
-	description: z.string().max(300).min(1, { message: "Description must not be empty" }).regex(/^[a-zA-Z0-9-_]+$/, { message: "Description must only contain letter characters" }),
+	description: z.string().max(300).min(1, { message: "Description must not be empty" }),
 	longDescription: z.string().max(2000).min(1, { message: "Long description must not be empty" }),
 	type: z.enum(["mod", "map"]),
 	gRecaptchatoken: z.string(),

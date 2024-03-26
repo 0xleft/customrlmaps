@@ -67,8 +67,6 @@ export default function NewProject() {
 		}),
 		description: z.string().max(300).min(1, {
 			message: "Description must not be empty",
-		}).regex(/^[a-zA-Z0-9-_]+$/, {
-			message: "Only alphanumeric characters are allowed (a-z, A-Z, 0-9, - and _)",
 		}),
 		longDescription: z.string().max(2000).min(1, {
 			message: "Long description must not be empty",
