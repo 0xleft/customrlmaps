@@ -37,7 +37,7 @@ def checkmaps(cur, conn, maps):
     for (id, link) in download_links:
         filename = hashlib.md5(link.encode()).hexdigest()
 
-        response = requests.get(f"{dotenv["ACTIVE_HOST"]}{link}", headers={
+        response = requests.get(f"{dotenv['ACTIVE_HOST']}{link}", headers={
             "x-local-host-bypass": "true"
         }).json()
 
