@@ -76,7 +76,7 @@ export default async function handler(req, res) {
 			Bucket: process.env.AWS_BUCKET_NAME,
 			Key: `${parsed.type}s/${filename}`,
 			Conditions: [
-				["content-length-range", 0, 100000000] // 100mb
+				["content-length-range", 0, 300000000] // 300mb
 			],
 			Fields: {
 				acl: "public-read",

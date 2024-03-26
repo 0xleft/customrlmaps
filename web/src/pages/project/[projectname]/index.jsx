@@ -57,12 +57,12 @@ export const getServerSideProps = async ({ req, res, params }) => {
         }
     });
 
-
     // get versions
     const versions = await prisma.version.findMany({
         where: {
             projectId: project.id,
             deleted: false,
+            checkedStatus: (isAdmin(currentUser) || currentUser.dbUser?.id === project.userId) ? undefined : "APPROVED",
         }
     });
 

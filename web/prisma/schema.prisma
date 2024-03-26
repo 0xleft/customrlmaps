@@ -12,6 +12,12 @@ enum PublishStatus {
   PUBLISHED
 }
 
+enum CheckStatus {
+  PENDING
+  APPROVED
+  DENIED
+}
+
 enum ProjectType {
   MAP
   MOD
@@ -84,7 +90,8 @@ model Version {
   updatedAt DateTime @updatedAt
   changes String
 
-  checked Boolean @default(false)
+  checkedStatus CheckStatus @default(PENDING)
+  checkedMessage String?
   
   deleted Boolean @default(false)
   deletedAt DateTime?

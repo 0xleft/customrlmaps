@@ -19,6 +19,8 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import DangerDialog from './_DangerDialog';
 import prisma from '@/lib/prisma';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     const { projectname, versionname } = params;
@@ -57,6 +59,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
             projectId: project.id,
             version: versionname,
             deleted: isAdmin(currentUser) ? undefined : false,
+            checkedStatus: (isAdmin(currentUser) || currentUser.dbUser?.id === project.userId) ? undefined : "APPROVED",
         }
     });
 
@@ -82,11 +85,12 @@ export const getServerSideProps = async ({ req, res, params }) => {
                 latestVersion: project.latestVersion,
             },
             version: {
-                checked: version.checked,
+                checkedStatus: version.checkedStatus,
                 changes: version.changes,
                 version: version.version,
                 downloadUrl: version.downloadUrl,
                 updated: `${version.updatedAt.getDate()}/${version.updatedAt.getMonth()}/${version.updatedAt.getFullYear()}`,
+                checkedMessage: version.checkedMessage,
             },
             canEdit: currentUser && currentUser.dbUser?.id === project.userId || isAdmin(currentUser),
         },
@@ -137,8 +141,8 @@ export default function VersionIndexView({ project, version, canEdit }) {
                                             <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.type}</Badge>
                                             <Badge className='md:ml-2 h-6 mt-2 w-max'>{project.publishStatus}</Badge>
                                             <Badge className='md:ml-2 h-6 mt-2 w-max'
-                                                variant={version.checked === true ? "default" : "destructive"}
-                                            >{version.checked === true ? "Checked" : "Unchecked"}</Badge>
+                                                variant={version.checkedStatus === "APPROVED" ? "default" : "destructive"}
+                                            >{version.checkedStatus}</Badge>
                                         </div>
                                     </h1>
                                 </div>
@@ -184,6 +188,16 @@ export default function VersionIndexView({ project, version, canEdit }) {
                     </CardHeader>
 
                     <CardContent>
+                        {version.checkedMessage && (
+                            <Alert variant="destructive" className="mb-4">
+                                <ExclamationTriangleIcon className="h-4 w-4" />
+                                <AlertTitle>Error</AlertTitle>
+                                <AlertDescription>
+                                    {version.checkedMessage}
+                                </AlertDescription>
+                          </Alert>
+                        )}
+
                         <Separator />
                         <div className='mt-2 mb-2'>
                             <h1 className='text-2xl'>Changes</h1>

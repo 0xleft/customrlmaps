@@ -66,6 +66,7 @@ export default async function handler(req, res) {
                 versions: {
                     where: {
                         deleted: false,
+                        checkedStatus: "APPROVED",
                     },
                     orderBy: {
                         createdAt: "desc",
@@ -87,7 +88,7 @@ export default async function handler(req, res) {
                 averageRating: project.averageRating,
                 latestVersion: project.latestVersion,
                 versions: project.versions.map((version) => ({
-                    checked: version.checked,
+                    checkedStatus: version.checkedStatus,
                     downloadUrl: version.downloadUrl,
                 })),
                 updated: `${project.updatedAt.getDate()}/${project.updatedAt.getMonth()}/${project.updatedAt.getFullYear()}`,
