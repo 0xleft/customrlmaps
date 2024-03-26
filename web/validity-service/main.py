@@ -1,7 +1,6 @@
 # connect to postgresql database
 import psycopg2
 from dotenvit import DotEnvIt
-from boto3.session import Session
 import weehok.weehok
 import time
 import requests
@@ -13,14 +12,6 @@ dotenv = DotEnvIt()
 
 webhook = weehok.weehok.DiscordHook(dotenv["WEBHOOK_URL"])
 webhook.set_username("Validity Service")
-
-session = Session(
-    aws_access_key_id=dotenv['AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=dotenv['AWS_SECRET_ACCESS_KEY']
-)
-
-s3_resource = session.resource('s3')
-customrlmapsBucket = s3_resource.Bucket("customrlmaps")
 
 def connect():
     try:

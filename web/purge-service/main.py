@@ -16,7 +16,7 @@ session = Session(
 )
 
 s3_resource = session.resource('s3')
-customrlmapsBucket = s3_resource.Bucket("customrlmaps")
+customrlmapsBucket = s3_resource.Bucket(dotenv["S3_BUCKET"])
 
 def connect():
     try:
