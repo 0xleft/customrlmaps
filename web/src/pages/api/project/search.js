@@ -79,7 +79,6 @@ export default async function handler(req, res) {
                 type: project.type,
                 name: project.name,
                 description: project.description,
-                rating: project.averageRating,
                 views: project.views,
                 downloads: project.downloads,
                 user: project.user.username,
