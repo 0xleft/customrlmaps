@@ -74,7 +74,7 @@ export default async function handler(req, res) {
 		// create presigned post
 		const fileReturn = await createPresignedPost(client, {
 			Bucket: process.env.AWS_BUCKET_NAME,
-			Key: `${parsed.type}s/${filename}`,
+			Key: `projects/${filename}`,
 			Conditions: [
 				["content-length-range", 0, 300000000] // 300mb
 			],
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
 			data: {
 				projectId: project.id,
 				version: "1.0.0",
-				downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${parsed.type}s/${filename}`,
+				downloadUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/projects/${filename}`,
 				changes: "Initial version",
 			},
 		})
