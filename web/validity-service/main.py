@@ -87,5 +87,10 @@ def validate():
 
 if __name__ == '__main__':
     while True:
-        validate()
+        try:
+            validate()
+        except Exception as e:
+            webhook.set_content("Validity service failed: ")
+            webhook.add_embed(embed=weehok.weehok.Embed().add_field(name="Error", value=str(e), inline=False))
+            webhook.send()
         time.sleep(20)
