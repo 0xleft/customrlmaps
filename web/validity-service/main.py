@@ -43,7 +43,7 @@ def checkmaps(cur, conn, maps):
 
         if not response.get("downloadUrl"):
             cur.execute('UPDATE "Version" SET "checkedStatus" = \'DENIED\' WHERE id = %s', (id,))
-            cur.execute('UPDATE "Version" SET "checkedMessage" = \'Failed to download (300)\' WHERE id = %s', (id,))
+            cur.execute('UPDATE "Version" SET "checkedMessage" = \'Failed to download (Error code 0x4010)\' WHERE id = %s', (id,))
             conn.commit()
             continue
 
@@ -53,7 +53,7 @@ def checkmaps(cur, conn, maps):
                 file.write(response.content)
         else:
             cur.execute('UPDATE "Version" SET "checkedStatus" = \'DENIED\' WHERE id = %s', (id,))
-            cur.execute('UPDATE "Version" SET "checkedMessage" = \'Failed to download (200)\' WHERE id = %s', (id,))
+            cur.execute('UPDATE "Version" SET "checkedMessage" = \'Failed to download (Error code 0x3201)\' WHERE id = %s', (id,))
             conn.commit()
             continue
 
@@ -63,7 +63,7 @@ def checkmaps(cur, conn, maps):
                 # check if id is int by trying to convert it to int # TODO
                 print('Zip file does not contain exactly one .upk file')
                 cur.execute('UPDATE "Version" SET "checkedStatus" = \'DENIED\' WHERE id = %s', (id,))
-                cur.execute('UPDATE "Version" SET "checkedMessage" = \'Zip file does not contain exactly one .upk file\' WHERE id = %s', (id,))
+                cur.execute('UPDATE "Version" SET "checkedMessage" = \'Invalid submition.\' WHERE id = %s', (id,))
                 conn.commit()
                 zip_ref.close()
                 os.remove(f'{filename}.zip')
