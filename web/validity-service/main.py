@@ -55,8 +55,9 @@ def checkmaps(cur, conn, maps):
             continue
 
         with zipfile.ZipFile(f'{filename}.zip', 'r') as zip_ref:
-            if not any(file.endswith('.upk') for file in zip_ref.namelist()):
-                print('Zip file does not contain .upk file')
+            upk_files = [file for file in zip_ref.namelist() if file.endswith('.upk')]
+            if len(upk_files) != 1:
+                print('Zip file does not contain exactly one .upk file')
                 # delete the version from the database
                 cur.execute('DELETE FROM "Version" WHERE id = %s', (id,))
                 conn.commit()
