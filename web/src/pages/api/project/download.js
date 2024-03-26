@@ -72,7 +72,6 @@ export default async function handler(req, res) {
         });
 
         const url = await getSignedUrl(client, command, { expiresIn: 5 * 60 });
-        console.log(url);
 
         return res.status(200).json({
             downloadUrl: url,

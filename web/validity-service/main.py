@@ -41,8 +41,6 @@ def checkmaps(cur, conn, maps):
             "x-local-host-bypass": "true"
         }).json()
 
-        print(response)
-
         if not response.get("downloadUrl"):
             cur.execute('UPDATE "Version" SET "checkedStatus" = \'DENIED\' WHERE id = %s', (id,))
             cur.execute('UPDATE "Version" SET "checkedMessage" = \'Failed to download (300)\' WHERE id = %s', (id,))
