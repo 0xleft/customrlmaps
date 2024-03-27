@@ -79,8 +79,8 @@ export default function Admin({ config }) {
 								</Link>
 							</Button>
 							<Button asChild>
-								<Link href="/admin/projects">
-									Projects
+								<Link href="/admin/whitelist">
+									Whitelists
 								</Link>
 							</Button>
 						</div>

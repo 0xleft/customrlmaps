@@ -1,8 +1,9 @@
 import RecaptchaNotice from '@/components/RecapchaNotice';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { signIn, getProviders } from 'next-auth/react'
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -20,6 +21,8 @@ export async function getServerSideProps() {
 
 export default function Signin({ providers }) {
     const [loading, setLoading] = useState(false);
+
+
 
     return (
         <div className='flex flex-col items-center justify-center w-full min-h-screen'>
@@ -42,7 +45,7 @@ export default function Signin({ providers }) {
                                             let res = await signIn(provider.id, {
                                                 redirect: false,
                                                 callbackUrl: "/",
-                                            })
+                                            });
                                             if (res?.error) {
                                                 toast.error(res.error);
                                             }
@@ -52,7 +55,6 @@ export default function Signin({ providers }) {
                                             setLoading(false);
                                             toast.error("An error occurred");
                                         }
-                                        
                                         }}>Sign in with {provider.name}</Button>
                                 </div>
                             )

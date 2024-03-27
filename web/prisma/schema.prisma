@@ -80,6 +80,14 @@ model Project {
   deletedAt DateTime?
 }
 
+model Whitelist {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  otp String @unique
+}
+
 model Version {
   id Int @id @default(autoincrement())
   project Project @relation(fields: [projectId], references: [id])

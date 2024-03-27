@@ -17,10 +17,12 @@ export default (req, res) => NextAuth(req, res, {
         signOut: "/auth/signout",
         error: "/auth/error",
     },
+
     callbacks: {
         async signIn({ user, account, profile}) {
             try {
                 if (account.provider === "google") {
+
                     if (profile.email_verified === false) {
                         throw new Error("Email not verified");
                     }
@@ -33,20 +35,38 @@ export default (req, res) => NextAuth(req, res, {
 
                     const appConfig = await getConfig();
 
-                    if (!dbUser) {
-                        if (!appConfig.isUserRegistrationEnabled) {
-                            throw new Error("Registration is disabled");
-                        }
-                    }
-
-                    if (dbUser && (dbUser.deleted || dbUser.banned) && profile.email !== process.env.ADMIN_EMAIL) {
-                        throw new Error("User is banned or deleted");
-                    }
-
                     if (profile.email !== process.env.ADMIN_EMAIL) {
                         if (!appConfig.isUserLoginEnabled) {
                             throw new Error("Login is disabled");
                         }
+                    }
+
+                    if (!dbUser) {
+                        const whitelist = await prisma.whitelist.findFirst({
+                            where: {
+                                otp: req.cookies.whitelist,
+                            }
+                        });
+
+                        if (!appConfig.isUserRegistrationEnabled && !whitelist) {
+                            throw new Error("Registration is disabled");
+                        }
+
+                        // delete as it has one time use
+                        if (whitelist) {
+                            await prisma.whitelist.delete({
+                                where: {
+                                    otp: req.cookies.whitelist,
+                                }
+                            });
+                        }
+
+                        // clear the cookie
+                        res.setHeader("Set-Cookie", "whitelist=; Path=/; HttpOnly; Max-Age=0; SameSite=Strict; Secure");
+                    }
+
+                    if (dbUser && (dbUser.deleted || dbUser.banned) && profile.email !== process.env.ADMIN_EMAIL) {
+                        throw new Error("User is banned or deleted");
                     }
 
                     // todo add the ip address to the users ips

@@ -195,7 +195,7 @@ export default function VersionIndexView({ project, version, canEdit }) {
                                 <AlertDescription>
                                     {version.checkedMessage}
                                 </AlertDescription>
-                          </Alert>
+                            </Alert>
                         )}
 
                         <Separator />
