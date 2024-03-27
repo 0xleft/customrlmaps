@@ -20,7 +20,11 @@ export default (req, res) => NextAuth(req, res, {
     callbacks: {
         async signIn({ user, account, profile}) {
             try {
-                if (account.provider === "google" && profile.email_verified === true) {
+                if (account.provider === "google") {
+                    if (profile.email_verified === false) {
+                        throw new Error("Email not verified");
+                    }
+
                     const dbUser = await prisma.user.findFirst({
                         where: {
                             email: profile.email,
@@ -73,6 +77,9 @@ export default (req, res) => NextAuth(req, res, {
                 }
                 if (error.message === "User is banned or deleted") {
                     throw new Error("User is banned or deleted");
+                }
+                if (error.message === "Email not verified") {
+                    throw new Error("Email not verified");
                 }
                 return false;
             }
