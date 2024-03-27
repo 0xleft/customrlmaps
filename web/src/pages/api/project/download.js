@@ -60,7 +60,7 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: "Project not found" });
         }
 
-        const version = project.versions.find((v) => v.version === v);
+        const version = project.versions.find((version) => version.version === v);
         if (!version) {
             return res.status(404).json({ error: "Version not found" });
         }
@@ -85,6 +85,7 @@ export default async function handler(req, res) {
         const url = await getSignedUrl(client, command, { expiresIn: 5 * 60 });
 
         return res.status(200).json({
+            filename: `${project.name}-${version.version}.zip`,
             downloadUrl: url,
         });
 
