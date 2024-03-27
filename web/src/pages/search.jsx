@@ -25,6 +25,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
 	});
 
 	return {
+		title: "Search - CRLM",
 		props: {
 			maxPage: (Math.ceil(count / PER_PAGE) - 1),
 		},

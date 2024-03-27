@@ -53,6 +53,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     );
 
 	return {
+        title: `${dbUser.username} - CRLM`,
 		props: {
             user: {
                 username: dbUser.username,

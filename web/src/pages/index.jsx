@@ -13,6 +13,7 @@ import {
 	AccordionTrigger,
   } from "@/components/ui/accordion"
 import FAQ from '@/components/FAQ';
+import Head from 'next/head';
 
 export default function Home() {
 	const plugin = useRef(
@@ -21,6 +22,11 @@ export default function Home() {
 
 	return (
 		<>
+			<Head>
+				<title>Custom Rocket League Maps</title>
+				<meta name="description" content="Custom Rocket League Maps is a platform that empowers creators of Rocket League maps and mods quickly share their creations and make the available to wider audience." />
+			</Head>
+
 			<Hero />
 
 			{/* <div className="container">

@@ -70,6 +70,7 @@ export const getServerSideProps = async ({ req, res, params }) => {
     }
 
 	return {
+        title: `${project.name}/${version.version}`,
 		props: {
             project: {
                 name: project.name,
