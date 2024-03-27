@@ -90,6 +90,7 @@ export default async function handler(req, res) {
                 versions: project.versions.map((version) => ({
                     checkedStatus: version.checkedStatus,
                     downloadUrl: version.downloadUrl,
+                    version: version.version,
                 })),
                 updated: `${project.updatedAt.getDate()}/${project.updatedAt.getMonth()}/${project.updatedAt.getFullYear()}`,
             })),

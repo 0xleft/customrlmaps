@@ -45,25 +45,36 @@ export default async function handler(req, res) {
                 name: p,
                 deleted: false,
                 publishStatus: bypass ? undefined : "PUBLISHED",
+            },
+            include: {
+                versions: {
+                    where: {
+                        checkedStatus: bypass ? undefined : "APPROVED",
+                        deleted: false,
+                    }
+                }
             }
         });
 
         if (!project) {
-            return res.status(400).json({ error: "Project not found or not public" });
+            return res.status(404).json({ error: "Project not found" });
         }
 
-        const version = await prisma.version.findFirst({
+        const version = project.versions.find((v) => v.version === v);
+        if (!version) {
+            return res.status(404).json({ error: "Version not found" });
+        }
+
+        await prisma.project.update({
             where: {
-                projectId: project.id,
-                version: v,
-                checkedStatus: bypass ? undefined : "APPROVED",
-                deleted: false,
+                id: project.id,
+            },
+            data: {
+                downloads: {
+                    increment: 1,
+                }
             }
         });
-
-        if (!version) {
-            return res.status(400).json({ error: "Version not found or not public" });
-        }
 
         // create presigned urk
         const command = new GetObjectCommand({
