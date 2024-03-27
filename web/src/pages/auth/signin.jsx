@@ -1,9 +1,11 @@
 import RecaptchaNotice from '@/components/RecapchaNotice';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { signIn, getProviders } from 'next-auth/react'
+import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { set } from 'react-hook-form';
+import { useCookies } from 'react-cookie';
 import { toast } from 'sonner';
 
 export async function getServerSideProps() {
@@ -28,26 +30,33 @@ export default function Signin({ providers }) {
                 </CardHeader>
                 <CardContent className="max-w-[300px]">
                     <div className='flex flex-col space-y-2'>
-                        {Object.values(providers).map((provider) => (
-                            <div key={provider.name}>
-                                <Button className="w-full" disabled={loading}
-                                onClick={async () => {
-                                    try {
-                                        setLoading(true);
-                                        let res = await signIn(provider.id, {redirect: false, callbackUrl: "/"})
-                                        if (res?.error) {
-                                            toast.error(res.error);
+                        {Object.values(providers).map((provider) => { 
+                            if (provider.name === "Credentials") return null;
+                            return (
+                                <div key={provider.name}>
+                                    <Button className="w-full" disabled={loading}
+                                    onClick={async () => {
+                                        try {
+                                            setLoading(true);
+
+                                            let res = await signIn(provider.id, {
+                                                redirect: false,
+                                                callbackUrl: "/",
+                                            })
+                                            if (res?.error) {
+                                                toast.error(res.error);
+                                            }
+                                            setLoading(false);
+                                        } catch (error) {
+                                            console.error(error);
+                                            setLoading(false);
+                                            toast.error("An error occurred");
                                         }
-                                        setLoading(false);
-                                    } catch (error) {
-                                        console.error(error);
-                                        setLoading(false);
-                                        toast.error("An error occurred");
-                                    }
-                                    
-                                    }}>Sign in with {provider.name}</Button>
-                            </div>
-                        ))}
+                                        
+                                        }}>Sign in with {provider.name}</Button>
+                                </div>
+                            )
+                        })}
                     </div>
 
                     <RecaptchaNotice className="text-center mt-2" />

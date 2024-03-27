@@ -10,7 +10,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
     }
 
     return {
-        title: "Projects - CRLM",
         redirect: {
             destination: `/user/${currentUser.dbUser.username}/projects`,
             permanent: false,

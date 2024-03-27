@@ -12,6 +12,7 @@ import { Button } from './ui/button';
 import { NavBreadcrumbs } from './NavBreadcrumbs';
 import UserButton from './UserButton';
 import { Skeleton } from './ui/skeleton';
+import { useRouter } from 'next/router';
 
 function NavbarSkeleton() {
 	"use client";
@@ -57,6 +58,8 @@ export default function Navbar() {
 		});
 	}, []);
 
+	const router = useRouter();
+
 	if (!session) return <NavbarSkeleton />;
 	if (session.status == "loading") return <NavbarSkeleton />;
 
@@ -82,7 +85,7 @@ export default function Navbar() {
 					</div>
 					<SignedOut session={session}>
 						<Button variant=''
-							onClick={() => signIn()}
+							onClick={() => router.push('/auth/signin')}
 						>Sign in</Button>
 					</SignedOut>
 					<SignedIn session={session}>

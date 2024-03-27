@@ -73,7 +73,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
     });
 
 	return {
-        title: `${project.name} - CRLM`,
 		props: {
             project: {
                 projectId: project.id,

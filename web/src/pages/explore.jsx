@@ -20,7 +20,6 @@ export const getServerSideProps = async ({ req, res }) => {
 		const [recent, popular, best] = await Promise.all([recentPromise, popularPromise, bestPromise]);
 	
 		return {
-			title: "Explore - CRLM",
 			props: {
 				recent: recent.data.projects.map((project) => {
 					return {
