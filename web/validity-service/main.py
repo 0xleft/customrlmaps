@@ -60,6 +60,8 @@ def checkmaps(cur, conn, maps):
         with zipfile.ZipFile(f'{filename}.zip', 'r') as zip_ref:
             upk_files = [file for file in zip_ref.namelist() if file.endswith('.upk')]
             if len(upk_files) != 1:
+                # check if the file is named after the project
+                
                 # check if id is int by trying to convert it to int # TODO
                 print('Zip file does not contain exactly one .upk file')
                 cur.execute('UPDATE "Version" SET "checkedStatus" = \'DENIED\' WHERE id = %s', (id,))
@@ -83,7 +85,6 @@ def validate():
     cur = conn.cursor()
     cur.execute('SELECT * FROM "Version" WHERE "checkedStatus" = \'PENDING\'')
     rows = cur.fetchall()
-    print(rows)
 
     # sort out maps and mods but later
     checkmaps(cur, conn, rows)
