@@ -38,8 +38,8 @@ export default function FAQ() {
 								>Email</a></p>
 								<p>
 									{/* todo */}
-									Or join our discord server:{" "}
-									<a href="https://discord.gg/7PWVSkyseW" target="_blank" rel="noreferrer"
+									Or dm @plusleft on {" "}
+									<a href="https://discord.com/users/406356211299123201" target="_blank" rel="noreferrer"
 										className='underline'
 									>Discord</a>
 								</p>
