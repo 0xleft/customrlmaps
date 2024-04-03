@@ -5,7 +5,7 @@ export default function Footer() {
         <>
             <footer className='text-center py-4 shadow-md'>
                 <div className='container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col'>
-                    <p className='text-sm sm:ml-4 sm:pl-4 sm:border-l-2 sm:py-2 sm:mt-0 mt-4 text-center w-full'>
+                    <p className='text-sm sm:ml-4 sm:pl-4 sm:py-2 sm:mt-0 mt-4 text-center w-full'>
                     © {new Date().getFullYear()} CustomRLMaps. <br />
                     In no way affiliated with Psyonix or Epic Games.
 
