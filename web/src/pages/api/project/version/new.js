@@ -44,6 +44,9 @@ export default async function handler(req, res) {
         const project = await prisma.project.findUnique({
             where: {
                 name: parsed.name,
+            },
+            include: {
+                versions: true,
             }
         });
 
@@ -68,6 +71,10 @@ export default async function handler(req, res) {
 
         if (exists) {
             return res.status(400).json({ error: "Version already exists" });
+        }
+
+        if (project.versions.length >= project.versionLimit) {
+            return res.status(400).json({ error: "Too many versions, if there is reasonable need please ask @plusleft to increase limit for this project or delete older versions." });
         }
 
         if (parsed.latest === true) {

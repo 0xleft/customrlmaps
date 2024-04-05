@@ -107,7 +107,6 @@ export const getServerSideProps = async ({ req, res, params }) => {
 	};
 };
 
-
 export default function ProjectIndex ( { project, versions, canEdit, creator }) {
     // todo install
     const router = useRouter();
@@ -146,7 +145,6 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                     </div>
                                 </h1>
                             </div>
-
 
                             <div className="items-end flex-row space-x-2 sm:flex hidden">
                                 <Combobox values={versionsList} title="version"

@@ -83,6 +83,11 @@ export default function Admin({ config }) {
 									Whitelists
 								</Link>
 							</Button>
+							<Button asChild>
+								<Link href="/admin/misc">
+									Misc
+								</Link>
+							</Button>
 						</div>
 
 						<div className="flex flex-col space-y-4 mt-4">

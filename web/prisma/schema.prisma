@@ -49,6 +49,8 @@ model User {
 
   deleted Boolean @default(false)
   deletedAt DateTime?
+
+  projectLimit Int @default(30)
 }
 
 model Project {
@@ -78,6 +80,8 @@ model Project {
 
   deleted Boolean @default(false)
   deletedAt DateTime?
+
+  versionLimit Int @default(10)
 }
 
 model Whitelist {

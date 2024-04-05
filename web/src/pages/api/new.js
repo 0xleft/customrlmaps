@@ -55,6 +55,16 @@ export default async function handler(req, res) {
 			return res.status(401).json({ error: "Creating maps is currently disabled" });
 		}
 
+		const projects = await prisma.project.findMany({
+			where: {
+				userId: user.dbUser.id,
+			}
+		});
+
+		if (projects.length >= user.dbUser.projectLimit) {
+			return res.status(400).json({ error: "Project limit reached! Ask @plusleft to increase the limit. Or delete unused projects" });
+		}
+
 		const exists = await prisma.project.findFirst({
 			where: {
 				name: parsed.name,
