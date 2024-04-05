@@ -11,8 +11,11 @@ import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { toast } from 'sonner';
 import { useState } from 'react';
 import Markdown from 'react-markdown';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 
 export const getServerSideProps = async ({ req, res, params }) => {
     const { projectname } = params;
@@ -131,7 +134,7 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
             <div className='container pt-6'>
                 <Card className="w-full">
                     <CardHeader className="flex-col flex">
-                        <CardTitle className="flex md:flex-row justify-between flex-col items-center mb-2">
+                        <CardTitle className="flex flex-row justify-between items-center mb-2">
                             <div className='w-full'>
                                 <h1 className='text-4xl flex md:flex-row flex-col'>
                                     <p>
@@ -144,7 +147,8 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                 </h1>
                             </div>
 
-                            <div className="items-end flex flex-row space-x-2">
+
+                            <div className="items-end flex-row space-x-2 sm:flex hidden">
                                 <Combobox values={versionsList} title="version"
                                 onSelect={(value) => {
                                     setSelectedVersion(value);
@@ -158,6 +162,84 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                 {canEdit && <Button asChild>
                                     <Link href={`/project/${project.name}/edit`} className='mt-4' variant='outline'>Edit</Link>
                                 </Button>}
+                                <Button
+                                    onClick={() => {
+                                        let version = versions.find(version => version.version === project.latestVersion);
+
+                                        if (!version) {
+                                            toast.error("No latest version found");
+                                            return;
+                                        }
+                                        fetch(version.downloadUrl).then(res => res.json()).then(data => {
+                                            if (data.error) {
+                                                toast.error(data.error);
+                                                return;
+                                            }
+    
+                                            open(data.downloadUrl, "_blank");
+                                        });
+                                    }}
+                                    className='mt-4'
+                                >
+                                    Download
+                                </Button>
+                            </div>
+
+                            <div className="flex sm:hidden">
+                                <DropdownMenu className="">
+                                    <DropdownMenuTrigger asChild>
+                                        <Button className='mt-4'>Actions</Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-56">
+                                        <DropdownMenuLabel>Download</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem onSelect={() => {
+                                                let version = versions.find(version => version.version === project.latestVersion);
+
+                                                if (!version) {
+                                                    toast.error("No latest version found");
+                                                    return;
+                                                }
+                                                fetch(version.downloadUrl).then(res => res.json()).then(data => {
+                                                    if (data.error) {
+                                                        toast.error(data.error);
+                                                        return;
+                                                    }
+    
+                                                    open(data.downloadUrl, "_blank");
+                                                });
+                                            }}>
+                                                Download latest
+                                            </DropdownMenuItem>
+                                            <DropdownMenuSub>
+                                                <DropdownMenuSubTrigger>
+                                                    Select version
+                                                </DropdownMenuSubTrigger>
+                                                <DropdownMenuPortal>
+                                                <DropdownMenuSubContent>
+                                                    {versionsList.map(version => {
+                                                        return (
+                                                            <DropdownMenuItem key={version.value} onSelect={() => {
+                                                                router.push(`/project/${project.name}/version/${version.value}`);
+                                                            }}>
+                                                                {version.label}
+                                                            </DropdownMenuItem>
+                                                        );
+                                                    })}                                                   
+                                                </DropdownMenuSubContent>
+                                                </DropdownMenuPortal>
+                                            </DropdownMenuSub>
+
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem onSelect={() => {
+                                                router.push(`/project/${project.name}/edit`);
+                                            }}>
+                                                Edit
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </CardTitle>
                         <Separator />
@@ -179,7 +261,8 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                 <h2 className='text-xl md:text-xl font-bold'>Creator: <span className='text-muted-foreground font-normal'>
                                     <Link href={`/user/${creator.username}`} className='hover:underline'>
                                         @{creator.username}
-                                    </Link></span></h2>
+                                    </Link></span>
+                                </h2>
 
                                 <div className='flex md:flex-row md:space-x-10 flex-col'>
                                     <div>
@@ -210,7 +293,6 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                         {project.description}
                                     </p>
                                 </div>
-                                
                             </div>
                         </div>
 
@@ -220,7 +302,6 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                 allowedElements={["h1", "h2", "h3", "h4", "h5", "h6", "p", "ul", "ol", "li", "a", "strong", "em", "code", "img", "blockquote", "hr", "br"]}
                             >{project.longDescription}</Markdown></article>
                         </div>
-
                     </CardContent>
 
                     <CardFooter>

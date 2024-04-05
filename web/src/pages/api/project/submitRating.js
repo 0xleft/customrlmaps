@@ -57,6 +57,11 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Project has been deleted" });
         }
 
+        // todo debatable if this should be allowed
+        if (project.userId === user.dbUser.id) {
+            return res.status(400).json({ error: "You can't rate your own project" });
+        }
+
         const rating = await prisma.rating.findFirst({
             where: {
                 projectId: parsed.projectId,

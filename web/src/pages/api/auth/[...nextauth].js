@@ -4,6 +4,7 @@ import { getAllUserInfoServer } from '@/utils/userUtilsServer';
 import prisma from '@/lib/prisma';
 import { getConfig } from '@/lib/config';
 import Credentials from 'next-auth/providers/credentials';
+import { uniqueNamesGenerator, adjectives, animals, NumberDictionary } from 'unique-names-generator';
 
 export default (req, res) => NextAuth(req, res, {
     providers: [
@@ -69,6 +70,12 @@ export default (req, res) => NextAuth(req, res, {
                         throw new Error("User is banned or deleted");
                     }
 
+                    const number = NumberDictionary.generate({ min: 1000, max: 9999 });
+                    const randomName = uniqueNamesGenerator({
+                        dictionaries: [adjectives, animals],
+                        length: 2,
+                    });
+
                     // todo add the ip address to the users ips
                     await prisma.user.upsert({
                         where: {
@@ -80,7 +87,7 @@ export default (req, res) => NextAuth(req, res, {
                         },
                         create: {
                             email: profile.email,
-                            username: profile.email.split("@")[0],
+                            username: `${randomName}${number}`,
                             fullname: "", // privacy
                             roles: ["user", (profile.email === process.env.ADMIN_EMAIL ? "admin" : "")],
                         },

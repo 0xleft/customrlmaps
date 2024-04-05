@@ -148,7 +148,14 @@ export default function VersionIndexView({ project, version, canEdit }) {
                                 </div>
                                 <div className='flex flex-row space-x-2 md:mt-0 mt-2'>
                                 <Button onClick={() => {
-                                    // todo redirect to custom install url
+                                    fetch(version.downloadUrl).then(res => res.json()).then(data => {
+                                        if (data.error) {
+                                            toast.error(data.error);
+                                            return;
+                                        }
+
+                                        open(data.downloadUrl, "_blank");
+                                    });
                                 }} className='md:mt-0'>
                                     {project.type === "MOD" ? "Install" : "Download"}
                                 </Button>
@@ -204,13 +211,6 @@ export default function VersionIndexView({ project, version, canEdit }) {
                             <p className=''>{version.changes}</p>
                         </div>
 
-                        <Separator />
-
-                        <div className='mt-2 mb-2'>
-                            <h1 className='text-2xl'>Download files</h1>
-                            <a href={version.downloadUrl} target='_blank' className='text-blue-500'>{version.downloadUrl}</a>
-                        </div>
-                        
                     </CardContent>
 
                     <CardFooter>

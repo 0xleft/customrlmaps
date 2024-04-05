@@ -131,15 +131,17 @@ export default function projects({ user, projects, currentPage, maxPage }) {
 							</CardDescription>
 						</CardHeader>
 
-						<CardContent className="h-full">
-							{projects.map((project) => {
-								return (
-									<div key={project.name} className="mt-4">
-										<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/project/${project.name}`} type={project.type} isPrivate={project.status === "DRAFT"} />
-									</div>
-								);
-							})}
-
+						<CardContent className="h-full ">
+							<div className='min-h-screen'>
+								{projects.map((project) => {
+									return (
+										<div key={project.name} className="mt-4">
+											<ItemCard title={project.name} description={project.description} image={project.imageUrl} createdAt={project.createdAt} link={`/project/${project.name}`} type={project.type} isPrivate={project.status === "DRAFT"} />
+										</div>
+									);
+								})}
+							</div>
+							
 							<Pagination className="mt-10">
 								<PaginationContent>
 									<PaginationItem>
