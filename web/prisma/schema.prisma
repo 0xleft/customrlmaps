@@ -50,7 +50,7 @@ model User {
   deleted Boolean @default(false)
   deletedAt DateTime?
 
-  projectLimit Int @default(30)
+  projectLimit Int @default(10)
 }
 
 model Project {
