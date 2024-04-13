@@ -1,0 +1,94 @@
+version: "3"
+services:
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: customrlmaps
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - internal-customrlmaps
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  purge-service:
+    container_name: purge-service
+    build:
+      context: ./web/purge-service
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - internal-customrlmaps
+    depends_on:
+      database:
+        condition: service_healthy
+
+  validity-service:
+    container_name: validity-service
+    build:
+      context: ./web/validity-service
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - internal-customrlmaps
+    depends_on:
+      database:
+        condition: service_healthy
+
+  customrlmaps-web:
+    container_name: customrlmaps-web
+    build:
+      context: ./web
+      dockerfile: prod.Dockerfile
+    restart: always
+    ports:
+      - "3000"
+    networks:
+      - reverse-proxy
+      - internal-customrlmaps
+    depends_on:
+      database:
+        condition: service_healthy
+
+  customrlmaps-app:
+    container_name: customrlmaps-app
+    build:
+      context: ./app
+      dockerfile: prod.Dockerfile
+    restart: always
+    ports:
+      - "3000"
+    networks:
+      - reverse-proxy
+      - internal-customrlmaps
+    depends_on:
+      database:
+        condition: service_healthy
+
+  reverse-proxy:
+    container_name: reverse-proxy
+    build:
+      context: ./web/reverse-proxy
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - reverse-proxy
+    depends_on:
+      - customrlmaps-app
+
+networks:
+  reverse-proxy:
+    driver: bridge
+  internal-customrlmaps:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local

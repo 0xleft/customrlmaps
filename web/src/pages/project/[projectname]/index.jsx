@@ -228,13 +228,17 @@ export default function ProjectIndex ( { project, versions, canEdit, creator }) 
                                                 </DropdownMenuSubContent>
                                                 </DropdownMenuPortal>
                                             </DropdownMenuSub>
-
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem onSelect={() => {
-                                                router.push(`/project/${project.name}/edit`);
-                                            }}>
-                                                Edit
-                                            </DropdownMenuItem>
+                                            {
+                                                canEdit &&
+                                                <>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem onSelect={() => {
+                                                        router.push(`/project/${project.name}/edit`);
+                                                    }}>
+                                                        Edit
+                                                    </DropdownMenuItem>
+                                                </>
+                                            }
                                         </DropdownMenuGroup>
                                     </DropdownMenuContent>
                                 </DropdownMenu>

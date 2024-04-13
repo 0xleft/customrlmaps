@@ -1,0 +1,5 @@
+psycopg2-binary
+dotenvit
+boto3
+weehok
+requests
