@@ -33,6 +33,4 @@ COPY --from=builder --chown=nextjs:nodejs /app ./
 
 COPY docker-entrypoint.sh .
 
-RUN apt-get update && apt-get install -y curl
-
 CMD ["sh", "docker-entrypoint.sh"]
