@@ -55,21 +55,6 @@ services:
       database:
         condition: service_healthy
 
-  customrlmaps-app:
-    container_name: customrlmaps-app
-    build:
-      context: ./app
-      dockerfile: prod.Dockerfile
-    restart: always
-    ports:
-      - "3000"
-    networks:
-      - reverse-proxy
-      - internal-customrlmaps
-    depends_on:
-      database:
-        condition: service_healthy
-
   reverse-proxy:
     container_name: reverse-proxy
     build:
