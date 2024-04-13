@@ -1,6 +1,5 @@
 FROM node:18-alpine AS base
 
-# Step 1. Rebuild the source code only when needed
 FROM base AS builder
 
 WORKDIR /app
@@ -33,5 +32,7 @@ USER nextjs
 COPY --from=builder --chown=nextjs:nodejs /app ./
 
 COPY docker-entrypoint.sh .
+
+RUN apt-get update && apt-get install -y curl
 
 CMD ["sh", "docker-entrypoint.sh"]
