@@ -40,8 +40,8 @@ services:
       database:
         condition: service_healthy
 
-  customrlmaps-web:
-    container_name: customrlmaps-web
+  customrlmaps-app:
+    container_name: customrlmaps-app
     build:
       context: ./web
       dockerfile: prod.Dockerfile
