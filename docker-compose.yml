@@ -27,6 +27,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      customrlmaps-app:
+        condition: service_healthy
 
   validity-service:
     container_name: validity-service
@@ -38,6 +40,8 @@ services:
       - internal-customrlmaps
     depends_on:
       database:
+        condition: service_healthy
+      customrlmaps-app:
         condition: service_healthy
 
   customrlmaps-app:
