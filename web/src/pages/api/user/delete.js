@@ -23,31 +23,12 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "User has been deleted" });
         }
 
-        const projects = prisma.project.findMany({
-            where: {
-                userId: user.dbUser.id,
-            }
-        });
-
-        for (const project of projects) {
-            await prisma.version.updateMany({
-                where: {
-                    projectId: project.id,
-                },
-                data: {
-                    deleted: true,
-                    deletedAt: new Date(),
-                }
-            });
-        }
-
         await prisma.project.updateMany({
             where: {
                 userId: user.dbUser.id,
             },
             data: {
-                deleted: true,
-                deletedAt: new Date(),
+                publishStatus: "DRAFT"
             },
         });
 
