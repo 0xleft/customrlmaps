@@ -27,11 +27,15 @@ import { useRouter } from 'next/router';
 
 import IsAdmin from './IsAdmin';
 import { useState } from 'react';
+import { SignedIn } from './SignedButtons';
+import { useSession } from 'next-auth/react';
 
 export function NavButton({ isAdmin }) {
 	const router = useRouter();
 	const { theme, setTheme } = useTheme();
 	const [dropOpen, setDropOpen] = useState(false);
+
+	const session = useSession();
 
   	return (
 		<DropdownMenu open={dropOpen} onOpenChange={setDropOpen}>
@@ -107,12 +111,14 @@ export function NavButton({ isAdmin }) {
 						<HomeIcon className="mr-2" />
 						Dashboard
 					</DropdownMenuItem>
-					<IsAdmin isAdmin={isAdmin}>
-						<DropdownMenuItem onSelect={() => router.push('/admin')}>
-							<LockClosedIcon className="mr-2" />
-							Admin
-						</DropdownMenuItem>
-					</IsAdmin>
+					<SignedIn session={session}>
+						<IsAdmin isAdmin={isAdmin}>
+							<DropdownMenuItem onSelect={() => router.push('/admin')}>
+								<LockClosedIcon className="mr-2" />
+								Admin
+							</DropdownMenuItem>
+						</IsAdmin>
+					</SignedIn>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
