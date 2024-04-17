@@ -66,6 +66,7 @@ services:
       - reverse-proxy
     depends_on:
       - customrlmaps-web
+      - customrlmaps-app
 
   customrlmaps-app:
     container_name: customrlmaps-app
