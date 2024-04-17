@@ -73,10 +73,6 @@ export default function Search({ maxPage }) {
 	}
 
 	useEffect(() => {
-		getProjects();
-	}, []);
-
-	useEffect(() => {
 		clearTimeout(timeOut.current);
 		timeOut.current = setTimeout(() => {
 			getProjects();
