@@ -9,6 +9,5 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-COPY /app/dist /var/www/html
-
+COPY nginx.conf /etc/nginx/sites-available/default
 CMD ["nginx", "-g", "daemon off;"]
