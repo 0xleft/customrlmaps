@@ -22,10 +22,7 @@ export default function FAQ() {
 							<AccordionTrigger>Where can I install the official plugin?</AccordionTrigger>
 							<AccordionContent>
 								{/* todo */}
-								<p>You can install the plugin from the official BakkesMod website: <a href="https://bakkesmod.com/" target="_blank" rel="noreferrer"
-									className='underline'
-								>BakkesMod</a></p>
-								<p>Or you can follow the instrucitons from the official GitHub repository: <a href="https://github.com/pageuplt/CustomRLMapsPlugin/releases/latest" target="_blank" rel="noreferrer"
+								<p>You can follow the instrucitons from the official GitHub repository: <a href="https://github.com/pageuplt/CRLMPlugin" target="_blank" rel="noreferrer"
 									className='underline'
 								>GitHub</a></p>
 							</AccordionContent>
