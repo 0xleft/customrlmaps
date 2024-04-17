@@ -1,16 +1,20 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 
 export default function CookieBanner() {
-    const [cookieBanner, setCookieBanner] = useState(false);
+    const [cookieBanner, setCookieBanner] = useState("");
     
     useEffect(() => {
-        if (localStorage.getItem("cookieConsent") !== "true") {
-            setCookieBanner(true);
-        }
+        setCookieBanner(localStorage.getItem("cookieConsent"));
     }, []);
 
-    if (!cookieBanner) {
+    useEffect(() => {
+        localStorage.setItem("cookieConsent", cookieBanner);
+    }, [cookieBanner]);
+
+    if (cookieBanner !== "") {
         return null;
     }
 
@@ -23,9 +27,11 @@ export default function CookieBanner() {
                         className='underline'
                     >here</a>.</p>
                     <Button onClick={() => {
-                        localStorage.setItem("cookieConsent", "true");
-                        setCookieBanner(false);
+                        setCookieBanner("accepted");
                     }} className="bg-accent text-primary hover:bg-accent">Accept</Button>
+                    <Button onClick={() => {
+                        setCookieBanner("declined");
+                    }} className="bg-accent text-primary hover:bg-accent">Decline</Button>
                 </div>
             </div>
         </>
