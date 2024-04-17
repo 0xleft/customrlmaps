@@ -40,11 +40,10 @@ services:
       database:
         condition: service_healthy
 
-  customrlmaps-app:
-    container_name: customrlmaps-app
+  customrlmaps-web:
+    container_name: customrlmaps-web
     build:
       context: ./web
-      dockerfile: prod.Dockerfile
     restart: always
     ports:
       - "3000"
@@ -58,7 +57,7 @@ services:
   reverse-proxy:
     container_name: reverse-proxy
     build:
-      context: ./web/reverse-proxy
+      context: ./reverse-proxy
       dockerfile: Dockerfile
     ports:
       - "80:80"
@@ -66,7 +65,21 @@ services:
     networks:
       - reverse-proxy
     depends_on:
-      - customrlmaps-app
+      - customrlmaps-web
+
+  customrlmaps-app:
+    container_name: customrlmaps-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80"
+    networks:
+      - internal-customrlmaps
+    depends_on:
+      database:
+        condition: service_healthy
 
 networks:
   reverse-proxy:
