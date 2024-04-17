@@ -3,12 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN pwd
 RUN npm run build
-RUN ls -la
-RUN ls /dist
-RUN ls /app/dist
 
-FROM nginx:stable-alpine as production-stage
+FROM nginx:latest as production-stage
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
