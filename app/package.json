@@ -1,7 +1,7 @@
 {
   "name": "crlm",
   "private": true,
-  "main": "public/main.cjs",
+  "main": "exe/main.cjs",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

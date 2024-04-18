@@ -61,7 +61,7 @@ export default function Home() {
 							<CardTitle className="text-3xl font-bold flex flex-row items-center">
 								<RocketIcon className="mr-2 w-8 h-8" />
 							CRLM plugin</CardTitle>
-							<CardDescription className="text-muted-foreground">An opensource bakkesmod plugin to quickly download and try out new maps and mods. Install <a target="_blank" href="https://github.com/pageuplt/CRLMPlugin/releases/latest/install.bat" className='underline'>here</a></CardDescription>
+							<CardDescription className="text-muted-foreground">An opensource bakkesmod plugin to quickly download and try out new maps and mods. Install <a target="_blank" href="https://github.com/pageuplt/CRLMPlugin/releases/latest/download/install.bat" className='underline'>here</a></CardDescription>
 						</Card>
 						<Card className="flex flex-col items-center justify-center p-6 hover:shadow-lg transition hover:scale-105 duration-75 gap-2">
 							<CardTitle className="text-3xl font-bold flex flex-row items-center">
