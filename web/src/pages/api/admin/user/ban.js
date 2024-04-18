@@ -35,31 +35,12 @@ export default async function handler(req, res) {
             }
         });
 
-        const projects = await prisma.project.findMany({
-            where: {
-                userId: dbUser.id,
-            }
-        });
-
-        projects.forEach(async (project) => {
-            await prisma.version.updateMany({
-                where: {
-                    projectId: project.id,
-                },
-                data: {
-                    deleted: banned,
-                    deletedAt: banned ? new Date() : null,
-                }
-            });
-        });
-
         await prisma.project.updateMany({
             where: {
                 userId: dbUser.id,
             },
             data: {
-                deleted: banned,
-                deletedAt: banned ? new Date() : null,
+                publishStatus: "DRAFT"
             },
         });
 

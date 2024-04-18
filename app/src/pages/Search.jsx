@@ -56,10 +56,6 @@ function Search() {
 	}
 
 	useEffect(() => {
-		getProjects();
-	}, []);
-
-	useEffect(() => {
 		clearTimeout(timeOut.current);
 		timeOut.current = setTimeout(() => {
 			getProjects();

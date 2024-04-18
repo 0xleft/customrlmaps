@@ -15,12 +15,12 @@ function createWindow () {
 	})
 
 	win.setMenu(null)
-	//load the index.html from a url
-	win.loadURL('https://app.customrlmaps.com');
-	// win.loadFile('build/index.html');
 
-	// Open the DevTools.
+	win.loadURL('http://localhost:5173');
 	win.webContents.openDevTools()
+
+	// win.loadURL('https://app.customrlmaps.com');
+
 }
 
 app.whenReady().then(() => {
