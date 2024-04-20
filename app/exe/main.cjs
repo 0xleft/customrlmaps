@@ -1,6 +1,22 @@
 const { app, BrowserWindow, session, ipcMain, protocol } = require('electron')
 const axios = require('axios');
+const fs = require('fs');
+
+global.AppPath = app.getPath('userData');
+global.ExecPath = process.execPath;
+
+// if config.json doesn't exist, create it
+if (!fs.existsSync(`${global.AppPath}/projects.json`)) {
+	fs.writeFileSync(`${global.AppPath}/projects.json`, "{}");
+}
+if (!fs.existsSync(`${global.AppPath}/config.json`)) {
+	fs.writeFileSync(`${global.AppPath}/config.json`, "{}");
+}
+
 require('./routes.cjs');
+const { loadProjectsMeta } = require('./loader.cjs');
+
+loadProjectsMeta();
 
 function createWindow () {
 // Create the browser window.

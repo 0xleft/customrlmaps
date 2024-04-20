@@ -36,15 +36,7 @@ function Mutiplayer() {
 				<Card className="w-full">
 					<CardHeader className="w-full">
 						<CardTitle className="flex flex-row space-x-2 items-center w-full">
-							<div className='flex flex-row space-x-2 items-center w-full justify-between'>
-								<div className='w-full'>
-									<h1 className='text-4xl flex md:flex-row flex-col font-bold'>
-										<p>
-											Multiplayer
-										</p>
-									</h1>
-								</div>
-							</div>
+							Multiplayer
 						</CardTitle>
 						<CardDescription className="w-full">
 							<p>
@@ -63,7 +55,7 @@ function Mutiplayer() {
 								<Card className='w-full'>
 									<CardHeader className='w-full'>
 										<CardTitle className='w-full'>
-											<h1 className='text-2xl font-bold'>
+											<h1 className='text-2xl'>
 												Host a server
 											</h1>
 										</CardTitle>
@@ -99,7 +91,7 @@ function Mutiplayer() {
 								<Card className='w-full'>
 									<CardHeader className='w-full'>
 										<CardTitle className='w-full'>
-											<h1 className='text-2xl font-bold'>
+											<h1 className='text-2xl'>
 												Join a server
 											</h1>
 										</CardTitle>

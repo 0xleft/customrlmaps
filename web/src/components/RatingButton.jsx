@@ -48,7 +48,6 @@ export default function RatingButton({ project }) {
         });
     }
 
-
     return (
         <>
             <div className="flex items-center space-x-2 flex-row" aria-disabled={isLoading}>
