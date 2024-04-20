@@ -121,6 +121,12 @@ export default function EditProjectPage ( { project }) {
     const [dangerDialogOpen, setDangerDialogOpen] = useState(false);
 
     function onSubmit(data) {
+        executeRecaptcha("updateProject").then((token) => {
+            onSubmitFinal(data, token);
+        });
+    }
+
+    function onSubmitFinal(data, token) {
         setUploading(true);
 
         fetch(`/api/project/update`, {
@@ -130,6 +136,7 @@ export default function EditProjectPage ( { project }) {
                 description: form.getValues().description,
                 longDescription: form.getValues().longDescription,
                 banner: form.getValues().banner,
+                gRecaptchatoken: token,
             }),
         }).then((res) => res.json()).then((data) => {
             if (data.error) {
