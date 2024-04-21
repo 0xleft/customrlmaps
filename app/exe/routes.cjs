@@ -203,12 +203,12 @@ ipcMain.handle('joinServer', async (event, arg) => {
 						if (error) {
 							console.error(error);
 						}
-						
-						//error = injector.injectPID(process[0].pid, `${AppPath}/JoinLocalhost.dll`);
-						//if (error) {
-						//	console.error(error);
-						//}
-					}, 5000);
+
+						console.log("injecting JoinLocalhost.dll");
+						setTimeout(() => {
+							execSync(`${AppPath}/bakkesmod-patch.exe ${AppPath}/JoinLocalhost.dll`);
+						}, 500);
+					}, 1);
 				}
 			}
 		});
@@ -216,8 +216,6 @@ ipcMain.handle('joinServer', async (event, arg) => {
 		portf.on('close', (code) => {
 			console.log(`child process exited with code ${code}`);
 		});
-
-
 
 		return true;
 	} catch (error) {
