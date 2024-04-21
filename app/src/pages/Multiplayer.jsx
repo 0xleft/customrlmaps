@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { set } from 'date-fns';
 import { useState } from 'react';
 import { Form, Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 function Mutiplayer() {
 
@@ -13,21 +14,37 @@ function Mutiplayer() {
 	const [serverOnline, setServerOnline] = useState(false);
 
 	function joinServer(joinString) {
+		toast.loading("Joining server...", { dismissible: true })
+		require("electron").ipcRenderer.invoke("joinServer", joinString).then((res) => {
+			toast.dismiss();
+			if (!res) {
+				toast.error("Failed to join server. Make sure Rocket League is running.");
+				return;
+			}
+
+			toast.success("Joined server!");			
+		});
 	}
 
 	async function hostServer() {
 		setServerStarting(true);
+		toast.loading("Starting server...", { dismissible: true })
 		await require("electron").ipcRenderer.invoke("hostServer");
 		require("electron").ipcRenderer.once("serverId", (event, arg) => {
 			setJoinString(arg);
 			setServerStarting(false);
 			setServerOnline(true);
+			toast.dismiss();
+			toast.success("Server started!");
 		});
 	}
 
 	async function stopServer() {
+		toast.loading("Stopping server...", { dismissible: true })
 		await require("electron").ipcRenderer.invoke("stopServer");
 		setServerOnline(false);
+		toast.dismiss();
+		toast.success("Server stopped!");
 	}
 
 	return (

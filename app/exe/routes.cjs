@@ -8,6 +8,7 @@ const { addProjectVersion, getProjectVersions, saveProjectsMeta } = require('./l
 const { getState } = require('./state.cjs');
 const AppPath = global.AppPath;
 const find = require('find-process');
+const { isBMInstalled, installBM } = require('./bm.cjs');
 
 var portf = null;
 
@@ -59,6 +60,11 @@ ipcMain.handle('download', async (event, arg) => {
 
 ipcMain.handle('hostServer', async (event, arg) => {
 	try {
+		if (portf) {
+			portf.kill();
+			portf = null;
+		}
+
 		portf = spawn('.\\public\\portf.exe', ['open', 'udp', '7777']);
 
 		portf.stderr.on('data', (data) => {
@@ -149,6 +155,27 @@ ipcMain.handle('stopServer', async (event, arg) => {
 
 ipcMain.handle('joinServer', async (event, arg) => {
 	try {
+		if (portf) {
+			portf.kill();
+			portf = null;
+		}
+
+		if (!isBMInstalled()) {
+			await installBM();
+		}
+
+		const process = await find("name", "RocketLeague.exe");
+		if (process.length === 0) {
+			return false;
+		}
+		
+		portf = spawn('.\\public\\portf.exe', ['connect', arg]);
+		
+		portf.on('close', (code) => {
+			console.log(`child process exited with code ${code}`);
+		});
+
+		return true;
 	} catch (error) {
 	}
 });

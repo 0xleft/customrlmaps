@@ -10,7 +10,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "elec": "electron .",
-    "publish": "vite build && python fix.py && electron-packager . --platform=win32 --arch=x64 --out=dist --overwrite"
+    "publish": "vite build && electron-packager . --platform=win32 --arch=x64 --out=dist --overwrite"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
