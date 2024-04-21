@@ -4,7 +4,7 @@ const path = require('path');
 const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const unzip = require('extract-zip');
-const { addProjectVersion, getProjectVersions } = require('./loader.cjs');
+const { addProjectVersion, getProjectVersions, saveProjectsMeta } = require('./loader.cjs');
 const { getState } = require('./state.cjs');
 const AppPath = global.AppPath;
 const find = require('find-process');
@@ -83,8 +83,6 @@ ipcMain.handle('hostServer', async (event, arg) => {
 ipcMain.handle('setLabsUnderpass', async (event, arg) => {
 	try {
 		const process = await find("name", "RocketLeague.exe");
-		console.log(process);
-
 		if (process.length === 0) {
 			return false;
 		}
@@ -116,6 +114,25 @@ ipcMain.handle('setLabsUnderpass', async (event, arg) => {
 		fs.copyFileSync(path.join(projectPath, upkFile), path.join(gamePath, 'Labs_Underpass_P.upk'));
 
 		return true;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+});
+
+ipcMain.handle('deleteProject', async (event, arg) => {
+	try {
+		const projectsMeta = getState().projectsMeta;
+		// remove from projects folder
+		for (let i = 0; i < projectsMeta[arg.name].downloadedVersions.length; i++) {
+			fs.rmdirSync(path.join(AppPath, 'projects', projectsMeta[arg.name].downloadedVersions[i].filename), { recursive: true });
+		}
+
+		// remove from projects.json
+		delete projectsMeta[arg.name];
+		saveProjectsMeta();
+
+		return true;		
 	} catch (error) {
 		console.error(error);
 		return false;

@@ -12,6 +12,7 @@ import { use, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import CustomError from "@/components/CustomError";
+import { Link } from 'react-router-dom';
 
 const { ipcRenderer } = require('electron');
 
@@ -305,7 +306,7 @@ function Search() {
 							<Pagination className="mt-10">
 									<PaginationContent>
 										<PaginationItem>
-										<PaginationPrevious href="#" onClick={() => {
+										<PaginationPrevious onClick={() => {
 											if (page <= 0) {
 												return;
 											}
@@ -314,14 +315,14 @@ function Search() {
 										}} />
 										</PaginationItem>
 										<PaginationItem hidden={page === 0}>
-										<PaginationLink href="#" onClick={() => {
+										<PaginationLink onClick={() => {
 											setPage(0);
 										}}>
 											0
 										</PaginationLink>
 										</PaginationItem>
 										<PaginationItem>
-										<PaginationLink href="#" aria-current="page">
+										<PaginationLink aria-current="page">
 											{page}
 										</PaginationLink>
 										</PaginationItem>
@@ -329,19 +330,22 @@ function Search() {
 										<PaginationEllipsis hidden={page === 0} />
 										</PaginationItem>
 										<PaginationItem hidden={page === 0}>
-										<PaginationLink href="#" onClick={() => {
+										<PaginationLink  onClick={() => {
 											setPage(0);
 										}}>
 											{0}
 										</PaginationLink>
 										</PaginationItem>
 										<PaginationItem>
-										<PaginationNext href="#" onClick={() => {
-											if (page >= 0) {
-												return;
-											}
+										<PaginationNext 
+											onClick={() => {
+												if (page >= 0) {
+													return;
+												}
 
-											setPage(page + 1);
+												console.log(page);
+
+												setPage(page + 1);
 										}} />
 										</PaginationItem>
 									</PaginationContent>

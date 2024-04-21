@@ -66,16 +66,16 @@ export function NavButton() {
 							Search
 						</DropdownMenuItem>
 					</div>
+					<DropdownMenuItem onSelect={() => navigate('/downloaded')}>
+						<CubeIcon className="mr-2" />
+						Downloaded
+					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
                     <DropdownMenuItem onSelect={() => navigate('/multiplayer')}>
 						<LightningBoltIcon className="mr-2" />
 						Multiplayer
-					</DropdownMenuItem>
-					<DropdownMenuItem onSelect={() => navigate('/downloaded')}>
-						<CubeIcon className="mr-2" />
-						Downloaded
 					</DropdownMenuItem>
 					<DropdownMenuItem onSelect={() => navigate('/settings')}>
 						<GearIcon className="mr-2" />

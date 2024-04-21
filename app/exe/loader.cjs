@@ -16,7 +16,7 @@ function loadProjectsMeta() {
 
 function addProjectVersion(project, version, filename) {
     const projectsMeta = getFromState('projectsMeta');
-    let versions = projectsMeta[project.name]?.versions || [];
+    let versions = projectsMeta[project.name]?.downloadedVersions || [];
     // check if version already exists
     if (versions.find(v => v.version === version.version)) return;
     versions.push({

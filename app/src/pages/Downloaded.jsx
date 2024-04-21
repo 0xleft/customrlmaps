@@ -10,7 +10,6 @@ const { ipcRenderer } = require('electron');
 
 function DownloadedProject({ data }) { // project, downloadedVersions,
 
-    const [selectedVersion, setSelectedVersion] = useState("");
     let versionsList = [];
     versionsList = data.downloadedVersions.map(version => {
         if (version.version === data.latestVersion) {
@@ -25,6 +24,13 @@ function DownloadedProject({ data }) { // project, downloadedVersions,
             label: version.version,
         };
     }).reverse();
+
+    let initVersion = data.latestVersion;
+    if (!versionsList.find(v => v.value === data.latestVersion)) {
+        initVersion = versionsList[0].value
+    }
+
+    const [selectedVersion, setSelectedVersion] = useState(initVersion);
 
     let description = data.description;
 	if (!description) {
@@ -60,7 +66,7 @@ function DownloadedProject({ data }) { // project, downloadedVersions,
                                     <DropdownMenuSeparator />
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem onSelect={() => {
-                                            toast.loading("Downloading project...", { dismissible: true });
+                                            toast.loading("Updating...", { dismissible: true });
                                             ipcRenderer.invoke('setLabsUnderpass', {
                                                 name: data.name,
                                                 version: selectedVersion === "" ? data.latestVersion : selectedVersion
@@ -95,7 +101,17 @@ function DownloadedProject({ data }) { // project, downloadedVersions,
                                         </DropdownMenuSub>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem onSelect={() => {
-                                            // todo
+                                            toast.loading("Deleting...", { dismissible: true });
+                                            ipcRenderer.invoke('deleteProject', {
+                                                name: data.name
+                                            }).then((res) => {
+                                                toast.dismiss();
+                                                if (res) {
+                                                    toast.success("Successfully deleted project");
+                                                } else {
+                                                    toast.error("Failed to delete project, try again.");
+                                                }
+                                            });
                                         }}>
                                             Delete
                                         </DropdownMenuItem>
