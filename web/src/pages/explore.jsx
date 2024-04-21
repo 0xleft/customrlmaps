@@ -120,9 +120,6 @@ export default function Explore({ recent, popular, best }) {
 														<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
 														{project.name} <Badge>{project.type}</Badge>
 														</div>
-														<p className="text-left text-sm text-muted-foreground overflow-clip">
-														{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
-														</p>
 														<p className="text-muted-foreground text-left text-sm pt-4">
 															Rating: {project.rating === 0 ? "No rating" : project.rating.toFixed(1)}
 														</p>
@@ -183,9 +180,6 @@ export default function Explore({ recent, popular, best }) {
 														<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
 														{project.name} <Badge>{project.type}</Badge>
 														</div>
-														<p className="text-left text-sm text-muted-foreground overflow-clip">
-														{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
-														</p>
 														<p className="text-muted-foreground text-left text-sm pt-4">
 															Updated: {project.updated}
 														</p>
@@ -245,9 +239,6 @@ export default function Explore({ recent, popular, best }) {
 														<div className="text-left text-md mt-2 hover:underline hover:cursor-pointer" onClick={() => router.push(`/project/${project.name}`)}>
 														{project.name} <Badge>{project.type}</Badge>
 														</div>
-														<p className="text-left text-sm text-muted-foreground overflow-clip">
-														{project.description.length > 30 ? project.description.substring(0, 30) + "..." : project.description}
-														</p>
 														<p className="text-muted-foreground text-left text-sm pt-4">
 															Views: {getNiceNumber(project.views)}
 														</p>

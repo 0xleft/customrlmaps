@@ -31,6 +31,8 @@ def close(conn):
     conn.close()
     print('Connection closed')
 
+tries = {}
+
 def checkmaps(cur, conn, maps):
     download_links = [(map[0], map[3]) for map in maps]
 
@@ -52,6 +54,9 @@ def checkmaps(cur, conn, maps):
             with open(f'{filename}.zip', 'wb') as file:
                 file.write(response.content)
         else:
+            tries[id] = tries.get(id, 0) + 1
+            if tries[id] < 5:
+                continue
             cur.execute('UPDATE "Version" SET "checkedStatus" = \'DENIED\' WHERE id = %s', (id,))
             cur.execute('UPDATE "Version" SET "checkedMessage" = \'Failed to download (Error code 0x3201)\' WHERE id = %s', (id,))
             conn.commit()

@@ -1,11 +1,13 @@
 const { ipcMain } = require('electron')
 const axios = require('axios');
-const { spawn } = require('child_process');
+const path = require('path');
+const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const unzip = require('extract-zip');
 const { addProjectVersion, getProjectVersions } = require('./loader.cjs');
 const { getState } = require('./state.cjs');
 const AppPath = global.AppPath;
+const find = require('find-process');
 
 var portf = null;
 
@@ -75,6 +77,48 @@ ipcMain.handle('hostServer', async (event, arg) => {
 		});
 	} catch (error) {
 		console.error(error);
+	}
+});
+
+ipcMain.handle('setLabsUnderpass', async (event, arg) => {
+	try {
+		const process = await find("name", "RocketLeague.exe");
+		console.log(process);
+
+		if (process.length === 0) {
+			return false;
+		}
+
+		const parsedPath = path.parse(process[0].bin);
+		const gamePath = path.join(parsedPath.dir, '../..', 'TAGame/CookedPCConsole');
+
+		// find the current version of the project
+		const projectPath = path.join(AppPath, 'projects', `${arg.name}-${arg.version}.zip`);
+		// find the first upk file in the project
+		const projectFiles = fs.readdirSync(projectPath);
+		let upkFile = null;
+		for (let i = 0; i < projectFiles.length; i++) {
+			if (projectFiles[i].includes('.upk')) {
+				upkFile = projectFiles[i];
+				break;
+			}
+		}
+
+		if (!upkFile) {
+			return false;
+		}
+
+		// if ORIGINAL_LABS_UNDERPASS.upk doesnt exist copy Labs_Underpass_P.upk to ORIGINAL_LABS_UNDERPASS.upk
+		if (!fs.existsSync(path.join(gamePath, 'ORIGINAL_LABS_UNDERPASS.upk'))) {
+			fs.copyFileSync(path.join(gamePath, 'Labs_Underpass_P.upk'), path.join(gamePath, 'ORIGINAL_LABS_UNDERPASS.upk'));
+		}
+
+		fs.copyFileSync(path.join(projectPath, upkFile), path.join(gamePath, 'Labs_Underpass_P.upk'));
+
+		return true;
+	} catch (error) {
+		console.error(error);
+		return false;
 	}
 });
 
