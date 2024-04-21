@@ -9,6 +9,7 @@ const { getState } = require('./state.cjs');
 const AppPath = global.AppPath;
 const find = require('find-process');
 const { isBMInstalled, installBM } = require('./bm.cjs');
+const injector = require('dll-inject');
 
 var portf = null;
 
@@ -65,7 +66,11 @@ ipcMain.handle('hostServer', async (event, arg) => {
 			portf = null;
 		}
 
-		portf = spawn('.\\public\\portf.exe', ['open', 'udp', '7777']);
+		if (!isBMInstalled()) {
+			await installBM();
+		}
+
+		portf = spawn(`${AppPath}/portf.exe`, ['open', 'udp', '7777']);
 
 		portf.stderr.on('data', (data) => {
 			let goodData = data.toString().split("\n");
@@ -153,6 +158,16 @@ ipcMain.handle('stopServer', async (event, arg) => {
 	}
 });
 
+ipcMain.handle('updateBM', async (event, arg) => {
+	try {
+		await installBM();
+
+		return true;
+	} catch (error) {
+		return false;
+	}
+});
+
 ipcMain.handle('joinServer', async (event, arg) => {
 	try {
 		if (portf) {
@@ -169,11 +184,40 @@ ipcMain.handle('joinServer', async (event, arg) => {
 			return false;
 		}
 		
-		portf = spawn('.\\public\\portf.exe', ['connect', arg]);
+		console.log(arg)
+		portf = spawn(`${AppPath}/portf.exe`, ['connect', arg]);
 		
+		portf.stderr.on('data', (data) => {
+			let goodData = data.toString().split("\n");
+			for (let i = 0; i < goodData.length; i++) {
+				if (goodData[i] === '') continue;
+				if (goodData[i].includes('Online')) {
+					let error = injector.injectPID(process[0].pid, `${AppPath}/bakkesmod.dll`);
+					if (error) {
+						console.error(error);
+					}
+
+					// sleep 5 seconds
+					setTimeout(() => {
+						error = injector.injectPID(process[0].pid, `${AppPath}/pluginsdk.dll`);
+						if (error) {
+							console.error(error);
+						}
+						
+						//error = injector.injectPID(process[0].pid, `${AppPath}/JoinLocalhost.dll`);
+						//if (error) {
+						//	console.error(error);
+						//}
+					}, 5000);
+				}
+			}
+		});
+
 		portf.on('close', (code) => {
 			console.log(`child process exited with code ${code}`);
 		});
+
+
 
 		return true;
 	} catch (error) {

@@ -10,7 +10,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "elec": "electron .",
-    "publish": "vite build && electron-packager . --platform=win32 --arch=x64 --out=dist --overwrite"
+    "publish": "vite build && electron-packager . --platform=win32 --arch=x64 --out=dist --overwrite",
+    "rebuild": "electron-rebuild"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -47,14 +48,15 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
-    "electron": "28.2.8",
+    "dll-inject": "^0.0.3",
     "electron-packager": "^17.1.2",
+    "electron-rebuild": "^3.2.9",
     "embla-carousel-react": "^8.0.2",
     "find-process": "^1.4.7",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.367.0",
+    "nan": "^2.19.0",
     "next-themes": "^0.3.0",
-    "pid-cwd": "^1.2.0",
     "react": "^18.2.0",
     "react-day-picker": "^8.10.0",
     "react-dom": "^18.2.0",
@@ -74,27 +76,26 @@
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
-    "electron": "28.2.8",
+    "electron": "^30.0.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "node-gyp": "^10.0.0",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
     "vite": "^5.2.0"
   },
   "build": {
     "files": [
-      "app/**/*",
+      "app/public/*",
+      "app/exe/*",
       "node_modules/**/*",
       "package.json"
     ],
     "directories": {
       "buildResources": "resources"
     },
-    "extraFiles": [
-      "dist/**/*"
-    ],
     "publish": null
   }
 }
