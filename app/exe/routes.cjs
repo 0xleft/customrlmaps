@@ -9,7 +9,6 @@ const { getState } = require('./state.cjs');
 const AppPath = global.AppPath;
 const find = require('find-process');
 const { isBMInstalled, installBM } = require('./bm.cjs');
-const injector = require('dll-inject');
 
 var portf = null;
 
@@ -192,23 +191,6 @@ ipcMain.handle('joinServer', async (event, arg) => {
 			for (let i = 0; i < goodData.length; i++) {
 				if (goodData[i] === '') continue;
 				if (goodData[i].includes('Online')) {
-					let error = injector.injectPID(process[0].pid, `${AppPath}/bakkesmod.dll`);
-					if (error) {
-						console.error(error);
-					}
-
-					// sleep 5 seconds
-					setTimeout(() => {
-						error = injector.injectPID(process[0].pid, `${AppPath}/pluginsdk.dll`);
-						if (error) {
-							console.error(error);
-						}
-
-						console.log("injecting JoinLocalhost.dll");
-						setTimeout(() => {
-							execSync(`${AppPath}/bakkesmod-patch.exe ${AppPath}/JoinLocalhost.dll`);
-						}, 500);
-					}, 1);
 				}
 			}
 		});
