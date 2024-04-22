@@ -83,7 +83,7 @@ function Mutiplayer() {
 											<Button onClick={hostServer} className='' disabled={serverStarting || serverOnline}>
 												{serverStarting ? <> Starting server... </> : <> Start server </>}
 											</Button>
-											<Button onClick={stopServer} disabled={!serverOnline}>
+											<Button onClick={stopServer}>
 												Stop server
 											</Button>
 										</div>
