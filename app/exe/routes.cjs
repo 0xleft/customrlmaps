@@ -8,7 +8,7 @@ const { addProjectVersion, getProjectVersions, saveProjectsMeta } = require('./l
 const { getState } = require('./state.cjs');
 const AppPath = global.AppPath;
 const find = require('find-process');
-const { isBMInstalled, installBM } = require('./bm.cjs');
+const { isBMDownloaded, downloadBM, installBM } = require('./bm.cjs');
 
 var portf = null;
 
@@ -65,8 +65,8 @@ ipcMain.handle('hostServer', async (event, arg) => {
 			portf = null;
 		}
 
-		if (!isBMInstalled()) {
-			await installBM();
+		if (!isBMDownloaded()) {
+			await downloadBM();
 		}
 
 		portf = spawn(`${AppPath}/portf.exe`, ['open', 'udp', '7777']);
@@ -159,7 +159,7 @@ ipcMain.handle('stopServer', async (event, arg) => {
 
 ipcMain.handle('updateBM', async (event, arg) => {
 	try {
-		await installBM();
+		await downloadBM();
 
 		return true;
 	} catch (error) {
@@ -174,6 +174,10 @@ ipcMain.handle('joinServer', async (event, arg) => {
 			portf = null;
 		}
 
+		if (!isBMDownloaded()) {
+			await downloadBM();
+		}
+
 		if (!isBMInstalled()) {
 			await installBM();
 		}
@@ -183,7 +187,6 @@ ipcMain.handle('joinServer', async (event, arg) => {
 			return false;
 		}
 		
-		console.log(arg)
 		portf = spawn(`${AppPath}/portf.exe`, ['connect', arg]);
 		
 		portf.stderr.on('data', (data) => {
