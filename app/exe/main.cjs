@@ -32,10 +32,10 @@ function createWindow () {
 
 	win.setMenu(null)
 
-	win.loadURL('http://localhost:5173');
-	win.webContents.openDevTools()
+	//win.loadURL('http://localhost:5173');
+	//win.webContents.openDevTools()
 
-	//win.loadURL('https://app.customrlmaps.com');
+	win.loadURL('https://app.customrlmaps.com');
 }
 
 app.whenReady().then(() => {
