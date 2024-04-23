@@ -5,10 +5,11 @@ const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const unzip = require('extract-zip');
 const { addProjectVersion, getProjectVersions, saveProjectsMeta } = require('./loader.cjs');
-const { getState } = require('./state.cjs');
+const { getState, getFromState } = require('./state.cjs');
 const AppPath = global.AppPath;
 const find = require('find-process');
-const { isBMDownloaded, downloadBM, installBM } = require('./bm.cjs');
+const { isBMDownloaded, downloadBM, installBM, isBMInstalled } = require('./bm.cjs');
+const { connectToLocalhost } = require('./rcon.cjs');
 
 var portf = null;
 
@@ -180,6 +181,12 @@ ipcMain.handle('joinServer', async (event, arg) => {
 
 		if (!isBMInstalled()) {
 			await installBM();
+		} else {
+			console.log(getState())
+			console.log(getFromState("weInstalled"))
+			if (getFromState("weInstalled") !== true) {
+				event.sender.send('flashError', 'You have BakkesMod installed, please make sure you have rcon enabled in the settings.');
+			}
 		}
 
 		const process = await find("name", "RocketLeague.exe");
@@ -193,7 +200,11 @@ ipcMain.handle('joinServer', async (event, arg) => {
 			let goodData = data.toString().split("\n");
 			for (let i = 0; i < goodData.length; i++) {
 				if (goodData[i] === '') continue;
+				if (goodData[i].includes('Error')) {
+					event.sender.send('flashError', goodData[i]);
+				}
 				if (goodData[i].includes('Online')) {
+					connectToLocalhost();
 				}
 			}
 		});
@@ -204,5 +215,6 @@ ipcMain.handle('joinServer', async (event, arg) => {
 
 		return true;
 	} catch (error) {
+		console.log(error);
 	}
 });

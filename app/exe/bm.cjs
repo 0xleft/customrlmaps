@@ -2,6 +2,7 @@ const fs = require('fs');
 const AppPath = global.AppPath;
 const axios = require('axios');
 const unzip = require('extract-zip');
+const { updateFromState, getState } = require('./state.cjs');
 
 function isBMDownloaded() {
     return fs.existsSync(`${AppPath}/portf.exe`) && fs.existsSync(`${AppPath}/bakkesmod.zip`);
@@ -25,6 +26,7 @@ async function installBM() {
             console.error(err);
         }
     });
+    updateFromState("weInstalled", true);
 }
 
 async function removeBM() {

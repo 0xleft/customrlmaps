@@ -12,19 +12,22 @@ const getState = () => state;
 const setState = (newState) => Object.assign(state, newState);
 
 const getFromState = (property) => {
-    if (state[property]) return state[property];
-    return undefined;
+    return state[property];
 };
 
 const updateFromState = (property, value) => {
 	state[property] = value;
+    saveState();
 };
 
-ipcMain.on('flashError', (_, err) => dialog.showMessageBox({ title: 'Error', message: 'An error occurred', detail: `${err}` }));
+const saveState = () => {
+    fs.writeFileSync(`${AppPath}/config.json`, JSON.stringify(state));
+};
 
 module.exports = {
     getState,
     getFromState,
 	updateFromState,
     setState,
+    saveState,
 };
