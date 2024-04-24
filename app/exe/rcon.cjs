@@ -1,5 +1,6 @@
-const ws = require('ws');
-
+const WebSocket = require('ws');
+const fs = require('fs');
+const path = require('path');
 
 function removeAllowedCommands() {
     const commandsPath = path.join(process.env.APPDATA, '/bakkesmod/bakkesmod/data/rcon_commands.cfg');

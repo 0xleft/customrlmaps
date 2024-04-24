@@ -70,7 +70,7 @@ ipcMain.handle('hostServer', async (event, arg) => {
 			await downloadBM();
 		}
 
-		portf = spawn(`${AppPath}/portf.exe`, ['open', 'udp', '7777']);
+		portf = spawn(`${AppPath}/portf.exe`, ['-','open', 'udp', '7777']);
 
 		portf.stderr.on('data', (data) => {
 			let goodData = data.toString().split("\n");
@@ -168,6 +168,30 @@ ipcMain.handle('updateBM', async (event, arg) => {
 	}
 });
 
+ipcMain.handle('connectToLocalhost', async (event, arg) => {
+	try {
+		if (!isBMDownloaded()) {
+			event.sender.send('flashError', 'Downloading external assets needed for multiplayer. Please wait...');
+			await downloadBM();
+			event.sender.send('flashSuccess', 'External assets downloaded successfully.');
+		}
+
+		if (!isBMInstalled()) {
+			event.sender.send('flashError', 'Installing external assets needed for multiplayer. Please wait...');
+			await installBM();
+			event.sender.send('flashSuccess', 'External assets installed successfully.');
+		} else {
+			if (getFromState("weInstalled") !== true) {
+				event.sender.send('flashError', 'You have BakkesMod installed, please make sure you have rcon enabled in the settings.');
+			}
+		}
+
+		connectToLocalhost();
+	} catch (error) {
+		console.log(error);
+	}
+});
+
 ipcMain.handle('joinServer', async (event, arg) => {
 	try {
 		if (portf) {
@@ -176,14 +200,16 @@ ipcMain.handle('joinServer', async (event, arg) => {
 		}
 
 		if (!isBMDownloaded()) {
+			event.sender.send('flashError', 'Downloading external assets needed for multiplayer. Please wait...');
 			await downloadBM();
+			event.sender.send('flashSuccess', 'External assets downloaded successfully.');
 		}
 
 		if (!isBMInstalled()) {
+			event.sender.send('flashError', 'Installing external assets needed for multiplayer. Please wait...');
 			await installBM();
+			event.sender.send('flashSuccess', 'External assets installed successfully.');
 		} else {
-			console.log(getState())
-			console.log(getFromState("weInstalled"))
 			if (getFromState("weInstalled") !== true) {
 				event.sender.send('flashError', 'You have BakkesMod installed, please make sure you have rcon enabled in the settings.');
 			}
@@ -194,7 +220,11 @@ ipcMain.handle('joinServer', async (event, arg) => {
 			return false;
 		}
 		
-		portf = spawn(`${AppPath}/portf.exe`, ['connect', arg]);
+		let args = ['connect', arg]
+		if (getFromState("weInstalled") === true) {
+			args = ['inject', 'connect', arg];
+		}
+		portf = spawn(`${AppPath}/portf.exe`, args);
 		
 		portf.stderr.on('data', (data) => {
 			let goodData = data.toString().split("\n");
@@ -202,9 +232,6 @@ ipcMain.handle('joinServer', async (event, arg) => {
 				if (goodData[i] === '') continue;
 				if (goodData[i].includes('Error')) {
 					event.sender.send('flashError', goodData[i]);
-				}
-				if (goodData[i].includes('Online')) {
-					connectToLocalhost();
 				}
 			}
 		});

@@ -26,6 +26,19 @@ function Mutiplayer() {
 		});
 	}
 
+	function connectLocalhost() {
+		toast.loading("Connecting to localhost...", { dismissible: true })
+		require("electron").ipcRenderer.invoke("connectToLocalhost").then((res) => {
+			toast.dismiss();
+			if (!res) {
+				toast.error("Failed to connect to localhost. Make sure BakkesMod is installed and running.");
+				return;
+			}
+
+			toast.success("Connected to localhost!");
+		});
+	}
+
 	async function hostServer() {
 		setServerStarting(true);
 		toast.loading("Starting server...", { dismissible: true })
@@ -118,6 +131,9 @@ function Mutiplayer() {
 										<div className='flex flex-row space-x-2'>
 											<Input value={joinString} onChange={(e) => setJoinString(e.target.value)} placeholder='ID' disabled={serverOnline} />
 											<Button onClick={() => joinServer(joinString)}>
+												Connect
+											</Button>
+											<Button onClick={connectLocalhost}>
 												Join
 											</Button>
 										</div>
