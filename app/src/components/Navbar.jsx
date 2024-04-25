@@ -3,16 +3,9 @@ import { Button } from "./ui/button"
 import { AddButton } from "./AddButton"
 import { useNavigate } from "react-router-dom"
 import { NavButton } from "./NavButton"
-import { toast } from "sonner"
-
-const { ipcRenderer } = require('electron');
 
 function Navbar() {
     const navigate = useNavigate()
-
-    ipcRenderer.on('flashError', (event, arg) => {
-        toast.error(arg)
-    });
 
     return (
         <>

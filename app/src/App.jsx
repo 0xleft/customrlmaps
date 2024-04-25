@@ -4,10 +4,15 @@ import Search from './pages/Search';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import Mutiplayer from './pages/Multiplayer';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import Downloaded from './pages/Downloaded';
+const { ipcRenderer } = require('electron');
 
 function App() {
+	ipcRenderer.on('flashError', (event, arg) => {
+        toast.error(arg)
+    });
+
 	return (
 		<>
 			<Navbar />

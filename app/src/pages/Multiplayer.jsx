@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { set } from 'date-fns';
+const { ipcRenderer, clipboard } = require('electron');
 import { useState } from 'react';
 import { Form, Link } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -9,29 +10,37 @@ import { toast } from 'sonner';
 function Mutiplayer() {
 
 	const [joinString, setJoinString] = useState('');
-	const [copiedTimeout, setCopiedTimeout] = useState(null);
-	const [serverStarting, setServerStarting] = useState(false);
 	const [serverOnline, setServerOnline] = useState(false);
+	const [connecting, setConnecting] = useState(false);
+	const [connected, setConnected] = useState(false);
 
+	ipcRenderer.on('connected', (event, arg) => {
+		setConnecting(false);
+		toast.success("Connected successfully.");
+		setConnected(true);
+	});
+
+	ipcRenderer.on('disconnected', (event, arg) => {
+		setConnecting(false);
+		toast.error("Disconnected unexpectedly.");
+		setConnected(false);
+	});
+
+	// naming is confusing af
 	function joinServer(joinString) {
+		setConnecting(true);
 		toast.loading("Joining server...", { dismissible: true })
-		require("electron").ipcRenderer.invoke("joinServer", joinString).then((res) => {
+		ipcRenderer.invoke("joinServer", joinString).then((res) => {
 			toast.dismiss();
-			if (!res) {
-				toast.error("Failed to join server. Make sure Rocket League is running.");
-				return;
-			}
-
-			toast.success("Joined server!");			
 		});
 	}
 
 	function connectLocalhost() {
 		toast.loading("Connecting to localhost...", { dismissible: true })
-		require("electron").ipcRenderer.invoke("connectToLocalhost").then((res) => {
+		ipcRenderer.invoke("connectToLocalhost").then((res) => {
 			toast.dismiss();
 			if (!res) {
-				toast.error("Failed to connect to localhost. Make sure BakkesMod is installed and running.");
+				toast.error("Failed to connect to localhost. Make sure BakkesMod is installed and running. (should be done automaticaly by CRLM)");
 				return;
 			}
 
@@ -40,13 +49,10 @@ function Mutiplayer() {
 	}
 
 	async function hostServer() {
-		setServerStarting(true);
 		toast.loading("Starting server...", { dismissible: true })
-		await require("electron").ipcRenderer.invoke("hostServer");
-		require("electron").ipcRenderer.once("serverId", (event, arg) => {
+		await ipcRenderer.invoke("hostServer");
+		ipcRenderer.once("serverId", (event, arg) => {
 			setJoinString(arg);
-			setServerStarting(false);
-			setServerOnline(true);
 			toast.dismiss();
 			toast.success("Server started!");
 		});
@@ -54,7 +60,7 @@ function Mutiplayer() {
 
 	async function stopServer() {
 		toast.loading("Stopping server...", { dismissible: true })
-		await require("electron").ipcRenderer.invoke("stopServer");
+		await ipcRenderer.invoke("stopServer");
 		setServerOnline(false);
 		toast.dismiss();
 		toast.success("Server stopped!");
@@ -72,7 +78,7 @@ function Mutiplayer() {
 							<p>
 								Documentation for the multiplayer features can be found <Link className='hover:underline font-bold'
 								onClick={() => {
-									require("electron").shell.openExternal("https://docs.customrlmaps.com/multiplayer")
+									shell.openExternal("https://docs.customrlmaps.com/multiplayer")
 								}}>here</Link>.
 							</p>
 						</CardDescription>
@@ -93,8 +99,8 @@ function Mutiplayer() {
 
 									<CardContent className="flex flex-col space-y-2">
 										<div className='flex flex-row space-x-2'>
-											<Button onClick={hostServer} className='' disabled={serverStarting || serverOnline}>
-												{serverStarting ? <> Starting server... </> : <> Start server </>}
+											<Button onClick={hostServer} className='' disabled={serverOnline}>
+												{serverOnline ? "Server online" : "Start server"}
 											</Button>
 											<Button onClick={stopServer}>
 												Stop server
@@ -104,12 +110,9 @@ function Mutiplayer() {
 										<div className='flex flex-row space-x-2'>
 											<Input value={joinString} onChange={(e) => setJoinString(e.target.value)} placeholder='ID' disabled />
 											<Button onClick={() => {
-												require("electron").clipboard.writeText(joinString);
-												clearTimeout(copiedTimeout);
-												setCopiedTimeout(setTimeout(() => {
-													setCopiedTimeout(null);
-												}, 1000));
-											}} disabled={copiedTimeout !== null}>
+												clipboard.writeText(joinString);
+												toast.success("Copied server ID to clipboard!");
+											}}>
 												Copy
 											</Button>
 										</div>
@@ -130,10 +133,10 @@ function Mutiplayer() {
 									<CardContent>
 										<div className='flex flex-row space-x-2'>
 											<Input value={joinString} onChange={(e) => setJoinString(e.target.value)} placeholder='ID' disabled={serverOnline} />
-											<Button onClick={() => joinServer(joinString)}>
-												Connect
+											<Button onClick={() => joinServer(joinString)} disabled={serverOnline || connecting}>
+												{connecting ? "Connecting..." : "Connect"}
 											</Button>
-											<Button onClick={connectLocalhost}>
+											<Button onClick={connectLocalhost} disabled={serverOnline || !connected}>
 												Join
 											</Button>
 										</div>

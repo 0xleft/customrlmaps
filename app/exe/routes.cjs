@@ -226,11 +226,29 @@ ipcMain.handle('joinServer', async (event, arg) => {
 		}
 		portf = spawn(`${AppPath}/portf.exe`, args);
 		
+		const startTime = Date.now();
+		let isOnline = false;
+
 		portf.stderr.on('data', (data) => {
 			let goodData = data.toString().split("\n");
 			for (let i = 0; i < goodData.length; i++) {
 				if (goodData[i] === '') continue;
+				console.log(goodData[i]);
+
+				if (goodData[i].includes('Online')) {
+					event.sender.send('connected');
+					isOnline = true;
+				}
+
+				if (Date.now() - startTime > 15000 && !isOnline) {
+					event.sender.send('disconnected');
+					event.sender.send('flashError', 'Failed to connect to server. Make sure Rocket League is running.');
+					portf.kill();
+					portf = null;
+				};
+
 				if (goodData[i].includes('Error')) {
+					event.sender.send('disconnected');
 					event.sender.send('flashError', goodData[i]);
 				}
 			}
@@ -239,8 +257,6 @@ ipcMain.handle('joinServer', async (event, arg) => {
 		portf.on('close', (code) => {
 			console.log(`child process exited with code ${code}`);
 		});
-
-		return true;
 	} catch (error) {
 		console.log(error);
 	}
