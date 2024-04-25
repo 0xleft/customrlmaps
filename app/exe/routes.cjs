@@ -70,7 +70,7 @@ ipcMain.handle('hostServer', async (event, arg) => {
 			await downloadBM();
 		}
 
-		portf = spawn(`${AppPath}/portf.exe`, ['-','open', 'udp', '7777']);
+		portf = spawn(`${AppPath}/portf.exe`, ['open', 'udp', '7777']);
 
 		portf.stderr.on('data', (data) => {
 			let goodData = data.toString().split("\n");
@@ -220,11 +220,7 @@ ipcMain.handle('joinServer', async (event, arg) => {
 			return false;
 		}
 		
-		let args = ['connect', arg]
-		if (getFromState("weInstalled") === true) {
-			args = ['inject', 'connect', arg];
-		}
-		portf = spawn(`${AppPath}/portf.exe`, args);
+		portf = spawn(`${AppPath}/portf.exe`, ['connect', arg]);
 		
 		const startTime = Date.now();
 		let isOnline = false;

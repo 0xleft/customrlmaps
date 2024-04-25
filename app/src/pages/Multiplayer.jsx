@@ -53,6 +53,7 @@ function Mutiplayer() {
 		await ipcRenderer.invoke("hostServer");
 		ipcRenderer.once("serverId", (event, arg) => {
 			setJoinString(arg);
+			setServerOnline(true);
 			toast.dismiss();
 			toast.success("Server started!");
 		});
