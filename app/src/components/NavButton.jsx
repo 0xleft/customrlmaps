@@ -73,10 +73,6 @@ export function NavButton() {
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-                    <DropdownMenuItem onSelect={() => navigate('/multiplayer')}>
-						<LightningBoltIcon className="mr-2" />
-						Multiplayer
-					</DropdownMenuItem>
 					<DropdownMenuItem onSelect={() => navigate('/settings')}>
 						<GearIcon className="mr-2" />
 						Settings

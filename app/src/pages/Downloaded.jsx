@@ -72,10 +72,10 @@ function DownloadedProject({ data }) { // project, downloadedVersions,
                                                 version: selectedVersion === "" ? data.latestVersion : selectedVersion
                                             }).then((res) => {
                                                 toast.dismiss();
-                                                if (res) {
+                                                if (res === "Success") {
                                                     toast.success("Successfully set Labs Underpass");
                                                 } else {
-                                                    toast.error("Failed to set Labs Underpass, make sure Rocket League is running and try again.");
+                                                    toast.error(res);
                                                 }
                                             });
                                         }}>

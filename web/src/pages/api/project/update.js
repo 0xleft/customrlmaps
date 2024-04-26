@@ -5,7 +5,7 @@ import { getAllUserInfoServer, isAdmin } from '@/utils/userUtilsServer';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { createHash } from 'crypto';
 import { z } from 'zod';
-import { S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 const client = new S3Client({
 	region: process.env.AWS_REGION,
@@ -109,15 +109,6 @@ export default async function handler(req, res) {
                     "Content-Type": "image/png", 
                 },
                 Expires: 60,
-            });
-
-            await prisma.project.update({
-                where: {
-                    id: project.id,
-                },
-                data: {
-                    imageUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/banners/${project.name}`,
-                }
             });
 
             return res.status(200).json({

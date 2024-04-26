@@ -32,13 +32,19 @@ function connectToLocalhost() {
     const ws = new WebSocket('ws://localhost:9002');
     ws.on('open', function open() {
         ws.send("rcon_password " + getRCONPassword());
+        addAllowedCommands();
         ws.send('rcon_refresh_allowed');
-        ws.send('unreal_command "start 127.0.0.1:7777/?Lan?Password=CRLM"')
-        removeAllowedCommands();
-        ws.send('rcon_refresh_allowed');
+        // wait 0.1 second
+        setTimeout(() => {
+            ws.send('unreal_command "start 127.0.0.1:7777/?Lan?Password=CRLM"')
+            setTimeout(() => {
+                removeAllowedCommands();
+                ws.send('rcon_refresh_allowed');
+            }, 100);
+        }, 100);
     });
     ws.on('message', function incoming(data) {
-        if (message === "noauth") {
+        if (data === "noauth") {
             console.log('Wrong password for rcon connection.');
         } else {
             console.log('Connected to localhost.');

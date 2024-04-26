@@ -135,7 +135,7 @@ export default function EditProjectPage ( { project }) {
                 name: project.name,
                 description: form.getValues().description,
                 longDescription: form.getValues().longDescription,
-                banner: form.getValues().banner,
+                banner: form.getValues().banner ? true : false,
                 gRecaptchatoken: token,
             }),
         }).then((res) => res.json()).then((data) => {

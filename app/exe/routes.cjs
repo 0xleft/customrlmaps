@@ -95,7 +95,7 @@ ipcMain.handle('setLabsUnderpass', async (event, arg) => {
 	try {
 		const process = await find("name", "RocketLeague.exe");
 		if (process.length === 0) {
-			return false;
+			return "Couldn't find Rocket League process";
 		}
 
 		const parsedPath = path.parse(process[0].bin);
@@ -114,7 +114,7 @@ ipcMain.handle('setLabsUnderpass', async (event, arg) => {
 		}
 
 		if (!upkFile) {
-			return false;
+			return "Couldn't find upk file in the projects directory";
 		}
 
 		// if ORIGINAL_LABS_UNDERPASS.upk doesnt exist copy Labs_Underpass_P.upk to ORIGINAL_LABS_UNDERPASS.upk
@@ -124,10 +124,9 @@ ipcMain.handle('setLabsUnderpass', async (event, arg) => {
 
 		fs.copyFileSync(path.join(projectPath, upkFile), path.join(gamePath, 'Labs_Underpass_P.upk'));
 
-		return true;
+		return "Success";
 	} catch (error) {
-		console.error(error);
-		return false;
+		return "Error " + error;
 	}
 });
 
