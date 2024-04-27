@@ -1,4 +1,4 @@
-const { ipcMain } = require('electron')
+const { ipcMain, app } = require('electron')
 const axios = require('axios');
 const path = require('path');
 const { spawn, execSync } = require('child_process');
@@ -270,6 +270,14 @@ ipcMain.handle('update', async (event, arg) => {
 	try {
 		downloadLatestVersion();
 		installLatestVersion();
+	} catch (error) {
+		console.error(error);
+	}
+});
+
+ipcMain.handle('getVersion', async (event, arg) => {
+	try {
+		return app.getVersion();
 	} catch (error) {
 		console.error(error);
 	}

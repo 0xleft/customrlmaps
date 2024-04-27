@@ -9,10 +9,14 @@ function Settings() {
 
 	const [updating, setUpdating] = useState(false);
 	const [projectFolder, setProjectFolder] = useState("loading...");
+	const [version, setVersion] = useState("loading...");
 
 	useEffect(() => {
 		ipcRenderer.invoke("getProjectFolder").then((res) => {
 			setProjectFolder(res);
+		});
+		ipcRenderer.invoke("getVersion").then((res) => {
+			setVersion(res);
 		});
 	}, []);
 
@@ -35,7 +39,7 @@ function Settings() {
 					disabled={updating}
 				>Update multiplayer</Button> */}
 				<h1>Project folder: {projectFolder}</h1>
-				<h1>Version: 0.0.1</h1>
+				<h1>Version: {version}</h1>
 				<h1>Author: plusleft</h1>
 			</div>
 		</>
