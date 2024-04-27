@@ -60,38 +60,6 @@ ipcMain.handle('download', async (event, arg) => {
 	}
 });
 
-ipcMain.handle('hostServer', async (event, arg) => {
-	try {
-		if (portf) {
-			portf.kill();
-			portf = null;
-		}
-
-		if (!isBMDownloaded()) {
-			await downloadBM();
-		}
-
-		portf = spawn(`${AppPath}/portf.exe`, ['open', 'udp', '7777']);
-
-		portf.stderr.on('data', (data) => {
-			let goodData = data.toString().split("\n");
-			for (let i = 0; i < goodData.length; i++) {
-				if (goodData[i] === '') continue;
-
-				if (!goodData[i].includes('Online') && !goodData[i].includes('keep alive')) {
-					event.sender.send('serverId', goodData[i].split(" ")[2]);
-				}
-			}
-		});
-
-		portf.on('close', (code) => {
-			console.log(`child process exited with code ${code}`);
-		});
-	} catch (error) {
-		console.error(error);
-	}
-});
-
 ipcMain.handle('setLabsUnderpass', async (event, arg) => {
 	try {
 		const process = await find("name", "RocketLeague.exe");
@@ -187,72 +155,6 @@ ipcMain.handle('connectToLocalhost', async (event, arg) => {
 		}
 
 		connectToLocalhost();
-	} catch (error) {
-		console.log(error);
-	}
-});
-
-ipcMain.handle('joinServer', async (event, arg) => {
-	try {
-		if (portf) {
-			portf.kill();
-			portf = null;
-		}
-
-		if (!isBMDownloaded()) {
-			event.sender.send('flashError', 'Downloading external assets needed for multiplayer. Please wait...');
-			await downloadBM();
-			event.sender.send('flashSuccess', 'External assets downloaded successfully.');
-		}
-
-		if (!isBMInstalled()) {
-			event.sender.send('flashError', 'Installing external assets needed for multiplayer. Please wait...');
-			await installBM();
-			event.sender.send('flashSuccess', 'External assets installed successfully.');
-		} else {
-			if (getFromState("weInstalled") !== true) {
-				event.sender.send('flashError', 'You have BakkesMod installed, please make sure you have rcon enabled in the settings.');
-			}
-		}
-
-		const process = await find("name", "RocketLeague.exe");
-		if (process.length === 0) {
-			return false;
-		}
-		
-		portf = spawn(`${AppPath}/portf.exe`, ['connect', arg]);
-		
-		const startTime = Date.now();
-		let isOnline = false;
-
-		portf.stderr.on('data', (data) => {
-			let goodData = data.toString().split("\n");
-			for (let i = 0; i < goodData.length; i++) {
-				if (goodData[i] === '') continue;
-				console.log(goodData[i]);
-
-				if (goodData[i].includes('Online')) {
-					event.sender.send('connected');
-					isOnline = true;
-				}
-
-				if (Date.now() - startTime > 15000 && !isOnline) {
-					event.sender.send('disconnected');
-					event.sender.send('flashError', 'Failed to connect to server. Make sure Rocket League is running.');
-					portf.kill();
-					portf = null;
-				};
-
-				if (goodData[i].includes('Error')) {
-					event.sender.send('disconnected');
-					event.sender.send('flashError', goodData[i]);
-				}
-			}
-		});
-
-		portf.on('close', (code) => {
-			console.log(`child process exited with code ${code}`);
-		});
 	} catch (error) {
 		console.log(error);
 	}
