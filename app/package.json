@@ -2,7 +2,7 @@
   "name": "crlm",
   "private": true,
   "main": "exe/main.cjs",
-  "version": "v0.0.2",
+  "version": "v0.0.4",
   "type": "module",
   "description": "Application allowing seemless integration with customrlmaps.com platform",
   "author": "plusleft",
