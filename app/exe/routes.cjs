@@ -10,6 +10,7 @@ const AppPath = global.AppPath;
 const find = require('find-process');
 const { isBMDownloaded, downloadBM, installBM, isBMInstalled } = require('./bm.cjs');
 const { connectToLocalhost } = require('./rcon.cjs');
+const { downloadLatestVersion, installLatestVersion } = require('./updater.cjs');
 
 var portf = null;
 
@@ -260,6 +261,15 @@ ipcMain.handle('joinServer', async (event, arg) => {
 ipcMain.handle('getProjectFolder', async (event, arg) => {
 	try {
 		return AppPath;
+	} catch (error) {
+		console.error(error);
+	}
+});
+
+ipcMain.handle('update', async (event, arg) => {
+	try {
+		downloadLatestVersion();
+		installLatestVersion();
 	} catch (error) {
 		console.error(error);
 	}

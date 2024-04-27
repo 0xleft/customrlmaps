@@ -2,7 +2,7 @@
   "name": "crlm",
   "private": true,
   "main": "exe/main.cjs",
-  "version": "0.0.0",
+  "version": "v0.0.1",
   "type": "module",
   "description": "Application allowing seemless integration with customrlmaps.com platform",
   "author": "plusleft",
@@ -96,10 +96,19 @@
     "vite": "^5.2.0"
   },
   "build": {
-    "appId": "customrlmaps.com",
+    "appId": "com.customrlmaps.app",
+    "directories": {
+      "buildResources": "build"
+    },
     "win": {
-      "target": "portable",
-      "icon": "build/icon.ico"
+        "asar": true,
+        "target": "nsis",
+        "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "installerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "deleteAppDataOnUninstall": true
     }
   }
 }

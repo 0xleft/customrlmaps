@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import Autoplay from "embla-carousel-autoplay"
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 const { ipcRenderer } = require('electron');
 
 function Home() {

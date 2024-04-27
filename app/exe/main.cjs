@@ -15,11 +15,13 @@ if (!fs.existsSync(`${global.AppPath}/config.json`)) {
 
 require('./routes.cjs');
 const { loadProjectsMeta } = require('./loader.cjs');
+const { updateFromState } = require('./state.cjs');
+const { fetchLatestVersion } = require('./updater.cjs');
 
 loadProjectsMeta();
 
 function createWindow () {
-// Create the browser window.
+	// Create the browser window.
 	const win = new BrowserWindow({
 		width: 1500,
 		height: 1000,
@@ -35,7 +37,13 @@ function createWindow () {
 	//win.loadURL('http://localhost:5173');
 	//win.webContents.openDevTools()
 
-	win.loadURL('https://app.customrlmaps.com');
+	win.loadURL('https://app.customrlmaps.com').then(() => {
+		updateFromState("version", app.getVersion());
+		const latestVersion = fetchLatestVersion();
+		if (latestVersion !== app.getVersion()) {
+			win.webContents.send('updateAvailable', latestVersion);
+		}
+	});
 }
 
 app.whenReady().then(() => {
