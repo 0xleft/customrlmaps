@@ -14,6 +14,7 @@ import {
   } from "@/components/ui/accordion"
 import FAQ from '@/components/FAQ';
 import Head from 'next/head';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
 	const plugin = useRef(
@@ -76,6 +77,53 @@ export default function Home() {
 							<CardDescription className="text-muted-foreground">This is the platform that empowers creators of Rocket League maps and mods quickly share their creations and make the available to wider audience</CardDescription>
 						</Card>
 					</div>
+				</section>
+			</div>
+
+			{/* big card with image on the left and text on the right with button to download the CRLMApp */}
+			<div className="container">
+				<section className="mx-auto flex flex-col items-center gap-8 pt-12 pb-24 md:py-24 lg:py-48 lg:pb-24">
+					<Card className="flex flex-col items-center justify-center transition duration-75 gap-2 min-h-[400px] p-10">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div className="flex justify-center items-center">
+								<img src="/crlmapp.png" className="aspect-video h-full w-full object-cover rounded-md" />
+							</div>
+							<div className="flex flex-col space-y-5 justify-center">
+								<CardTitle className="text-3xl font-bold">CRLM app</CardTitle>
+								<CardDescription className="text-muted-foreground">The CRLM app is the desktop application that allows you to easily download and install maps and mods. To play the selected map just create a LAN match with mutators you desire and play!</CardDescription>
+								<div className="flex gap-4">
+									<Button asChild>
+										<Link href="https://github.com/pageuplt/CRLMApp/releases/latest/download/CRLM.exe">
+											<DownloadIcon className="w-4 h-4" />
+											Download
+										</Link>
+									</Button>
+								</div>
+							</div>
+						</div>
+					</Card>
+				</section>
+
+				<section className="mx-auto flex flex-col items-center gap-8 pt-12 pb-24 md:py-24 lg:py-24 lg:pb-24">
+					<Card className="flex flex-col items-center justify-center p-10 transition duration-75 gap-2 min-h-[400px]">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div className="flex flex-col space-y-5 justify-center">
+								<CardTitle className="text-3xl font-bold">CRLM plugin</CardTitle>
+								<CardDescription className="text-muted-foreground">The CRLM plugin is a bakkesmod addition to for more experienced users. It is acompanied by more advanced features to aid with creation of custom maps. Multiplayer features are not guaranteed to work.</CardDescription>
+								<div className="flex gap-4">
+									<Button asChild>
+										<Link href="https://github.com/pageuplt/CRLMPlugin/releases/latest/download/install.bat">
+											<DownloadIcon className="w-4 h-4" />
+											Install
+										</Link>
+									</Button>
+								</div>
+							</div>
+							<div className="flex justify-center items-center">
+								<img src="crlmplugin.png" className="aspect-video object-cover rounded-md" />
+							</div>
+						</div>
+					</Card>
 				</section>
 			</div>
 
