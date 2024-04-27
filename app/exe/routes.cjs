@@ -268,7 +268,10 @@ ipcMain.handle('getProjectFolder', async (event, arg) => {
 
 ipcMain.handle('update', async (event, arg) => {
 	try {
-		downloadLatestVersion();
+		if (!downloadLatestVersion()) {
+			event.sender.send('flashError', 'Failed to download the latest version.');
+			return;
+		}
 		installLatestVersion();
 	} catch (error) {
 		console.error(error);

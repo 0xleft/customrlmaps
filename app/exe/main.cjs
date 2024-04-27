@@ -39,10 +39,14 @@ function createWindow () {
 
 	win.loadURL('https://app.customrlmaps.com').then(() => {
 		updateFromState("version", app.getVersion());
-		const latestVersion = fetchLatestVersion();
-		if (latestVersion !== app.getVersion()) {
-			win.webContents.send('updateAvailable', latestVersion);
-		}
+		fetchLatestVersion().then((latestVersion) => {
+			console.log(latestVersion);
+			if (latestVersion !== app.getVersion()) {
+				win.webContents.send('updateAvailable', latestVersion);
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
 	}).catch((err) => {
 		console.log(err);
 	});

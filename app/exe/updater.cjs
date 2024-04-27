@@ -3,19 +3,26 @@ const fs = require('fs');
 const { app } = require('electron');
 const AppPath = app.getPath('userData');
 
-function fetchLatestVersion() {
-    axios.get("https://api.github.com/repos/pageuplt/CRLMApp/releases/latest").then((res) => {
-        return res.data.tag_name;
-    }).catch((err) => {
-        console.error(err);
+async function fetchLatestVersion() {
+    try {
+        return await axios.get("https://api.github.com/repos/pageuplt/CRLMApp/releases/latest").data.tag_name || app.getVersion();
+    }
+    catch (err) {
         return app.getVersion();
-    });
+    };
 }
 
 function downloadLatestVersion() {
-    axios.get(`https://github.com/pageuplt/CRLMApp/releases/latest/download/CRLM.exe`, { responseType: 'arraybuffer' }).then((res) => {
-        fs.writeFileSync(`${AppPath}/CRLM.exe`, Buffer.from(res.data));
-    });
+    try {
+        axios.get(`https://github.com/pageuplt/CRLMApp/releases/latest/download/CRLM.exe`, { responseType: 'arraybuffer' }).then((res) => {
+            fs.writeFileSync(`${AppPath}/CRLM.exe`, Buffer.from(res.data));
+        });
+    } catch (err) {
+        console.error(err);
+        return false;
+    }
+
+    return true;
 }
 
 function installLatestVersion() {
