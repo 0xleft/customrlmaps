@@ -42,6 +42,7 @@ function App() {
 						<Button onClick={() => {
 							setUpdatePopup(false);
 							ipcRenderer.invoke('update');
+							toast.loading("Updating...", { dismissible: false });
 						}
 						}>Update</Button>
 						<Button onClick={() => setUpdatePopup(false)}>Cancel</Button>

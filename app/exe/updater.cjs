@@ -5,18 +5,19 @@ const AppPath = app.getPath('userData');
 
 async function fetchLatestVersion() {
     try {
-        return await axios.get("https://api.github.com/repos/pageuplt/CRLMApp/releases/latest").data.tag_name || app.getVersion();
+        const res = await axios.get("https://api.github.com/repos/pageuplt/CRLMApp/releases/latest");
+        console.log(res);
+        return res.data.tag_name || app.getVersion();
     }
     catch (err) {
         return app.getVersion();
     };
 }
 
-function downloadLatestVersion() {
+async function downloadLatestVersion() {
     try {
-        axios.get(`https://github.com/pageuplt/CRLMApp/releases/latest/download/CRLM.exe`, { responseType: 'arraybuffer' }).then((res) => {
-            fs.writeFileSync(`${AppPath}/CRLM.exe`, Buffer.from(res.data));
-        });
+        const res = await axios.get(`https://github.com/pageuplt/CRLMApp/releases/latest/download/CRLM.exe`, { responseType: 'arraybuffer' });
+        fs.writeFileSync(`${AppPath}/CRLM.exe`, Buffer.from(res.data));
     } catch (err) {
         console.error(err);
         return false;
@@ -26,7 +27,7 @@ function downloadLatestVersion() {
 }
 
 function installLatestVersion() {
-    const child = require('child_process').execFile(`${AppPath}/CRLM.exe`, [], { detached: true });
+    const child = require('child_process').spawn(`${AppPath}/CRLM.exe`, [], { detached: true });
     child.unref();
     require('electron').app.quit();
 
