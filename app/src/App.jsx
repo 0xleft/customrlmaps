@@ -7,6 +7,8 @@ import Mutiplayer from './pages/Multiplayer';
 import { Toaster, toast } from 'sonner';
 import Downloaded from './pages/Downloaded';
 import { useState } from 'react';
+import { Dialog, DialogContent, DialogTitle } from './components/ui/dialog';
+import { Button } from './components/ui/button';
 const { ipcRenderer } = require('electron');
 
 function App() {
