@@ -4,8 +4,11 @@ const { app } = require('electron');
 const AppPath = app.getPath('userData');
 
 function fetchLatestVersion() {
-    const version = axios.get("https://api.github.com/repos/pageuplt/CRLMApp/releases/latest").then((res) => {
+    axios.get("https://api.github.com/repos/pageuplt/CRLMApp/releases/latest").then((res) => {
         return res.data.tag_name;
+    }).catch((err) => {
+        console.error(err);
+        return app.getVersion();
     });
 }
 

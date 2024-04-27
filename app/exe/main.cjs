@@ -35,7 +35,7 @@ function createWindow () {
 	win.setMenu(null)
 
 	//win.loadURL('http://localhost:5173');
-	//win.webContents.openDevTools()
+	win.webContents.openDevTools()
 
 	win.loadURL('https://app.customrlmaps.com').then(() => {
 		updateFromState("version", app.getVersion());
@@ -43,6 +43,8 @@ function createWindow () {
 		if (latestVersion !== app.getVersion()) {
 			win.webContents.send('updateAvailable', latestVersion);
 		}
+	}).catch((err) => {
+		console.log(err);
 	});
 }
 

@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Mutiplayer from './pages/Multiplayer';
 import { Toaster, toast } from 'sonner';
 import Downloaded from './pages/Downloaded';
+import { useState } from 'react';
 const { ipcRenderer } = require('electron');
 
 function App() {
