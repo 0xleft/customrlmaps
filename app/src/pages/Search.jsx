@@ -278,20 +278,23 @@ function Search() {
 										setUsername("");
 										setRating(0);
 										getProjects();
-									}
-									}>Clear</Button>
+									}}>Clear</Button>
 								</div>
 								</CardContent>
 						</CardHeader>
 
 						<CardContent className="mt-0 lg:mt-4 min-h-screen">
 							{/* todo better */}
-							{projects.length === 0 && !loading ? <CustomError error={"404"}>
+							{projects.length === 0 && !loading ? <CustomError error={"404"}
+								className='h-max-content'
+							>
 								<h2 className='text-muted-foreground'>No projects found</h2>
 								<h2 className='text-muted-foreground text-sm'>Try a different query?</h2>
 							</CustomError> : <></>}
 
-							<div className="mt-4 min-h-screen">
+							<div className={"mt-4"
+								+ (projects.length === 0 && !loading ? " " : " min-h-screen")
+							}>
 								<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 									{loading ? <><SearchSkeleton/></> : <>
 										{projects.map((project) => {
@@ -314,37 +317,16 @@ function Search() {
 											setPage(page - 1);
 										}} />
 										</PaginationItem>
-										<PaginationItem hidden={page === 0}>
-										<PaginationLink onClick={() => {
-											setPage(0);
-										}}>
-											0
-										</PaginationLink>
-										</PaginationItem>
 										<PaginationItem>
 										<PaginationLink aria-current="page">
 											{page}
 										</PaginationLink>
 										</PaginationItem>
-										<PaginationItem>
 										<PaginationEllipsis hidden={page === 0} />
-										</PaginationItem>
-										<PaginationItem hidden={page === 0}>
-										<PaginationLink  onClick={() => {
-											setPage(0);
-										}}>
-											{0}
-										</PaginationLink>
-										</PaginationItem>
 										<PaginationItem>
 										<PaginationNext 
 											onClick={() => {
-												if (page >= 0) {
-													return;
-												}
-
-												console.log(page);
-
+												console.log(page + 1);
 												setPage(page + 1);
 										}} />
 										</PaginationItem>

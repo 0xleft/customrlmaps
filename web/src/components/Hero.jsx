@@ -7,7 +7,7 @@ export default function Hero() {
         <>
             <div className="container">
                 <section className="mx-auto flex max-w-[980px] flex-col items-center gap-2 pt-32 pb-0 md:py-24 lg:py-24 lg:pb-20">
-                    <h1 className="text-center lg:text-6xl md:text-5xl text-3xl font-bold">CustomRLMaps</h1>
+                    <h1 className="text-center lg:text-6xl md:text-5xl text-4xl font-bold">CustomRLMaps</h1>
                     <p className="text-center lg:text-2xl md:text-xl text-sm text-muted-foreground break-words md:max-w-[400px] max-w-[300px]">Rocket League projects made easy.</p>
 
                     <div className="flex flex-row md:flex-row gap-4">

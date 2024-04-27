@@ -256,3 +256,11 @@ ipcMain.handle('joinServer', async (event, arg) => {
 		console.log(error);
 	}
 });
+
+ipcMain.handle('getProjectFolder', async (event, arg) => {
+	try {
+		return AppPath;
+	} catch (error) {
+		console.error(error);
+	}
+});
